@@ -1,0 +1,32 @@
+.sidebar {
+  /* padding: 10px; */
+}
+
+.sidebar-list {
+  list-style-type: none;
+}
+
+.sidebar-item:hover {
+  background-color: white;
+  filter: brightness(0.9);
+}
+
+.sidebar-item a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 15px 10px;
+  text-decoration: none;
+  color: black;
+}
+
+.sidebar-item p {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.sidebar-item object {
+  width: 25px;
+  height: 25px;
+}

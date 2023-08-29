@@ -1,0 +1,240 @@
+.footer-container {
+  min-height: 100vh;
+  /* position: relative; */
+}
+
+.footer-add-task-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+
+  width: 50px;
+  height: 50px;
+  color: white;
+  background-color: red;
+  border-radius: 50%;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-add-task-button:hover {
+  filter: brightness(0.9);
+}
+
+.discard-changes-dialog {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  /* width: 100%; */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+}
+
+.discard-changes-dialog:not([open]) {
+  display: none;
+}
+
+.discard-changes-dialog-header {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.discard-changes-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+
+}
+
+.discard-changes-buttons button {
+  flex: 1;
+  padding: 5px 10px;
+  border: none;
+  font-weight: bold;
+}
+
+.discard-changes-buttons button:hover {
+  cursor: pointer;
+}
+
+.discard-changes-discard-button {
+  background-color: red;
+  color: white;
+}
+
+
+.footer-add-task-dialog {
+  /* for some reason without max-width: 100% !important, 
+    width: 100% isn't really 100% */
+  max-width: 100% !important;
+  width: 100%;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, -100%);
+
+  border: 1px solid gray;
+  border-radius: 10px 10px 0 0;
+  /* border-left: none; */
+  /* border-radius: none; */
+  border-bottom: none;
+}
+
+.footer-add-task-dialog .task-title {
+  font-size: 1.5rem;
+}
+
+.task-title,
+.task-description {
+  padding: 5px 10px;
+  caret-color: red;
+  border: none;
+  outline: none;
+}
+
+.task-description {
+  font-size: 1rem;
+}
+
+.date-and-priority-buttons {
+  display: flex;
+  gap: 10px;
+  
+  border-bottom: 1px solid rgb(212, 209, 209);
+  padding: 10px;
+}
+
+.priority-1 {
+  color: red;
+}
+.priority-2 {
+  color: rgb(146, 0, 243);
+}
+.priority-3 {
+  color: blue;
+}
+.priority-4 {
+  color: gray;
+}
+
+.task-due-date {
+  background-color: rgb(197, 197, 197);
+  border: none;
+}
+
+.task-due-date:hover {
+  cursor: pointer;
+}
+
+.task-due-date-button {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  width: max-content;
+
+  background-color: rgb(197, 197, 197);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  /* justify-content: flex-end; */
+}
+
+.task-due-date-button * {
+  pointer-events: none;
+}
+
+.task-due-date-button:hover {
+  cursor: pointer;
+}
+
+.task-due-date-button:active {
+  filter: brightness(1.1);
+}
+
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  /* display: none;
+  -webkit-appearance: none; */
+  /* margin:0; */
+  /* border: none; */
+  
+}
+
+input[type="date"]::-webkit-datetime-edit {
+  display:none;
+}
+
+.bottom-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.add-button {
+  width: 30px;
+  height: 30px;
+  align-self: flex-end;
+
+  border-radius: 5px;
+  background-color: red;
+  border: none;
+  padding: 5px;
+
+  cursor: pointer;
+}
+
+.add-button * {
+  pointer-events: none;
+}
+
+.footer-add-task-dialog::backdrop {
+  background-color: white;
+  opacity: 0;
+}
+
+.footer-add-task-dialog[open] {
+  animation: show 0.5s ease normal;
+}
+
+.footer-add-task-dialog.hide {
+  animation: hide 0.5s ease normal;
+}
+
+@keyframes show{
+  from {
+    top: 110%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  /* to {
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+  } */
+}
+
+@keyframes hide{
+  to {
+    top: 110%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+
+
+.footer-add-task-form {
+  display: flex;
+  flex-direction: column;
+}
