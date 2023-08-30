@@ -1,10 +1,16 @@
-import addButtonSVG from '../svgs/send.svg';
+import sendButtonSVG from '../svgs/send.svg';
+import { createTask } from './tasks';
 
 let taskList = [];
 
 let locationForTasks = ['Inbox', 'Projects'];
 
 // console.log('local storage: ' + JSON.parse(localStorage.getItem('sidebarItems'))[0]);
+
+let addTaskFormElementDefaultValues = [];
+let addTaskFormElements = [];
+
+// localStorage.setItem('touchedElements', '{}');
 
 function createFooter() {
   let content = document.querySelector('#content');
@@ -23,30 +29,72 @@ function createFooter() {
   activateDueDateButton();
   addEventListenerPriorityDropdown();
   activateDiscardChangesButtons();
+  addEventListenerTaskTitle();
+  // activateSendButton();
+  addEventListenerSubmitForm();
 
   let priorityDropdown = document.querySelector('.priority-dropdown');
 
-  let dialog = document.querySelector('.discard-changes-dialog');
-  // let dialog = document.querySelector('.footer-add-task-dialog');
+  // let dialog = document.querySelector('.discard-changes-dialog');
+  let dialog = document.querySelector('.footer-add-task-dialog');
   // dialog.close();
   // dialog.showModal();
+
+  let form = document.querySelector('.footer-add-task-form');
+  // console.log(taskList[0]);
+
+  // store default values of form elements and the form elements themselves
+  Array.from(form.elements).forEach(element => {
+    if (element.tagName !== 'BUTTON' && element.tagName !== 'OBJECT') {
+      addTaskFormElementDefaultValues.push(element.value);
+      addTaskFormElements.push(element);
+    }
+  })
+
 }
 
-// function createTaskList() {
-
-// }
-
-function addTask() {
-  // taskList.push(task);
+// Checks if the title is empty or not
+// If title is empty, the add button is disabled.
+// Otherwise, it is enabled.
+function addEventListenerTaskTitle() {
+  let taskTitle = document.querySelector('.task-title');
+  taskTitle.addEventListener('input', (e) => {
+    let addButton = document.querySelector('.send-button');
+    if (e.target.value !== '') {
+      addButton.classList.add('active');
+    } else {
+      addButton.classList.remove('active');
+    }
+    console.log('INPUT CHANGED');
+  })
 }
 
-const Task = (title, description, dueDate, priority, checkList) => {
+// adds a Task when send button is active and clicked
+function addEventListenerSubmitForm() {
+  let form = document.querySelector('.footer-add-task-form');
+  let sendButton = document.querySelector('.send-button');
 
-  return { title, description, dueDate, priority, checkList };
-}
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-function openAddTaskForm() {
+    if (sendButton.classList.contains('active')) {
+      let task = createTask(addTaskFormElements);
+      
+      // add task to local storage
+      if (localStorage.getItem('taskList') === null) {
+        let taskList = [];
+        taskList.push(task);
+        localStorage.setItem('taskList', JSON.stringify(taskList));
+      } else {
+        let taskList = JSON.parse(localStorage.getItem('taskList'));
+        taskList.push(task);
+        localStorage.setItem('taskList', JSON.stringify(taskList));
+      }
 
+      clearAddTaskForm();
+      sendButton.classList.remove('active');
+    }
+  })
 }
 
 function createDiscardChangesDialog() {
@@ -121,8 +169,14 @@ function createAddTaskDialog() {
   let buttons = document.createElement('div');
   buttons.classList.add('date-and-priority-buttons');
 
-  let priority = document.createElement('select');
-  priority.classList.add('priority-dropdown');
+  let priorityDropdown = document.createElement('select');
+  priorityDropdown.classList.add('priority-dropdown');
+
+  // let noPriority = document.createElement('option');
+  // noPriority.textContent = 'Select Priority';
+  // noPriority.style.color = 'black';
+  // noPriority.value = 0;
+  // priorityDropdown.appendChild(noPriority);
 
   for (let i = 1; i <= 4; i++) {
     let option = document.createElement('option');
@@ -133,17 +187,17 @@ function createAddTaskDialog() {
     if (i === 4) {
       option.setAttribute('selected', true);
     }
-    priority.appendChild(option);
+    priorityDropdown.appendChild(option);
   }
 
-  let addButton = document.createElement('button');
-  addButton.type = 'button';
-  addButton.classList.add('add-button');
-  addButton.setAttribute('fill', 'white');
+  let sendButton = document.createElement('button');
+  sendButton.type = 'submit';
+  sendButton.classList.add('send-button');
+  sendButton.setAttribute('fill', 'white');
 
   let buttonSVG = document.createElement('object');
-  buttonSVG.classList.add('add-button-svg');
-  buttonSVG.setAttribute('data', addButtonSVG);
+  buttonSVG.classList.add('send-button-svg');
+  buttonSVG.setAttribute('data', sendButtonSVG);
   buttonSVG.setAttribute('type', 'image/svg+xml');
 
   let bottomRow = document.createElement('div');
@@ -158,21 +212,17 @@ function createAddTaskDialog() {
     option.value = locationForTasks[i].toLowerCase();
     option.textContent = locationForTasks[i];
 
-    let img = document.createElement('img');
-    img.src = 'https://imgix.ranker.com/user_node_img/4373/87455191/original/satoru-gojo-u-495446080?auto=format&q=60&fit=crop&fm=pjpg&dpr=2&crop=faces&bg=fff&h=150&w=150';
-
-    option.appendChild(img);
     taskLocationDropdown.appendChild(option);
   }
 
   bottomRow.appendChild(taskLocationDropdown);
-  bottomRow.appendChild(addButton);
+  bottomRow.appendChild(sendButton);
   
-  addButton.appendChild(buttonSVG);
+  sendButton.appendChild(buttonSVG);
 
   buttons.appendChild(dueDateButton);
   buttons.appendChild(dueDateTime);
-  buttons.appendChild(priority);
+  buttons.appendChild(priorityDropdown);
 
   form.append(title, description, buttons, bottomRow);
   dialog.appendChild(form);
@@ -180,6 +230,7 @@ function createAddTaskDialog() {
   return dialog;
 }
 
+// the circle button with '+' sign
 function createAddTaskButton() {
   let button = document.createElement('button');
   button.classList.add('footer-add-task-button');
@@ -199,6 +250,9 @@ function activateAddTaskButton() {
     let dialog = document.querySelector('.footer-add-task-dialog');
 
     dialog.showModal();
+
+    // set add task dialog at the bottom of page
+    dialog.style.top =  `calc(100% - ${dialog.offsetHeight}px)`;
   })
 }
 
@@ -283,9 +337,8 @@ function addEventListenerAddTaskDialog() {
       event.clientY < modalArea.top ||
       event.clientY > modalArea.bottom)) {
       isMouseOutsideModal = false;
-      if (allElementsAreUntouched(form)) {
-        dialog.classList.add('hide');
-        dialog.addEventListener('animationend', dialogAnimationEnd);
+      if (allElementsAreUntouched()) {
+        hideAddTaskDialog();
       } else {
         let discardChangesDialog = document.querySelector('.discard-changes-dialog');
         discardChangesDialog.showModal();
@@ -303,53 +356,68 @@ function dialogAnimationEnd() {
   clearAddTaskForm();
 }
 
+function hideAddTaskDialog() {
+  let addTaskDialog = document.querySelector('.footer-add-task-dialog');
+  addTaskDialog.classList.add('hide');
+  addTaskDialog.addEventListener('animationend', dialogAnimationEnd);
+}
 function addEventListenerPriorityDropdown() {
   let priorityDropdown = document.querySelector('.priority-dropdown');
 
   // set color of initial selected item (priority 4)
   let currentOptionElement = document.querySelector(`.priority-${priorityDropdown.value}`);
-  priorityDropdown.style.color = getComputedStyle(currentOptionElement).color;
+  // priorityDropdown.style.color = getComputedStyle(currentOptionElement).color;
+  priorityDropdown.classList.add(`priority-${priorityDropdown.value}-color`);
 
   // change color of selected item to the user selected item
   priorityDropdown.addEventListener('change', () => {
     let dropdownOption = document.querySelector(`.priority-${priorityDropdown.value}`);
-    priorityDropdown.style.color = getComputedStyle(dropdownOption).color;
+    // priorityDropdown.style.color = getComputedStyle(dropdownOption). color;
+    priorityDropdown.classList.forEach(className => {
+      if (/^priority-\d-color$/.test(className)) {
+        priorityDropdown.classList.remove(className);
+      }
+    })
+    priorityDropdown.classList.add(`priority-${priorityDropdown.value}-color`);
   })
 }
 
 function activateDiscardChangesButtons() {
   let discardChangesDialog = document.querySelector('.discard-changes-dialog');
   let cancelButton = document.querySelector('.discard-changes-cancel-button');
-  let discardButton = document.querySelector('.discard-changes-cancel-button');
+  let discardButton = document.querySelector('.discard-changes-discard-button');
 
   cancelButton.addEventListener('click', () => {
     discardChangesDialog.close();
   });
 
   discardButton.addEventListener('click', () => {
+    let addTaskDialog = document.querySelector('.footer-add-task-dialog');
+    let discardChangesDialog = document.querySelector('.discard-changes-dialog');
+    hideAddTaskDialog();
     discardChangesDialog.close();
+    // clearAddTaskForm();
   });
 
 }
 
-function allElementsAreUntouched(form) {
-  console.log(form.elements.length);
-  for (let i = 0; i < form.elements.length; i++) {
-    const element = form.elements[i];
-    console.log(element.touched);
-    // Check if the element has been touched or modified
-    if (element.touched || element.dirty) {
-      return false; // At least one element has been touched
-    }
-  }
+function allElementsAreUntouched() {
 
-  return true; // All elements are untouched
+  for (let i = 0; i < addTaskFormElementDefaultValues.length; i++) {
+    if (addTaskFormElementDefaultValues[i] !== addTaskFormElements[i].value) {
+      return false;
+    }
+    // console.log('element value: ' + addTaskFormElements[i].value);
+    // console.log('default value: ' + addTaskFormElementDefaultValues[i]);  
+  }
+  return true;
 }
 
 function clearAddTaskForm() {
   let form = document.querySelector('.footer-add-task-form');
   form.reset();
 
+  localStorage.setItem('touchedElements', '{}');
   // let title = document.querySelector('.task-title');
   // title.value = '';
 
@@ -368,11 +436,20 @@ function clearAddTaskForm() {
   // dueDateTime.value = '';
 
   let priorityDropdown = document.querySelector('.priority-dropdown');
-  // // reset option to last option which is priority 4
+  priorityDropdown.classList.forEach(className => {
+    if (/^priority-\d-color$/.test(className)) {
+      priorityDropdown.classList.remove(className);
+    }
+  })
+
+  // reset to last option's color (priority 4)
+  priorityDropdown.classList.add(`priority-${priorityDropdown.value}-color`);
+
+  // reset option to last option which is priority 4
   // priorityDropdown.value = priorityDropdown.options[priorityDropdown.options.length-1].value;
   
-  let colorOfLastOption = getComputedStyle(priorityDropdown.options[priorityDropdown.options.length-1]).color;
-  priorityDropdown.style.color = colorOfLastOption;
+  // let colorOfLastOption = getComputedStyle(priorityDropdown.options[priorityDropdown.options.length-1]).color;
+  // priorityDropdown.style.color = colorOfLastOption;
 
 }
 

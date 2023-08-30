@@ -1,5 +1,5 @@
 .footer-container {
-  min-height: 100vh;
+  /* min-height: 100vh;  */
   /* position: relative; */
 }
 
@@ -73,27 +73,6 @@
   color: white;
 }
 
-
-.footer-add-task-dialog {
-  /* for some reason without max-width: 100% !important, 
-    width: 100% isn't really 100% */
-  max-width: 100% !important;
-  width: 100%;
-  top: 100%;
-  left: 50%;
-  transform: translate(-50%, -100%);
-
-  border: 1px solid gray;
-  border-radius: 10px 10px 0 0;
-  /* border-left: none; */
-  /* border-radius: none; */
-  border-bottom: none;
-}
-
-.footer-add-task-dialog .task-title {
-  font-size: 1.5rem;
-}
-
 .task-title,
 .task-description {
   padding: 5px 10px;
@@ -114,18 +93,30 @@
   padding: 10px;
 }
 
-.priority-1 {
+
+.priority-0-color {
+  color: black;
+}
+.priority-1,
+.priority-1-color {
   color: red;
 }
-.priority-2 {
+.priority-2,
+.priority-2-color {
   color: rgb(146, 0, 243);
 }
-.priority-3 {
+.priority-3,
+.priority-3-color {
   color: blue;
 }
-.priority-4 {
+.priority-4,
+.priority-4-color {
   color: gray;
 }
+
+/* .priority-dropdown option:checked {
+  color: inherit; 
+} */
 
 .task-due-date {
   background-color: rgb(197, 197, 197);
@@ -178,28 +169,59 @@ input[type="date"]::-webkit-datetime-edit {
 .bottom-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 10px;
 }
 
-.add-button {
-  width: 30px;
-  height: 30px;
+.task-location-dropdown {
+  height: fit-content;
+  padding: 5px;
+}
+
+.send-button {
   align-self: flex-end;
 
+  background-color: #E5E5E5;
   border-radius: 5px;
-  background-color: red;
   border: none;
-  padding: 5px;
+  padding: 5px 10px;
+  
+}
 
+.send-button.active {
+  background-color: red;
   cursor: pointer;
 }
 
-.add-button * {
+.send-button-svg {
+  width: 25px;
+  height: 25px;
+}
+
+.send-button * {
   pointer-events: none;
 }
 
+.footer-add-task-dialog {
+  /* for some reason without max-width: 100% !important, 
+    width: 100% isn't really 100% */
+    max-width: 100% !important;
+    width: 100%;
+
+  /* top is calculated and set in footer.js */
+  border: 1px solid gray;
+  border-radius: 10px 10px 0 0;
+  /* border-left: none; */
+  /* border-radius: none; */
+  border-bottom: none;
+}
+
+.footer-add-task-dialog .task-title {
+  font-size: 1.5rem;
+}
+
 .footer-add-task-dialog::backdrop {
-  background-color: white;
+  /* background-color: white; */
   opacity: 0;
 }
 
@@ -213,22 +235,14 @@ input[type="date"]::-webkit-datetime-edit {
 
 @keyframes show{
   from {
-    top: 110%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateY(100%);
   }
-  /* to {
-    top: 100%;
-    left: 50%;
-    transform: translate(-50%, -100%);
-  } */
+
 }
 
 @keyframes hide{
   to {
-    top: 110%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateY(100%);
   }
 }
 

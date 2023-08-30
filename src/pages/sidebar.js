@@ -4,7 +4,8 @@ import upcomingOutlineSVG from '../svgs/upcoming-outline.svg';
 
 
 // default sidebar items
-let sidebarItems = ['Inbox', 'Today', 'Upcoming', 'Projects'];
+// let sidebarItems = ['Inbox', 'Today', 'Upcoming', 'Projects'];
+
 // localStorage.setItem('sidebarItems', JSON.stringify(sidebarItems));
 
 function createSidebar() {
@@ -25,9 +26,9 @@ function createSidebar() {
   content.appendChild(sidebar);
 }
 
-export function getSidebarItems() {
-  return [...sidebarItems];
-}
+// export function getSidebarItems() {
+//   return [...sidebarItems];
+// }
 
 const createSidebarItem = (itemName, itemClass, svg) => {
   if (itemName === undefined || itemClass === undefined || svg === undefined) {
