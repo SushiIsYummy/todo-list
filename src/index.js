@@ -7,5 +7,6 @@ import './styles/sidebar.css';
 import './styles/footer.css'
 import './styles/inbox.css'
 
-createSidebar();
+// createSidebar();
+createInbox();
 createFooter();

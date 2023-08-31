@@ -7,6 +7,7 @@ import upcomingOutlineSVG from '../svgs/upcoming-outline.svg';
 // let sidebarItems = ['Inbox', 'Today', 'Upcoming', 'Projects'];
 
 // localStorage.setItem('sidebarItems', JSON.stringify(sidebarItems));
+const taskListChange = new Event('taskListChange');
 
 function createSidebar() {
   let content = document.querySelector('#content');

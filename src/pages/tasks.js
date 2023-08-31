@@ -62,22 +62,34 @@ export function createTask(listOfFormElements) {
   let task = builder.build();
   return task;
 }
-// const task = createTaskBuilder()
-//   .setPriority(1)
-//   .build();
 
-// console.log(task);
+const taskListChangeEvent = new Event('taskListChange');
 
-// function removeLastItem() {
-//   let taskList = JSON.parse(localStorage.getItem('taskList'));
+export function addTaskToLocalStorage(task) {
+      
+  // add task to local storage
+  if (localStorage.getItem('taskList') === null) {
+    let taskList = [];
+    taskList.push(task);
+    localStorage.setItem('taskList', JSON.stringify(taskList));
+  } else {
+    let taskList = JSON.parse(localStorage.getItem('taskList'));
+    taskList.push(task);
+    localStorage.setItem('taskList', JSON.stringify(taskList));
+  }
+  window.dispatchEvent(taskListChangeEvent);
+}
 
-//   if (taskList !== null) {
-//     taskList.pop();
-//   }
+function removeLastItem() {
+  let taskList = JSON.parse(localStorage.getItem('taskList'));
+
+  if (taskList !== null) {
+    taskList.pop();
+  }
   
-//   localStorage.setItem('taskList', JSON.stringify(taskList));
+  localStorage.setItem('taskList', JSON.stringify(taskList));
 
-//   console.log(localStorage.getItem('taskList'));
-// }
+  console.log(localStorage.getItem('taskList'));
+}
 
 // removeLastItem();

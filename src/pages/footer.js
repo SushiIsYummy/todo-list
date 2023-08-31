@@ -1,9 +1,10 @@
 import sendButtonSVG from '../svgs/send.svg';
-import { createTask } from './tasks';
+import { addTaskToLocalStorage, createTask } from './tasks';
 
 let taskList = [];
 
-let locationForTasks = ['Inbox', 'Projects'];
+// more locations after user adds projects.
+let locationForTasks = ['Inbox'];
 
 // console.log('local storage: ' + JSON.parse(localStorage.getItem('sidebarItems'))[0]);
 
@@ -25,7 +26,7 @@ function createFooter() {
   content.appendChild(footerContainer);
 
   activateAddTaskButton();
-  addEventListenerAddTaskDialog();
+  handleAddTaskDialogOutsideClick();
   activateDueDateButton();
   addEventListenerPriorityDropdown();
   activateDiscardChangesButtons();
@@ -79,19 +80,21 @@ function addEventListenerSubmitForm() {
 
     if (sendButton.classList.contains('active')) {
       let task = createTask(addTaskFormElements);
-      
+      addTaskToLocalStorage(task);
       // add task to local storage
-      if (localStorage.getItem('taskList') === null) {
-        let taskList = [];
-        taskList.push(task);
-        localStorage.setItem('taskList', JSON.stringify(taskList));
-      } else {
-        let taskList = JSON.parse(localStorage.getItem('taskList'));
-        taskList.push(task);
-        localStorage.setItem('taskList', JSON.stringify(taskList));
-      }
+      // if (localStorage.getItem('taskList') === null) {
+      //   let taskList = [];
+      //   taskList.push(task);
+      //   localStorage.setItem('taskList', JSON.stringify(taskList));
+      // } else {
+      //   let taskList = JSON.parse(localStorage.getItem('taskList'));
+      //   taskList.push(task);
+      //   localStorage.setItem('taskList', JSON.stringify(taskList));
+      // }
+      // window.dispatchEvent(taskListChangeEvent);
 
       clearAddTaskForm();
+      form.querySelector('.task-title').focus();
       sendButton.classList.remove('active');
     }
   })
@@ -308,7 +311,7 @@ function activateDueDateButton() {
   })
 }
 
-function addEventListenerAddTaskDialog() {
+function handleAddTaskDialogOutsideClick() {
   let dialog = document.querySelector('.footer-add-task-dialog');
   let form = dialog.querySelector('form');
 
@@ -339,6 +342,7 @@ function addEventListenerAddTaskDialog() {
       isMouseOutsideModal = false;
       if (allElementsAreUntouched()) {
         hideAddTaskDialog();
+        clearAddTaskForm();
       } else {
         let discardChangesDialog = document.querySelector('.discard-changes-dialog');
         discardChangesDialog.showModal();
@@ -348,19 +352,26 @@ function addEventListenerAddTaskDialog() {
   
 }
 
-function dialogAnimationEnd() {
-  let dialog = document.querySelector('.footer-add-task-dialog');
-  dialog.close();
-  dialog.classList.remove('hide');
-  dialog.removeEventListener('animationend', dialogAnimationEnd);
-  clearAddTaskForm();
+function handleDiscardChangesDialogOutsideClick() {
+
 }
 
 function hideAddTaskDialog() {
   let addTaskDialog = document.querySelector('.footer-add-task-dialog');
   addTaskDialog.classList.add('hide');
   addTaskDialog.addEventListener('animationend', dialogAnimationEnd);
+  // clearAddTaskForm();
 }
+
+function dialogAnimationEnd() {
+  let dialog = document.querySelector('.footer-add-task-dialog');
+  dialog.close();
+  dialog.classList.remove('hide');
+  dialog.removeEventListener('animationend', dialogAnimationEnd);
+  // clearAddTaskForm();
+}
+
+
 function addEventListenerPriorityDropdown() {
   let priorityDropdown = document.querySelector('.priority-dropdown');
 
@@ -396,7 +407,7 @@ function activateDiscardChangesButtons() {
     let discardChangesDialog = document.querySelector('.discard-changes-dialog');
     hideAddTaskDialog();
     discardChangesDialog.close();
-    // clearAddTaskForm();
+    clearAddTaskForm();
   });
 
 }
@@ -417,23 +428,8 @@ function clearAddTaskForm() {
   let form = document.querySelector('.footer-add-task-form');
   form.reset();
 
-  localStorage.setItem('touchedElements', '{}');
-  // let title = document.querySelector('.task-title');
-  // title.value = '';
-
-  // let description = document.querySelector('.task-description');
-  // description.value = '';
-
-  // let dueDate = document.querySelector('.task-due-date');
-  // dueDate.value = '';
-  
-  // let dueDateButton = document.querySelector('.task-due-date-button');
-
   let dueDateButtonPara = document.querySelector('.task-due-date-button-para');
   dueDateButtonPara.textContent = 'No Date';
-
-  // let dueDateTime = document.querySelector('.task-due-date-time');
-  // dueDateTime.value = '';
 
   let priorityDropdown = document.querySelector('.priority-dropdown');
   priorityDropdown.classList.forEach(className => {

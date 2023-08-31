@@ -6,4 +6,16 @@
 
 :root {
   font-size: 16px;
+
+  --priority-1-color:  255, 0, 0;
+  --priority-1-color-lighter: rgba(var(--priority-1-color), 0.4);
+
+  --priority-2-color:  146, 0, 243;
+  --priority-2-color-lighter: rgba(var(--priority-2-color), 0.4);
+
+  --priority-3-color:  0, 0, 255;
+  --priority-3-color-lighter: rgba(var(--priority-3-color), 0.4);
+
+  --priority-4-color:  128, 128, 128;
+  --priority-4-color-lighter: rgba(var(--priority-4-color), 0.4);
 }
