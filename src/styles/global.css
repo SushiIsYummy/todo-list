@@ -18,4 +18,7 @@
 
   --priority-4-color:  128, 128, 128;
   --priority-4-color-lighter: rgba(var(--priority-4-color), 0.4);
+
+  /* atd = add task dialog */
+  --animation-time-atd-open: 0.5s;
 }

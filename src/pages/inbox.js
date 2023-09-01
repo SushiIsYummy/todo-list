@@ -1,3 +1,5 @@
+import scrollIntoView from 'scroll-into-view-if-needed'
+
 function createInbox() {
   let content = document.querySelector('#content');
 
@@ -34,7 +36,7 @@ function createInbox() {
   window.addEventListener('taskListChange', updateInboxListItems);
 
   inboxMainContent.style.marginTop = getComputedStyle(inboxHeader).height;
-
+  // inboxList.style.marginBottom = '1000px';
 }
 
 function updateInboxListItems() {
@@ -49,8 +51,43 @@ function updateInboxListItems() {
       let taskItem = createTaskItem(task);
       inboxList.appendChild(taskItem);
     });
-  }
 
+    // if task is added
+    
+    moveInboxListUp();
+
+    scrollIntoView(inboxList.lastElementChild, {
+      behavior: 'smooth', // You can customize the scroll behavior
+      block: 'end', // Scroll to the bottom of the element
+      inline: 'end', // Scroll to the right edge of the element
+    });
+
+    // div.remove();
+  }
+}
+
+function moveInboxListUp() {
+  let inboxList = document.querySelector('.inbox-list');
+  let addTaskDialog = document.querySelector('.footer-add-task-dialog');
+  console.log('add task dialog open: ' + addTaskDialog.open);
+
+  if (addTaskDialog.open) {
+    let div = document.createElement('div');
+    div.classList.add('inbox-list-div');
+    div.style.height = `${addTaskDialog.offsetHeight}px`;
+    inboxList.appendChild(div);
+
+    div.addEventListener('animationend', () => {
+      div.remove();
+    })
+  }
+}
+
+export function moveInboxListDown() {
+  let div = document.querySelector('.inbox-list-div');
+  if (div !== null) {
+    div.remove();
+  }
 }
 
 function createTaskItem(task) {
@@ -73,8 +110,6 @@ function createTaskItem(task) {
   // priorityCheckbox.style.backgroundColor = 'rgba(cs.getPropertyValue(`--priority-${task.priority}-color`), 0.1)';
   // priorityCheckbox.style
   // priorityCheckbox.style.color = 
-
-
 
   // let span = document.createElement('span');
   // span.classList.add('task-item-priority-checkmark');
@@ -121,15 +156,15 @@ function createTaskItem(task) {
     time.classList.add('task-item-time');
     // date.textContent = task.dueDateTime;
 
-  // console.log('hours: ' + hours);
-  let hours = parseInt(task.dueDateTime.split(':')[0]);
-  let minutes = task.dueDateTime.split(':')[0];
-  let suffix = hours >= 12 ? "PM":"AM"; 
+    // console.log('hours: ' + hours);
+    let hours = parseInt(task.dueDateTime.split(':')[0]);
+    let minutes = task.dueDateTime.split(':')[1];
+    let suffix = hours >= 12 ? "PM":"AM"; 
 
-  // convert 24 hour to 12 hour
-  hours = ((hours + 11) % 12 + 1);
+    // convert 24 hour to 12 hour
+    hours = ((hours + 11) % 12 + 1);
 
-  time.textContent = hours + ':' + minutes + suffix;
+    time.textContent = hours + ':' + minutes + suffix;
   }
 
   let dateAndTime = document.createElement('div');
@@ -139,13 +174,29 @@ function createTaskItem(task) {
 
   taskItem.append(priorityCheckbox, title, description, dateAndTime);
 
+  Array.from(dateAndTime.children).forEach(element => {
+    if (element.value === '') {
+      element.remove();
+    }
+  });
+
+  if (dateAndTime.childElementCount === 0) {
+    dateAndTime.remove();
+  }
+
+  Array.from(taskItem.children).forEach(element => {
+    if (element.value === '') {
+      element.remove();
+    }
+  })
+
   return taskItem;
 }
 
 function clearInboxList(inboxList) {
 
-  while (inboxList.firstChild) {
-    inboxList.firstChild.remove();
+  while (inboxList.lastChild) {
+    inboxList.lastChild.remove();
   }
 }
 

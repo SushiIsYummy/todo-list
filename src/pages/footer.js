@@ -1,4 +1,5 @@
 import sendButtonSVG from '../svgs/send.svg';
+import { moveInboxListDown } from './inbox';
 import { addTaskToLocalStorage, createTask } from './tasks';
 
 let taskList = [];
@@ -52,6 +53,11 @@ function createFooter() {
     }
   })
 
+}
+
+export function getAddTaskDialogHeight() {
+  let addTaskDialog = document.querySelector('.footer-add-task-dialog');
+  return addTaskDialog.offsetHeight;
 }
 
 // Checks if the title is empty or not
@@ -255,7 +261,7 @@ function activateAddTaskButton() {
     dialog.showModal();
 
     // set add task dialog at the bottom of page
-    dialog.style.top =  `calc(100% - ${dialog.offsetHeight}px)`;
+    dialog.style.top =  `calc(100% - ${getAddTaskDialogHeight()}px)`;
   })
 }
 
@@ -359,6 +365,13 @@ function handleDiscardChangesDialogOutsideClick() {
 function hideAddTaskDialog() {
   let addTaskDialog = document.querySelector('.footer-add-task-dialog');
   addTaskDialog.classList.add('hide');
+
+  let inboxListDiv = document.querySelector('.inbox-list-div');
+  console.log('inbox list div: ' + inboxListDiv);
+  if (inboxListDiv !== null) {
+    inboxListDiv.classList.add('hide');
+  }
+
   addTaskDialog.addEventListener('animationend', dialogAnimationEnd);
   // clearAddTaskForm();
 }

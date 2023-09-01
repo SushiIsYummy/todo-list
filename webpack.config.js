@@ -13,6 +13,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
+  mode: 'development',
   optimization: {
     minimizer: [
       // Use TerserPlugin for JavaScript minification
@@ -57,10 +58,10 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
-      },
+      // {
+      //   test: /\.css$/i,
+      //   use: ["style-loader", "css-loader"],
+      // },
       {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
@@ -105,5 +106,14 @@ module.exports = {
       }
     }),
   ],
+  // target: 'web',
+  // devServer: {
+  //   // static: './',
+  //   static: {
+  //     directory: path.resolve(__dirname, 'dist'), // Change the directory to match your project setup
+  //   },
+  //   // compress: true,
+  //   // port: 9000, // You can choose any port you prefer
+  // },
   devtool: 'inline-source-map',
 };

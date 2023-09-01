@@ -8,5 +8,5 @@ import './styles/footer.css'
 import './styles/inbox.css'
 
 // createSidebar();
-createInbox();
 createFooter();
+createInbox();

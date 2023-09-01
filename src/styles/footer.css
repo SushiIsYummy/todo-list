@@ -226,11 +226,11 @@ input[type="date"]::-webkit-datetime-edit {
 }
 
 .footer-add-task-dialog[open] {
-  animation: show 0.2s ease normal;
+  animation: show var(--animation-time-atd-open) ease normal;
 }
 
 .footer-add-task-dialog.hide {
-  animation: hide 0.2s ease normal;
+  animation: hide var(--animation-time-atd-open) ease normal;
 }
 
 @keyframes show{
