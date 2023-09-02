@@ -2,14 +2,11 @@ import inboxOutlineSVG from '../svgs/inbox-outline.svg';
 import todayOutlineSVG from '../svgs/today-outline.svg';
 import upcomingOutlineSVG from '../svgs/upcoming-outline.svg';
 
-
-// default sidebar items
-// let sidebarItems = ['Inbox', 'Today', 'Upcoming', 'Projects'];
-
-// localStorage.setItem('sidebarItems', JSON.stringify(sidebarItems));
-
 function createSidebar() {
   let content = document.querySelector('#content');
+
+  let sidebarDialog = document.createElement('dialog');
+  sidebarDialog.classList.add('sidebar-dialog');
 
   let sidebar = document.createElement('aside');
   sidebar.classList.add('sidebar');
@@ -22,13 +19,19 @@ function createSidebar() {
   sidebarList.appendChild(createSidebarItem('Upcoming', 'upcoming', upcomingOutlineSVG));
   sidebarList.appendChild(createSidebarItemList('Projects', 'projects'));
 
-  sidebar.appendChild(sidebarList);
-  content.appendChild(sidebar);
+  sidebar.appendChild(sidebarList)
+  sidebarDialog.appendChild(sidebar);
+  content.appendChild(sidebarDialog);
+
+  // sidebarDialog.showModal();
+  handleSidebarDialogOutsideClick();
+  closeSidebarOnItemClick();
 }
 
 // export function getSidebarItems() {
 //   return [...sidebarItems];
 // }
+
 
 const createSidebarItem = (itemName, itemClass, svg) => {
   if (itemName === undefined || itemClass === undefined || svg === undefined) {
@@ -58,11 +61,11 @@ const createSidebarItem = (itemName, itemClass, svg) => {
 
 const createSidebarItemList = (itemName, itemClass, itemListItems) => {
   let sidebarItemList = document.createElement('li');
-  sidebarItemList.classList.add('sidebar-item');
+  sidebarItemList.classList.add('sidebar-item-list');
   sidebarItemList.classList.add(itemClass);
 
   let linkContainer = document.createElement('a');
-  linkContainer.href = '#';
+  // linkContainer.href = '#';
 
   let sidebarItemName = document.createElement('p');
   sidebarItemName.textContent = itemName;
@@ -79,6 +82,63 @@ const createSidebarItemList = (itemName, itemClass, itemListItems) => {
   sidebarItemList.appendChild(linkContainer);
 
   return sidebarItemList;
+}
+
+function closeSidebarOnItemClick() {
+  let allSidebarItems = document.querySelectorAll('.sidebar-item');
+
+  allSidebarItems.forEach((sidebarItem) => {
+    sidebarItem.addEventListener('click', () => {
+      hideSidebarDialog();
+    });
+  })
+}
+
+function handleSidebarDialogOutsideClick() {
+  let dialog = document.querySelector('.sidebar-dialog');
+
+  let isMouseOutsideModal = false;
+
+  dialog.addEventListener("mousedown", (event) => {
+    const dialogDimensions = dialog.getBoundingClientRect();
+    if (
+      event.clientX < dialogDimensions.left ||
+      event.clientX > dialogDimensions.right ||
+      event.clientY < dialogDimensions.top ||
+      event.clientY > dialogDimensions.bottom
+    ) {
+      isMouseOutsideModal = true;
+    } else {
+      isMouseOutsideModal = false;
+    }
+  });
+
+  dialog.addEventListener("mouseup", (event) => {
+    const modalArea = dialog.getBoundingClientRect();
+    console.log(isMouseOutsideModal);
+    if (isMouseOutsideModal && 
+      (event.clientX < modalArea.left ||
+      event.clientX > modalArea.right ||
+      event.clientY < modalArea.top ||
+      event.clientY > modalArea.bottom)) {
+      isMouseOutsideModal = false;
+      hideSidebarDialog();
+    }
+  });
+  
+}
+
+function hideSidebarDialog() {
+  let sidebarDialog = document.querySelector('.sidebar-dialog');
+  sidebarDialog.classList.add('hide');
+  sidebarDialog.addEventListener('animationend', dialogAnimationEnd);
+}
+
+function dialogAnimationEnd() {
+  let dialog = document.querySelector('.sidebar-dialog');
+  dialog.close();
+  dialog.classList.remove('hide');
+  dialog.removeEventListener('animationend', dialogAnimationEnd);
 }
 
 export default createSidebar;

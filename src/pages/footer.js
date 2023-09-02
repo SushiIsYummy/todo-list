@@ -24,6 +24,9 @@ function createFooter() {
   footerContainer.appendChild(createAddTaskButton());
   footerContainer.appendChild(createAddTaskDialog());
   footerContainer.appendChild(createDiscardChangesDialog());
+
+  // footerBar.style.height = '400px';
+  footerContainer.appendChild(createFooterBarWithHamburgerMenu());
   content.appendChild(footerContainer);
 
   activateAddTaskButton();
@@ -34,6 +37,7 @@ function createFooter() {
   addEventListenerTaskTitle();
   // activateSendButton();
   addEventListenerSubmitForm();
+  activateHamburgerMenu();
 
   let priorityDropdown = document.querySelector('.priority-dropdown');
 
@@ -53,6 +57,32 @@ function createFooter() {
     }
   })
 
+}
+
+function createFooterBarWithHamburgerMenu() {
+  let footerBar = document.createElement('div');
+  footerBar.classList.add('footer-bar');
+
+  let hamburgerContainer = document.createElement('div');
+  hamburgerContainer.classList.add('hamburger-menu');
+
+  let span = document.createElement('span');
+  let span2 = span.cloneNode();
+  let span3 = span.cloneNode();
+
+  hamburgerContainer.append(span, span2, span3);
+  footerBar.appendChild(hamburgerContainer);
+
+  return footerBar;
+}
+
+function activateHamburgerMenu() {
+  let hamburgerMenu = document.querySelector('.hamburger-menu');
+  let sidebarDialog = document.querySelector('.sidebar-dialog');
+
+  hamburgerMenu.addEventListener('click', () => {
+    sidebarDialog.showModal();
+  })
 }
 
 export function getAddTaskDialogHeight() {
@@ -87,18 +117,6 @@ function addEventListenerSubmitForm() {
     if (sendButton.classList.contains('active')) {
       let task = createTask(addTaskFormElements);
       addTaskToLocalStorage(task);
-      // add task to local storage
-      // if (localStorage.getItem('taskList') === null) {
-      //   let taskList = [];
-      //   taskList.push(task);
-      //   localStorage.setItem('taskList', JSON.stringify(taskList));
-      // } else {
-      //   let taskList = JSON.parse(localStorage.getItem('taskList'));
-      //   taskList.push(task);
-      //   localStorage.setItem('taskList', JSON.stringify(taskList));
-      // }
-      // window.dispatchEvent(taskListChangeEvent);
-
       clearAddTaskForm();
       form.querySelector('.task-title').focus();
       sendButton.classList.remove('active');

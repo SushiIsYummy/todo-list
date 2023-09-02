@@ -1,4 +1,6 @@
 import scrollIntoView from 'scroll-into-view-if-needed'
+import { updateTaskList } from './tasks';
+import { addMarginBottom, addMarginTop } from './utils';
 
 function createInbox() {
   let content = document.querySelector('#content');
@@ -26,17 +28,20 @@ function createInbox() {
 
   content.appendChild(inboxContainer);
 
-  updateInboxListItems();
+  updateTaskList('inbox', inboxList);
   // let rootElement = document.querySelector(':root');
   // let cs = getComputedStyle(rootElement);
   // console.log(cs);
   // console.log(typeof cs.getPropertyValue('--priority-1-color'));
 
   // Listen for changes in the localStorage 'taskList' variable
-  window.addEventListener('taskListChange', updateInboxListItems);
-
-  inboxMainContent.style.marginTop = getComputedStyle(inboxHeader).height;
-  // inboxList.style.marginBottom = '1000px';
+  // window.addEventListener('taskListChange', updateInboxListItems);
+  window.addEventListener('taskAddedToLocalStorage', function() {
+    updateTaskList('inbox', inboxList);
+  });
+  
+  addMarginTop(inboxHeader, inboxMainContent);
+  addMarginBottom(inboxMainContent);
 }
 
 function updateInboxListItems() {
@@ -59,7 +64,7 @@ function updateInboxListItems() {
     scrollIntoView(inboxList.lastElementChild, {
       behavior: 'smooth', // You can customize the scroll behavior
       block: 'end', // Scroll to the bottom of the element
-      inline: 'end', // Scroll to the right edge of the element
+      // inline: 'end', // Scroll to the right edge of the element
     });
 
     // div.remove();
@@ -165,6 +170,7 @@ function createTaskItem(task) {
     hours = ((hours + 11) % 12 + 1);
 
     time.textContent = hours + ':' + minutes + suffix;
+
   }
 
   let dateAndTime = document.createElement('div');
