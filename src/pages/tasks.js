@@ -84,44 +84,46 @@ export function addTaskToLocalStorage(task) {
 
 const taskAddedInfo = (() => {
   let taskAddedOnPageWithTaskList = false;
-
+  let pageTaskWasAdded = '';
   const getTaskAddedOnPageWithTaskList = () => taskAddedOnPageWithTaskList;
   const setTaskAddedOnPageWithTaskList = (boolean) => taskAddedOnPageWithTaskList = boolean;
-
+  const getPageTaskWasAdded = () => pageTaskWasAdded;
+  // const setPageTaskWasAdded = 
   return { getTaskAddedOnPageWithTaskList, setTaskAddedOnPageWithTaskList };
 })();
 
-window.addEventListener('taskAddedToLocalStorage', () => {
-  if (onPageWithTaskList()) {
-    taskAddedInfo.setTaskAddedOnPageWithTaskList(true);
-  } else {
-    taskAddedInfo.setTaskAddedOnPageWithTaskList(false);
-  }
-});
+// window.addEventListener('taskAddedToLocalStorage', () => {
+//   if (onPageWithTaskList()) {
+//     taskAddedInfo.setTaskAddedOnPageWithTaskList(true);
+//   } else {
+//     taskAddedInfo.setTaskAddedOnPageWithTaskList(false);
+//   }
+// });
 
 function showAddedTaskIfHidden(taskListElement) {
-  if (taskAddedInfo.getTaskAddedOnPageWithTaskList()) {
-    moveTaskListUp(taskListElement);
+  // if (taskAddedInfo.getTaskAddedOnPageWithTaskList()) {
+    // if (taskListElement != null && taskListElement.childElementCount > 0) {
+      moveTaskListUp(taskListElement);
       
-    scrollIntoView(taskListElement.lastElementChild, {
-      behavior: 'smooth', // You can customize the scroll behavior
-      block: 'end', // Scroll to the bottom of the element
-      // inline: 'end', // Scroll to the right edge of the element
-    });
-  }
+      scrollIntoView(taskListElement.lastElementChild, {
+        behavior: 'smooth', // You can customize the scroll behavior
+        block: 'start', // Scroll to the bottom of the element
+      }); 
+    // }
 }
 
-function onPageWithTaskList() {
-  let inbox = document.querySelector('.inbox-container');
 
-  if (inbox != null) {
-    return true;
-  }
+// function onPageWithTaskList() {
+//   let inbox = document.querySelector('.inbox-container');
+//   let today = document.querySelector('.today-container');
+//   if (inbox != null || today != null) {
+//     return true;
+//   }
 
-  return false;
-}
+//   return false;
+// }
 
-export function updateTaskList(pageName, taskListElement) {
+export function updateTaskList(pageName, taskListElement, addedTask) {
   clearTaskList(taskListElement);
   let taskList = JSON.parse(localStorage.getItem('taskList'));
 
@@ -136,7 +138,9 @@ export function updateTaskList(pageName, taskListElement) {
     taskListElement.appendChild(taskItem);
   });
 
-  showAddedTaskIfHidden(taskListElement);
+  if (addedTask) {
+    showAddedTaskIfHidden(taskListElement);
+  }
 
   return taskList;
 }
@@ -147,13 +151,19 @@ function moveTaskListUp(taskListElement) {
 
   if (addTaskDialog.open) {
     let div = document.createElement('div');
+    let footerBarHeight = document.querySelector('.footer-bar').offsetHeight;
     div.classList.add('inbox-list-div');
-    div.style.height = `${addTaskDialog.offsetHeight}px`;
+    div.style.height = `${addTaskDialog.offsetHeight-footerBarHeight-1}px`;
+
+    let div2 = document.createElement('div');
+    div2.style.height = '1px';
 
     taskListElement.appendChild(div);
+    taskListElement.appendChild(div2);
 
     div.addEventListener('animationend', () => {
       div.remove();
+      div2.remove();
     })
   }
 }
@@ -200,23 +210,22 @@ function createTaskItem(task) {
 
     // convert the 'yyyy-mm-dd' format to different format
     // depending on the due date relative to current date
-    import('luxon').then(Luxon => {
-      let now = Luxon.DateTime.now();
-      let dueDate = Luxon.DateTime.fromISO(task.dueDate);
-      let dueDateFormatted = dueDate.toFormat('MMMM d');
+    let now = DateTime.now();
+    let dueDate = DateTime.fromISO(task.dueDate);
+    let dueDateFormatted = dueDate.toFormat('MMMM d');
+    
+    let relativeDate = dueDate.toRelative();
+    if (relativeDate.startsWith('in') && relativeDate.endsWith('hours')) {
+      dueDateFormatted = 'Tomorrow';
       
-      let relativeDate = dueDate.toRelative();
-      if (relativeDate.startsWith('in') && relativeDate.endsWith('hours')) {
-        dueDateFormatted = 'Tomorrow';
-        
-      } else if ( /^in [1-5] days$/.test(relativeDate)) {
-        dueDateFormatted = dueDate.weekdayLong;
-      }
-      
-      date.textContent = dueDateFormatted;
-      console.log(relativeDate);
+    } else if ( /^in [1-5] days$/.test(relativeDate)) {
+      dueDateFormatted = dueDate.weekdayLong;
+    }
+    
+    date.textContent = dueDateFormatted;
+    console.log(relativeDate);
 
-    })
+    
   }
 
   let time = document.createElement('p');
@@ -297,6 +306,7 @@ function filterTaskListByToday(taskList) {
 
   if (taskList !== null) {
     taskList = taskList.filter((task) => {
+      console.log('task.dueDate: ' + task.dueDate);
       if (task.dueDate !== '') {
         // let dueDateFormat = task.dueDate;
         let dueDate = DateTime.fromISO(task.dueDate);

@@ -1,8 +1,8 @@
-export function addMarginTop(headerElement, mainElement) {
-  mainElement.style.marginTop = getComputedStyle(headerElement).height;
+export function addMarginTopToTaskList(headerElement, taskListElement) {
+  taskListElement.style.marginTop = getComputedStyle(headerElement).height;
 }
 
-export function addMarginBottom(mainElement) {
+export function addMarginBottomToTaskList(taskListElement) {
   let footerBar = document.querySelector('.footer-bar');
-  mainElement.style.marginBottom = getComputedStyle(footerBar).height;
+  taskListElement.style.marginBottom = getComputedStyle(footerBar).height;
 }

@@ -1,6 +1,8 @@
+import { DateTime } from 'luxon';
 import sendButtonSVG from '../svgs/send.svg';
 import { moveInboxListDown } from './inbox';
 import { addTaskToLocalStorage, createTask } from './tasks';
+import flatpickr from 'flatpickr';
 
 let taskList = [];
 
@@ -31,32 +33,41 @@ function createFooter() {
 
   activateAddTaskButton();
   handleAddTaskDialogOutsideClick();
-  activateDueDateButton();
+  // activateDueDateButton();
+  // activateDueDateTime();
   addEventListenerPriorityDropdown();
   activateDiscardChangesButtons();
   addEventListenerTaskTitle();
   // activateSendButton();
   addEventListenerSubmitForm();
   activateHamburgerMenu();
+  customizeFlatpickrInputs();
+  adjustDateInputWidthToPlaceHolderWidth();
 
   let priorityDropdown = document.querySelector('.priority-dropdown');
 
   // let dialog = document.querySelector('.discard-changes-dialog');
-  let dialog = document.querySelector('.footer-add-task-dialog');
   // dialog.close();
-  // dialog.showModal();
 
   let form = document.querySelector('.footer-add-task-form');
   // console.log(taskList[0]);
 
   // store default values of form elements and the form elements themselves
   Array.from(form.elements).forEach(element => {
-    if (element.tagName !== 'BUTTON' && element.tagName !== 'OBJECT') {
+    if (element.tagName !== 'BUTTON' && element.tagName !== 'OBJECT' &&
+        !element.matches('.task-due-date.form-control') && 
+        !element.classList.contains('flatpickr-monthDropdown-months') && 
+        !element.classList.contains('numInput')) {
       addTaskFormElementDefaultValues.push(element.value);
       addTaskFormElements.push(element);
+      console.log(element);
     }
   })
 
+  console.log('addTaskFormElements: ' + addTaskFormElements);
+  // console.log('addTaskFormElementDefaultValues: ' + addTaskFormElementDefaultValues);
+  let dialog = document.querySelector('.footer-add-task-dialog');
+  // dialog.showModal();
 }
 
 function createFooterBarWithHamburgerMenu() {
@@ -174,20 +185,21 @@ function createAddTaskDialog() {
   description.placeholder = 'Description';
 
   let dueDate = document.createElement('input');
-  dueDate.type = 'date';
+  dueDate.type = 'text';
+  dueDate.placeholder = 'Select Date...';
   dueDate.classList.add('task-due-date');
-  dueDate.tabIndex = -1;
+  dueDate.tabIndex = 1;
   
-  let dueDateButton = document.createElement('button');
-  dueDateButton.classList.add('task-due-date-button');
-  dueDateButton.type = 'button';
+  // let dueDateButton = document.createElement('button');
+  // dueDateButton.classList.add('task-due-date-button');
+  // dueDateButton.type = 'button';
   
-  let dueDateButtonDate = document.createElement('p');
-  dueDateButtonDate.classList.add('task-due-date-button-para');
-  dueDateButtonDate.textContent = 'No Date';
+  // let dueDateButtonDate = document.createElement('p');
+  // dueDateButtonDate.classList.add('task-due-date-button-para');
+  // dueDateButtonDate.textContent = 'No Date';
 
-  dueDateButton.appendChild(dueDate);
-  dueDateButton.appendChild(dueDateButtonDate);
+  // dueDateButton.appendChild(dueDate);
+  // dueDateButton.appendChild(dueDateButtonDate);
 
   let dueDateTime = document.createElement('input');
   dueDateTime.classList.add('task-due-date-time');
@@ -247,7 +259,7 @@ function createAddTaskDialog() {
   
   sendButton.appendChild(buttonSVG);
 
-  buttons.appendChild(dueDateButton);
+  buttons.appendChild(dueDate);
   buttons.appendChild(dueDateTime);
   buttons.appendChild(priorityDropdown);
 
@@ -255,6 +267,73 @@ function createAddTaskDialog() {
   dialog.appendChild(form);
 
   return dialog;
+}
+
+function customizeFlatpickrInputs() {
+  const datepicker = flatpickr('.task-due-date', {
+  altInput: true,
+  altFormat: 'F j, Y',
+  dateFormat: 'Y-m-d',
+  // Other options go here
+    onOpen: [
+      function() {
+        let calendar = document.querySelector('.flatpickr-calendar');
+        let calendarHeight = getComputedStyle(calendar).height;
+        let dialog = document.querySelector('.footer-add-task-dialog');
+        let bottomRow = document.querySelector('.bottom-row');
+        let bottomRowHeight = getComputedStyle(bottomRow).height
+        console.log(getAddTaskDialogHeight())
+        console.log(parseInt(calendarHeight));
+        dialog.style.top = `calc(100% - ${getAddTaskDialogHeight()}px - ${calendarHeight} + ${bottomRowHeight})`;
+        
+        // height could be anything
+        dialog.style.height = `calc(100% - ${getAddTaskDialogHeight()}px - ${calendarHeight} + ${bottomRowHeight})`;
+        // console.log(calendarHeight);
+      }
+    ],
+    onClose: [
+      function() {
+        let dialog = document.querySelector('.footer-add-task-dialog');
+        dialog.style.height = '';
+        dialog.style.top =  `calc(100% - ${getAddTaskDialogHeight()}px)`;
+      }
+    ],
+    static: true
+
+  });
+
+  let dueDate = document.querySelector('.task-due-date');
+  datepicker.config.onOpen.push(() => {
+        // Set the altInput value to 'Hello'
+        // console.log(datepickerElement.value);
+        console.log('opened!');
+        dueDate.focus();
+  });
+
+  dueDate.addEventListener('change', () => {
+    adjustDateInputWidthToContentWidth();
+  })
+
+  
+}
+
+function adjustDateInputWidthToContentWidth() {
+  let dueDateAltInput = document.querySelector('.task-due-date.form-control');
+  let dueDatePaddingLeft = parseInt(getComputedStyle(dueDateAltInput).paddingLeft);
+  // console.log(dueDatePaddingLeft);
+  let dueDateSpan = document.createElement('span');
+  dueDateSpan.style.visibility = 'hidden';
+  document.body.appendChild(dueDateSpan);
+  dueDateSpan.textContent = dueDateAltInput.value;
+  console.log('dueDate value: ' + dueDateAltInput.value);
+  console.log(dueDateSpan.textContent);
+  // dueDateSpan.textContent = datepicker.value;
+
+  let contentWidth = dueDateSpan.offsetWidth;
+  dueDateAltInput.style.width = `${contentWidth + dueDatePaddingLeft}px`;
+  // dueDate.style.width = `100px`;
+  console.log('content width: ' + contentWidth)
+  document.body.removeChild(dueDateSpan);
 }
 
 // the circle button with '+' sign
@@ -283,6 +362,20 @@ function activateAddTaskButton() {
   })
 }
 
+function activateDueDateTime() {
+  let dueDateTime = document.querySelector('.task-due-date-time');
+  let dueDate = document.querySelector('.task-due-date');
+  dueDateTime.addEventListener('change', () => {
+    if (dueDate.value === '') {
+      dueDate.value = DateTime.now().toFormat('yyyy-MM-dd');
+
+      // Manually trigger the the change for dueDate
+      const changeEvent = new Event('change', { bubbles: true });
+      dueDate.dispatchEvent(changeEvent);
+    }
+  })
+}
+
 function activateDueDateButton() {
   let dueDateButton = document.querySelector('.task-due-date-button');
   let dueDate = document.querySelector('.task-due-date');
@@ -294,14 +387,12 @@ function activateDueDateButton() {
 
   dueDate.addEventListener('change', () => {
     if (dueDate.value !== '') {
-      
-      import('luxon').then((Luxon) => {
+
         const calendarInput = document.querySelector('.task-due-date');
         console.log('calendar input: ' + calendarInput.value);
-        const selectedDate = Luxon.DateTime.fromISO(calendarInput.value);
+        const selectedDate = DateTime.fromISO(calendarInput.value);
 
-        // console.log("now: " + now);
-        let dayNumber = selectedDate.toFormat('dd');
+        let dayNumber = selectedDate.toFormat('d');
         const formattedDay = selectedDate.toFormat('cccc'); // Day of the week
         const formattedYear = selectedDate.toFormat('yyyy'); // Year
         const formattedMonth = selectedDate.toFormat('LLLL'); // Month
@@ -310,19 +401,15 @@ function activateDueDateButton() {
         console.log('Selected Year:', formattedYear);
         console.log('Selected Month:', formattedMonth);
         
-        const currentYear = Luxon.DateTime.now().toFormat('yyyy');
+        const currentYear = DateTime.now().toFormat('yyyy');
 
-        if (dayNumber.slice(0,1) === '0') {
-          dayNumber = dayNumber.slice(1);
-          console.log('day number: ' + dayNumber);
-        }
-
-        if (formattedYear !== currentYear) {
+        if (selectedDate.toRelative().endsWith('hours ago')) {
+          dueDateButtonPara.textContent = 'Today';
+        } else if (formattedYear !== currentYear) {
           dueDateButtonPara.textContent = `${formattedMonth.slice(0,3)} ${dayNumber} ${formattedYear}`
         } else {
           dueDateButtonPara.textContent = `${formattedMonth.slice(0,3)} ${dayNumber}`
         }
-      });
     } else {
       // Clear button is clicked
       const calendarInput = document.querySelector('.task-due-date');
@@ -402,6 +489,21 @@ function dialogAnimationEnd() {
   // clearAddTaskForm();
 }
 
+function adjustDateInputWidthToPlaceHolderWidth() {
+  let dueDateAltInput = document.querySelector('.task-due-date.form-control');
+  let dueDateSpan = document.createElement('span');
+  let dueDatePlaceholder = dueDateAltInput.placeholder;
+
+  dueDateSpan.style.visibility = 'hidden';
+  document.body.appendChild(dueDateSpan);
+  dueDateSpan.textContent = dueDatePlaceholder;
+
+  let dueDatePaddingLeft = parseInt(getComputedStyle(dueDateAltInput).paddingLeft);
+  let contentWidth = dueDateSpan.offsetWidth;
+
+  dueDateAltInput.style.width = `${contentWidth + dueDatePaddingLeft}px`;
+  document.body.removeChild(dueDateSpan);
+}
 
 function addEventListenerPriorityDropdown() {
   let priorityDropdown = document.querySelector('.priority-dropdown');
@@ -459,8 +561,15 @@ function clearAddTaskForm() {
   let form = document.querySelector('.footer-add-task-form');
   form.reset();
 
-  let dueDateButtonPara = document.querySelector('.task-due-date-button-para');
-  dueDateButtonPara.textContent = 'No Date';
+  let dueDateFlatpickr = document.querySelector('.task-due-date')._flatpickr;
+
+  // empty the flatpickr alt input
+  let dueDateFlatpickrInput = document.querySelector('.task-due-date.flatpickr-input');
+  dueDateFlatpickrInput.value = '';
+
+  adjustDateInputWidthToPlaceHolderWidth();
+  // let dueDateButtonPara = document.querySelector('.task-due-date-button-para');
+  // dueDateButtonPara.textContent = 'No Date';
 
   let priorityDropdown = document.querySelector('.priority-dropdown');
   priorityDropdown.classList.forEach(className => {

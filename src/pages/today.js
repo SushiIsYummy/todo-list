@@ -1,4 +1,5 @@
 import { updateTaskList } from "./tasks";
+import { addMarginBottomToTaskList, addMarginTopToTaskList } from "./utils";
 
 function createToday() {
   let content = document.querySelector('#content');
@@ -25,11 +26,14 @@ function createToday() {
   todayContainer.appendChild(todayMainContent);
     
   content.appendChild(todayContainer);
-  updateTaskList('today', todayList);
+  updateTaskList('today', todayList, false);
     
-  window.addEventListener('taskListChange', function() {
-    updateTaskList('today', todayList);
+  window.addEventListener('taskAddedToLocalStorage', function() {
+    updateTaskList('today', todayList, true);
   });
+
+  addMarginTopToTaskList(todayHeader, todayList);
+  addMarginBottomToTaskList(todayList);
 }
 
 export default createToday;

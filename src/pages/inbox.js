@@ -1,6 +1,6 @@
 import scrollIntoView from 'scroll-into-view-if-needed'
 import { updateTaskList } from './tasks';
-import { addMarginBottom, addMarginTop } from './utils';
+import { addMarginBottomToTaskList, addMarginTopToTaskList } from './utils';
 
 function createInbox() {
   let content = document.querySelector('#content');
@@ -28,7 +28,7 @@ function createInbox() {
 
   content.appendChild(inboxContainer);
 
-  updateTaskList('inbox', inboxList);
+  updateTaskList('inbox', inboxList, false);
   // let rootElement = document.querySelector(':root');
   // let cs = getComputedStyle(rootElement);
   // console.log(cs);
@@ -37,11 +37,11 @@ function createInbox() {
   // Listen for changes in the localStorage 'taskList' variable
   // window.addEventListener('taskListChange', updateInboxListItems);
   window.addEventListener('taskAddedToLocalStorage', function() {
-    updateTaskList('inbox', inboxList);
+    updateTaskList('inbox', inboxList, true);
   });
   
-  addMarginTop(inboxHeader, inboxMainContent);
-  addMarginBottom(inboxMainContent);
+  addMarginTopToTaskList(inboxHeader, inboxList);
+  addMarginBottomToTaskList(inboxList);
 }
 
 function updateInboxListItems() {
