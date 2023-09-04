@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import sendButtonSVG from '../svgs/send.svg';
+import calendarSVG from '../svgs/calendar-outline.svg';
 import { moveInboxListDown } from './inbox';
 import { addTaskToLocalStorage, createTask } from './tasks';
 import flatpickr from 'flatpickr';
@@ -34,14 +35,15 @@ function createFooter() {
   activateAddTaskButton();
   handleAddTaskDialogOutsideClick();
   // activateDueDateButton();
-  // activateDueDateTime();
+  activateDueDateTime();
   addEventListenerPriorityDropdown();
   activateDiscardChangesButtons();
   addEventListenerTaskTitle();
   // activateSendButton();
   addEventListenerSubmitForm();
   activateHamburgerMenu();
-  customizeFlatpickrInputs();
+  customizeFlatpickrDateInput();
+  // customizeFlatpickrTimeInput();
   adjustDateInputWidthToPlaceHolderWidth();
 
   let priorityDropdown = document.querySelector('.priority-dropdown');
@@ -55,6 +57,7 @@ function createFooter() {
   // store default values of form elements and the form elements themselves
   Array.from(form.elements).forEach(element => {
     if (element.tagName !== 'BUTTON' && element.tagName !== 'OBJECT' &&
+        element.tagName !== 'IFRAME' &&
         !element.matches('.task-due-date.form-control') && 
         !element.classList.contains('flatpickr-monthDropdown-months') && 
         !element.classList.contains('numInput')) {
@@ -190,20 +193,32 @@ function createAddTaskDialog() {
   dueDate.classList.add('task-due-date');
   dueDate.tabIndex = 1;
   
-  // let dueDateButton = document.createElement('button');
-  // dueDateButton.classList.add('task-due-date-button');
-  // dueDateButton.type = 'button';
+  let dueDateContainer = document.createElement('div');
+  dueDateContainer.classList.add('task-due-date-container');
+  // dueDateContainer.type = 'button';
   
-  // let dueDateButtonDate = document.createElement('p');
-  // dueDateButtonDate.classList.add('task-due-date-button-para');
-  // dueDateButtonDate.textContent = 'No Date';
-
-  // dueDateButton.appendChild(dueDate);
-  // dueDateButton.appendChild(dueDateButtonDate);
+  let dueDateSVG = document.createElement('iframe');
+  dueDateSVG.setAttribute('src', calendarSVG);
+  dueDateSVG.classList.add('calendar-svg');
 
   let dueDateTime = document.createElement('input');
   dueDateTime.classList.add('task-due-date-time');
   dueDateTime.type = 'time';
+
+  // let customTimePicker = document.createElement('div');
+  // customTimePicker.classList.add('custom-time-picker');
+  // customTimePicker.style.display = 'none';
+
+  // let customTime = document.createElement('input');
+  // customTime.classList.add('custom-time');
+
+  // let confirmButton = document.createElement('button');
+  // confirmButton.classList.add('confirm-button');
+  // confirmButton.textContent = '✔️';
+
+  // customTimePicker.appendChild(customTime);
+  // customTimePicker.appendChild(confirmButton);
+  // document.body.appendChild(customTimePicker);
 
   let buttons = document.createElement('div');
   buttons.classList.add('date-and-priority-buttons');
@@ -254,12 +269,16 @@ function createAddTaskDialog() {
     taskLocationDropdown.appendChild(option);
   }
 
+  dueDateContainer.appendChild(dueDateSVG);
+  dueDateContainer.appendChild(dueDate);
+
   bottomRow.appendChild(taskLocationDropdown);
   bottomRow.appendChild(sendButton);
   
   sendButton.appendChild(buttonSVG);
 
-  buttons.appendChild(dueDate);
+  // buttons.appendChild(dueDate);
+  buttons.appendChild(dueDateContainer);
   buttons.appendChild(dueDateTime);
   buttons.appendChild(priorityDropdown);
 
@@ -269,12 +288,38 @@ function createAddTaskDialog() {
   return dialog;
 }
 
-function customizeFlatpickrInputs() {
+// function customizeFlatpickrTimeInput() {
+//   console.log(document.querySelector('custom-time-picker'));
+//   const timepicker = flatpickr('.task-due-date-time', {
+//     enableTime: true,
+//     noCalendar: true,
+//     dateFormat: "H:i", // Use a 24-hour time format (e.g., "14:30")
+//     // time_24hr: true, // Use a 24-hour time format
+//     static: true,
+//     appendTo: document.querySelector('.custom-time-picker'),
+//   })
+// }
+
+function customizeFlatpickrDateInput() {
   const datepicker = flatpickr('.task-due-date', {
-  altInput: true,
-  altFormat: 'F j, Y',
-  dateFormat: 'Y-m-d',
-  // Other options go here
+    minDate: "today", // Starts from today
+    maxDate: "infinite", // Continues indefinitely
+    altInput: true,
+    // altFormat: 'F j, Y',
+    // dateFormat: 'Y-m-d',
+    position: function () {
+      let dueDateContainer = document.querySelector('.task-due-date-container');
+      let dueDateContainerCS = getComputedStyle(dueDateContainer);
+      let dueDateAltInput = document.querySelector('.task-due-date.form-control');
+      let shiftLeft = dueDateContainer.offsetWidth - dueDateAltInput.offsetWidth
+                      - parseInt(dueDateContainerCS.paddingRight);
+      let shiftDown = dueDateContainerCS.paddingBottom;
+      // console.log('padding right: ' + getComputedStyle(dueDateContainer).paddingRight);
+      let calendar = document.querySelector('.flatpickr-calendar');
+      calendar.style.left = `-${shiftLeft}px`;
+      calendar.style.top = `${shiftDown}px`;
+    },
+    // Other options go here
     onOpen: [
       function() {
         let calendar = document.querySelector('.flatpickr-calendar');
@@ -282,60 +327,108 @@ function customizeFlatpickrInputs() {
         let dialog = document.querySelector('.footer-add-task-dialog');
         let bottomRow = document.querySelector('.bottom-row');
         let bottomRowHeight = getComputedStyle(bottomRow).height
-        console.log(getAddTaskDialogHeight())
-        console.log(parseInt(calendarHeight));
+        // console.log(getAddTaskDialogHeight())
+        // console.log(parseInt(calendarHeight));
         dialog.style.top = `calc(100% - ${getAddTaskDialogHeight()}px - ${calendarHeight} + ${bottomRowHeight})`;
         
-        // height could be anything
-        dialog.style.height = `calc(100% - ${getAddTaskDialogHeight()}px - ${calendarHeight} + ${bottomRowHeight})`;
-        // console.log(calendarHeight);
+        // changeCalendarIconColor('green');
+
+        // console.log('top: ' + getComputedStyle(dialog).top);
+        if (parseInt(getComputedStyle(dialog).top) < 0) {
+          dialog.style.top = '';
+          // dialog.style.bottom = '';
+        }
+        // console.log('top: ' + getComputedStyle(dialog).top);
+
+        
+        dialog.style.height = `10000px`;
+
       }
     ],
     onClose: [
       function() {
         let dialog = document.querySelector('.footer-add-task-dialog');
+        let altInput = document.querySelector('.task-due-date.form-control')
         dialog.style.height = '';
         dialog.style.top =  `calc(100% - ${getAddTaskDialogHeight()}px)`;
+
+        formatDateInputText();
+        // altInput.value = 'APIDJAPODJPOJZZZZAPSDIJSAPODJ';
+        // changeCalendarIconColor('red');
       }
     ],
     static: true
 
-  });
+});
 
   let dueDate = document.querySelector('.task-due-date');
-  datepicker.config.onOpen.push(() => {
+  // datepicker.config.onOpen.push(() => {
         // Set the altInput value to 'Hello'
         // console.log(datepickerElement.value);
-        console.log('opened!');
-        dueDate.focus();
-  });
+        // console.log('opened!');
+        // dueDate.focus();
+  // });
 
   dueDate.addEventListener('change', () => {
+    if (dueDate.value === '') {
+      setDateToToday();
+      formatDateInputText();
+    }
     adjustDateInputWidthToContentWidth();
+  })
+
+  let dueDateContainer = document.querySelector('.task-due-date-container');
+  dueDateContainer.addEventListener('click', function () {
+    datepicker.open();
   })
 
   
 }
 
+function setDateToToday() {
+  let dueDate = document.querySelector('.task-due-date');
+
+  let now = DateTime.now();
+  let todayDate = now.toFormat('YYYY-MM-DD');
+  console.log(todayDate);
+  dueDate.value = DateTime.now().toFormat('yyyy-MM-dd');
+}
+
 function adjustDateInputWidthToContentWidth() {
   let dueDateAltInput = document.querySelector('.task-due-date.form-control');
-  let dueDatePaddingLeft = parseInt(getComputedStyle(dueDateAltInput).paddingLeft);
-  // console.log(dueDatePaddingLeft);
   let dueDateSpan = document.createElement('span');
   dueDateSpan.style.visibility = 'hidden';
+
   document.body.appendChild(dueDateSpan);
   dueDateSpan.textContent = dueDateAltInput.value;
-  console.log('dueDate value: ' + dueDateAltInput.value);
-  console.log(dueDateSpan.textContent);
-  // dueDateSpan.textContent = datepicker.value;
 
   let contentWidth = dueDateSpan.offsetWidth;
-  dueDateAltInput.style.width = `${contentWidth + dueDatePaddingLeft}px`;
-  // dueDate.style.width = `100px`;
-  console.log('content width: ' + contentWidth)
+  // console.log('client width: ' + contentWidth);
+  if (dueDateAltInput.value === '') {
+    let dueDatePlaceholder = dueDateAltInput.placeholder;
+    dueDateSpan.textContent = dueDatePlaceholder;
+    contentWidth = dueDateSpan.offsetWidth;
+  }
+
+  dueDateAltInput.style.width = `${contentWidth}px`;
   document.body.removeChild(dueDateSpan);
 }
 
+// note: only usable when the add task dialog is opened since the
+// calendar svg is in the dialog and it is not loaded until it is
+// opened.
+function setCalendarIconColor(color) {
+  const svgIframe = document.querySelector('.calendar-svg');
+  const svgIframeWindow = svgIframe.contentWindow;
+  const svgIframeDocument = svgIframeWindow.document;
+  const pathElement = svgIframeDocument.querySelector('svg');
+  pathElement.style.fill = color;
+}
+
+function changeDateInputTextColor(color) {
+  let dateInput = document.querySelector('.task-due-date.form-control');
+  dateInput.style.color = color;
+}
 // the circle button with '+' sign
 function createAddTaskButton() {
   let button = document.createElement('button');
@@ -356,70 +449,86 @@ function activateAddTaskButton() {
     let dialog = document.querySelector('.footer-add-task-dialog');
 
     dialog.showModal();
-
+    setCalendarIconColor('#757575');
     // set add task dialog at the bottom of page
-    dialog.style.top =  `calc(100% - ${getAddTaskDialogHeight()}px)`;
+    // dialog.style.top =  `calc(100% - ${getAddTaskDialogHeight()}px)`;
+    // dialog.style.bottom = 0;
   })
 }
 
 function activateDueDateTime() {
   let dueDateTime = document.querySelector('.task-due-date-time');
   let dueDate = document.querySelector('.task-due-date');
+
+  // A task cannot have a time and no date
+  // change date to Today if time is chosen and date is empty
   dueDateTime.addEventListener('change', () => {
     if (dueDate.value === '') {
-      dueDate.value = DateTime.now().toFormat('yyyy-MM-dd');
+      // dueDate.value = DateTime.now().toFormat('yyyy-MM-dd');
 
       // Manually trigger the the change for dueDate
       const changeEvent = new Event('change', { bubbles: true });
       dueDate.dispatchEvent(changeEvent);
+
+      console.log('dispatched event!');
     }
   })
 }
 
-function activateDueDateButton() {
-  let dueDateButton = document.querySelector('.task-due-date-button');
+function formatDateInputText() {
   let dueDate = document.querySelector('.task-due-date');
-  let dueDateButtonPara = document.querySelector('.task-due-date-button-para');
 
-  dueDateButton.addEventListener('click', () => {
-    dueDate.showPicker();
-  });
-
-  dueDate.addEventListener('change', () => {
-    if (dueDate.value !== '') {
-
-        const calendarInput = document.querySelector('.task-due-date');
-        console.log('calendar input: ' + calendarInput.value);
-        const selectedDate = DateTime.fromISO(calendarInput.value);
-
-        let dayNumber = selectedDate.toFormat('d');
-        const formattedDay = selectedDate.toFormat('cccc'); // Day of the week
-        const formattedYear = selectedDate.toFormat('yyyy'); // Year
-        const formattedMonth = selectedDate.toFormat('LLLL'); // Month
-        
-        console.log('Selected Day:', formattedDay);
-        console.log('Selected Year:', formattedYear);
-        console.log('Selected Month:', formattedMonth);
-        
-        const currentYear = DateTime.now().toFormat('yyyy');
-
-        if (selectedDate.toRelative().endsWith('hours ago')) {
-          dueDateButtonPara.textContent = 'Today';
-        } else if (formattedYear !== currentYear) {
-          dueDateButtonPara.textContent = `${formattedMonth.slice(0,3)} ${dayNumber} ${formattedYear}`
-        } else {
-          dueDateButtonPara.textContent = `${formattedMonth.slice(0,3)} ${dayNumber}`
-        }
-    } else {
-      // Clear button is clicked
+  if (dueDate.value !== '') {
+      let altInput = document.querySelector('.task-due-date.form-control');
       const calendarInput = document.querySelector('.task-due-date');
+      console.log('calendar input: ' + calendarInput.value);
+      const selectedDate = DateTime.fromISO(calendarInput.value);
 
-      dueDateButtonPara.textContent = 'No Date';
-      console.log(calendarInput.value);
-      console.log('clear');
-    }
+      let dayNumber = selectedDate.toFormat('d');
+      const formattedDay = selectedDate.toFormat('cccc'); // Day of the week
+      const formattedYear = selectedDate.toFormat('yyyy'); // Year
+      const formattedMonth = selectedDate.toFormat('LLLL'); // Month
+      
+      console.log('Selected Day:', formattedDay);
+      console.log('Selected Year:', formattedYear);
+      console.log('Selected Month:', formattedMonth);
+      
+      const currentYear = DateTime.now().toFormat('yyyy');
 
-  })
+      const relativeDate = selectedDate.toRelative();
+      console.log(selectedDate.toRelative());
+
+      if (relativeDate.endsWith('hours ago')) {
+        altInput.value = 'Today';
+        setCalendarIconColor('green');
+        changeDateInputTextColor('green');
+      } else if (/^in \d+ hours$/.test(relativeDate)) {
+        altInput.value = 'Tomorrow';
+        setCalendarIconColor('#CC6600');
+        changeDateInputTextColor('#CC6600');
+      } else if (/^in [1-5] day(s)?$/.test(relativeDate)) {
+        altInput.value = formattedDay;
+        setCalendarIconColor('purple');
+        changeDateInputTextColor('purple');
+      } else if (formattedYear > currentYear){
+        altInput.value = `${formattedMonth.slice(0,3)} ${dayNumber} ${formattedYear}`
+        setCalendarIconColor('#757575');
+        changeDateInputTextColor('#757575');
+      } else {
+        altInput.value = `${formattedMonth.slice(0,3)} ${dayNumber}`;
+        setCalendarIconColor('#757575');
+        changeDateInputTextColor('#757575');
+      }
+  } else {
+    // Clear button is clicked
+    const calendarInput = document.querySelector('.task-due-date');
+
+    // dueDateButtonPara.textContent = 'No Date';
+    console.log(calendarInput.value);
+    console.log('clear');
+  }
+
+  // })
 }
 
 function handleAddTaskDialogOutsideClick() {
@@ -444,7 +553,7 @@ function handleAddTaskDialogOutsideClick() {
 
   dialog.addEventListener("mouseup", (event) => {
     const modalArea = dialog.getBoundingClientRect();
-    console.log(isMouseOutsideModal);
+    // console.log(isMouseOutsideModal);
     if (isMouseOutsideModal && 
       (event.clientX < modalArea.left ||
       event.clientX > modalArea.right ||

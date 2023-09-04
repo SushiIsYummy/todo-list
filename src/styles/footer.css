@@ -169,12 +169,35 @@
   color: inherit; 
 } */
 
+.calendar-svg {
+  width: 20px;
+  height: 20px;
+  /* cursor: inherit; */
+  border: none;
+  pointer-events: none;
+}
+
+.task-due-date-container {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  
+  padding: 5px 10px;
+  background-color: rgb(197, 197, 197);
+  border-radius: 7px;
+}
+
+.task-due-date-container:hover {
+  cursor: pointer;
+}
+
 .task-due-date {
   background-color: rgb(197, 197, 197);
-  padding: 5px;
+  /* padding: 5px; */
   height: 100%;
   border: none;
   /* min-width: 100px; */
+  outline: none;
 }
 
 .task-due-date:hover {
@@ -240,6 +263,7 @@ input[type="date"]::-webkit-datetime-edit {
   border: none;
   padding: 5px 10px;
   
+  display: flex;
 }
 
 .send-button.active {
@@ -261,8 +285,12 @@ input[type="date"]::-webkit-datetime-edit {
     width: 100% isn't really 100% */
     max-width: 100% !important;
     width: 100%;  
+    /* position: fixed; */
+    inset-block-start: auto; /* Allow the element to be positioned based on normal flow */
+    inset-block-end: 0px; /* Keep the bottom edge aligned with the bottom of the containing block */
+    /* bottom: 0; */
     /* height: 100%; */
-    z-index: 5;
+    /* z-index: 5; */
   /* top is calculated and set in footer.js */
   border: 1px solid gray;
   border-radius: 10px 10px 0 0;
@@ -313,7 +341,34 @@ input[type="date"]::-webkit-datetime-edit {
   /* transform: translateY(-10px); Adjust this value to fine-tune the position */
 }
 
-.flatpickr-calendar { z-index: 999999; }
+/* .flatpickr-calendar { z-index: 999999; }
 .flatpickr-calendar.open {
   z-index: 10000;
+} */
+
+.flatpickr-calendar.hasTime {
+  width: 200px;
+}
+
+.task-due-date.form-control {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 1rem;
+}
+
+.task-due-date-time.flatpickr-input {
+  width: 100px;
+}
+
+.custom-time-picker {
+  position: relative;
+}
+
+.custom-time-picker .confirm-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  cursor: pointer;
 }

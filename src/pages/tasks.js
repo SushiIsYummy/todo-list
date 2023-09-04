@@ -306,7 +306,7 @@ function filterTaskListByToday(taskList) {
 
   if (taskList !== null) {
     taskList = taskList.filter((task) => {
-      console.log('task.dueDate: ' + task.dueDate);
+      // console.log('task.dueDate: ' + task.dueDate);
       if (task.dueDate !== '') {
         // let dueDateFormat = task.dueDate;
         let dueDate = DateTime.fromISO(task.dueDate);

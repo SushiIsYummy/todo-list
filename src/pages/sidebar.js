@@ -48,9 +48,11 @@ const createSidebarItem = (itemName, itemClass, svg) => {
   let sidebarItemName = document.createElement('p');
   sidebarItemName.textContent = itemName;
 
-  let sidebarItemSVG = document.createElement('object');
-  sidebarItemSVG.setAttribute('data', svg);
-  sidebarItemSVG.setAttribute('type', 'image/svg+xml');
+  let sidebarItemSVG = document.createElement('iframe');
+  sidebarItemSVG.classList.add(`${itemClass}-svg`);
+  sidebarItemSVG.setAttribute('src', svg);
+
+  setSidebarSVGColors(sidebarItemSVG);
 
   linkContainer.appendChild(sidebarItemSVG);
   linkContainer.appendChild(sidebarItemName);
@@ -59,6 +61,24 @@ const createSidebarItem = (itemName, itemClass, svg) => {
   return sidebarItem;
 }
 
+function setSidebarSVGColors(sidebarItemSVG) {
+  sidebarItemSVG.addEventListener('load', () => {
+    const svgIframeWindow = sidebarItemSVG.contentWindow;
+    const svgIframeDocument = svgIframeWindow.document;
+
+    // Access and manipulate SVG elements within the iframe as needed
+    const pathElement = svgIframeDocument.querySelector('svg');
+    // pathElement.style.fill = "red"; // Change the fill color to blue
+
+    if (sidebarItemSVG.classList.contains('inbox-svg')) {
+      pathElement.style.fill = 'blue';
+    } else if (sidebarItemSVG.classList.contains('today-svg')) {
+      pathElement.style.fill = 'green'
+    } else if (sidebarItemSVG.classList.contains('upcoming-svg')) {
+      pathElement.style.fill = 'purple'
+    }
+  })
+}
 const createSidebarItemList = (itemName, itemClass, itemListItems) => {
   let sidebarItemList = document.createElement('li');
   sidebarItemList.classList.add('sidebar-item-list');
