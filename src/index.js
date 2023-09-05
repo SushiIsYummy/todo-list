@@ -1,5 +1,5 @@
 import createSidebar from './pages/sidebar';
-import createFooter from './pages/footer';
+import createFooter from './pages/footer/footerBuilder';
 import createInbox from './pages/inbox';
 
 import './styles/global.css';

@@ -147,7 +147,7 @@ export function updateTaskList(pageName, taskListElement, addedTask) {
 
 function moveTaskListUp(taskListElement) {
   let addTaskDialog = document.querySelector('.footer-add-task-dialog');
-  console.log('add task dialog open: ' + addTaskDialog.open);
+  // console.log('add task dialog open: ' + addTaskDialog.open);
 
   if (addTaskDialog.open) {
     let div = document.createElement('div');
@@ -215,6 +215,7 @@ function createTaskItem(task) {
     let dueDateFormatted = dueDate.toFormat('MMMM d');
     
     let relativeDate = dueDate.toRelative();
+    // if (relativeDate.endsWith())
     if (relativeDate.startsWith('in') && relativeDate.endsWith('hours')) {
       dueDateFormatted = 'Tomorrow';
       
@@ -223,7 +224,7 @@ function createTaskItem(task) {
     }
     
     date.textContent = dueDateFormatted;
-    console.log(relativeDate);
+    // console.log(relativeDate);
 
     
   }
@@ -316,20 +317,20 @@ function filterTaskListByToday(taskList) {
         // console.log(now);
         // if (now.compare(dueDate)) {
           // console.log(now > (dueDate));
-        if (relativeDate.endsWith('ago')) {
-          console.log('bye')
+          // console.log('relative date today: ' + relativeDate);
+
+        if (relativeDate.startsWith('in') && relativeDate.endsWith('hours')) {
           return true;
         }
 
         return false;
-        console.log('byee')
       }
   });
   } else {
     taskList = [];
   }
   // })
-  console.log('after: ' + taskList);
+  // console.log('after: ' + taskList);
 
   return taskList;
 }

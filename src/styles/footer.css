@@ -355,8 +355,12 @@ input[type="date"]::-webkit-datetime-edit {
   font-size: 1rem;
 }
 
-.task-due-date-time.flatpickr-input {
-  width: 100px;
+.task-due-date.form-control::placeholder {
+  color: #646464;
+}
+
+.task-due-date-time {
+  /* color: red; */
 }
 
 .custom-time-picker {
