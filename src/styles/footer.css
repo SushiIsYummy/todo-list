@@ -92,7 +92,9 @@
   border-radius: 5px;
 }
 
-.discard-changes-dialog:not([open]) {
+.discard-changes-dialog:not([open]),
+.task-date-time-dialog:not([open]), 
+.date-required-dialog:not([open]) {
   display: none;
 }
 
@@ -139,9 +141,11 @@
 .date-and-priority-buttons {
   display: flex;
   gap: 10px;
-  
+  flex-wrap: wrap;
   border-bottom: 1px solid rgb(212, 209, 209);
   padding: 10px;
+  /* overflow-x: auto; */
+
 }
 
 
@@ -177,7 +181,7 @@
   pointer-events: none;
 }
 
-.task-due-date-container {
+.task-due-date-button-container {
   display: flex;
   align-items: center;
   gap: 3px;
@@ -187,7 +191,7 @@
   border-radius: 7px;
 }
 
-.task-due-date-container:hover {
+.task-due-date-button-container:hover {
   cursor: pointer;
 }
 
@@ -204,7 +208,17 @@
   cursor: pointer;
 }
 
-.task-due-date-button {
+.task-due-date-clear-button {
+  border: none;
+  padding: 7px 10px;
+  margin-bottom: 10px;
+  /* background-color: rgb(197, 197, 197); */
+  /* color: rgb(100, 100, 100); */
+  /* margin-left: 5px; */
+  cursor: pointer;
+}
+
+/* .task-due-date-button {
   display: flex;
   align-items: center;
   gap: 2px;
@@ -214,10 +228,9 @@
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
-  /* justify-content: flex-end; */
-}
+} */
 
-.task-due-date-button * {
+/* .task-due-date-button * {
   pointer-events: none;
 }
 
@@ -227,7 +240,7 @@
 
 .task-due-date-button:active {
   filter: brightness(1.1);
-}
+} */
 
 
 input[type="date"]::-webkit-inner-spin-button,
@@ -350,20 +363,86 @@ input[type="date"]::-webkit-datetime-edit {
   width: 200px;
 }
 
-.task-due-date.form-control {
+/* .task-due-date.form-control {
   font-family: 'Times New Roman', Times, serif;
   font-size: 1rem;
 }
 
 .task-due-date.form-control::placeholder {
   color: #646464;
+} */
+
+.task-due-date-para {
+  font-size: 1rem;
+  color: #646464;
 }
 
-.task-due-date-time {
+.task-date-time-dialog {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  border-radius: 5px;
+  border: none;
+  /* height: 1000px; */
+  /* width: 300px; */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-date-time-dialog .flatpickr-calendar {
+  display: block;
+}
+
+.date-required-dialog {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: none;
+  border-radius: 10px;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+}
+
+.date-required-dialog-header {
+  font-size: 1.5rem;
+}
+
+.date-required-dialog-ok-button {
+  align-self: flex-end;
+  padding: 5px;
+}
+
+/* .task-due-date-time { */
   /* color: red; */
-}
+  /* height: 100%; */
+  /* min-width: 101px; */
+/* } */
 
-.custom-time-picker {
+/* .task-due-date-time-container { */
+  /* display: flex; */
+  /* flex-direction: row; */
+  /* gap: 5px; */
+
+  /* overflow: hidden; */
+  /* white-space: nowrap; */
+/* } */
+
+/* .task-due-date-time-clear-button { */
+  /* height: 100%; */
+  /* padding: 0 5px; */
+  /* background-color: ; */
+  /* color: red; */
+  /* border: none; */
+  /* border-radius: 5px; */
+/* } */
+
+/* .custom-time-picker {
   position: relative;
 }
 
@@ -375,4 +454,4 @@ input[type="date"]::-webkit-datetime-edit {
   background-color: #f0f0f0;
   border: 1px solid #ccc;
   cursor: pointer;
-}
+} */

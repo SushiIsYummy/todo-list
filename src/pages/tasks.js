@@ -112,17 +112,6 @@ function showAddedTaskIfHidden(taskListElement) {
     // }
 }
 
-
-// function onPageWithTaskList() {
-//   let inbox = document.querySelector('.inbox-container');
-//   let today = document.querySelector('.today-container');
-//   if (inbox != null || today != null) {
-//     return true;
-//   }
-
-//   return false;
-// }
-
 export function updateTaskList(pageName, taskListElement, addedTask) {
   clearTaskList(taskListElement);
   let taskList = JSON.parse(localStorage.getItem('taskList'));
@@ -214,12 +203,13 @@ function createTaskItem(task) {
     let dueDate = DateTime.fromISO(task.dueDate);
     let dueDateFormatted = dueDate.toFormat('MMMM d');
     
-    let relativeDate = dueDate.toRelative();
+    let relativeDate = dueDate.toRelativeCalendar();
     // if (relativeDate.endsWith())
-    if (relativeDate.startsWith('in') && relativeDate.endsWith('hours')) {
-      dueDateFormatted = 'Tomorrow';
-      
-    } else if ( /^in [1-5] days$/.test(relativeDate)) {
+    if (relativeDate === 'today') {
+      dueDateFormatted = 'Today';
+    } else if (relativeDate === 'tomorrow') {
+      dueDateFormatted = 'Tomorrow';  
+    } else if ( /^in [1-6] days$/.test(relativeDate)) {
       dueDateFormatted = dueDate.weekdayLong;
     }
     
@@ -307,30 +297,19 @@ function filterTaskListByToday(taskList) {
 
   if (taskList !== null) {
     taskList = taskList.filter((task) => {
-      // console.log('task.dueDate: ' + task.dueDate);
       if (task.dueDate !== '') {
-        // let dueDateFormat = task.dueDate;
         let dueDate = DateTime.fromISO(task.dueDate);
-        // console.log('due date: ' + dueDate);
-        let relativeDate = dueDate.toRelative();
-        // console.log('today: ' + relativeDate);
-        // console.log(now);
-        // if (now.compare(dueDate)) {
-          // console.log(now > (dueDate));
-          // console.log('relative date today: ' + relativeDate);
+        let relativeDate = dueDate.toRelativeCalendar();
 
-        if (relativeDate.startsWith('in') && relativeDate.endsWith('hours')) {
+        if (relativeDate === 'today') {
           return true;
         }
-
         return false;
       }
-  });
+    });
   } else {
     taskList = [];
   }
-  // })
-  // console.log('after: ' + taskList);
 
   return taskList;
 }

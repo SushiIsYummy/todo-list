@@ -4,8 +4,8 @@ import calendarSVG from '../../svgs/calendar-outline.svg';
 import { addTaskToLocalStorage, createTask } from '../tasks';
 import flatpickr from 'flatpickr';
 
-import * as footerEL from './footerEventHandlers';
-import * as footerUtil from './footerUtilities';
+import footerEventListenerManager from './footerEventHandlers';
+import footerUtilitiesManager from './footerUtilities';
 
 // console.log('local storage: ' + JSON.parse(localStorage.getItem('sidebarItems'))[0]);
 
@@ -19,24 +19,35 @@ function createFooter() {
   footerContainer.appendChild(createAddTaskButton());
   footerContainer.appendChild(createAddTaskDialog());
   footerContainer.appendChild(createDiscardChangesDialog());
-
+  footerContainer.appendChild(createDateTimeDialog());
+  footerContainer.appendChild(createDateRequiredDialog());
   // footerBar.style.height = '400px';
   footerContainer.appendChild(createFooterBarWithHamburgerMenu());
   content.appendChild(footerContainer);
 
-  footerEL.activateAddTaskButton();
-  footerEL.handleAddTaskDialogOutsideClick();
+
+  footerEventListenerManager.initializeElements();
+  footerEventListenerManager.initializeFlatpickrDateInput();
+  footerEventListenerManager.activateAddTaskButton();
+  footerEventListenerManager.handleDialogOutsideClick();
   // activateDueDateButton();
-  footerEL.activateDueDateTime();
-  footerEL.addEventListenerPriorityDropdown();
-  footerEL.activateDiscardChangesButtons();
-  footerEL.addEventListenerTaskTitle();
+  // footerEventListenerManager.activateDueDateTime();
+  // footerEventListenerManager.activateDueDateTimeClearButton();
+  // footerEventListenerManager.activateDueDateClearButton();
+  footerEventListenerManager.activateTimeInputClearButton();
+  footerEventListenerManager.activateDueDateInputClearButton();
+  footerEventListenerManager.addEventListenerPriorityDropdown();
+  footerEventListenerManager.activateDiscardChangesButtons();
+  footerEventListenerManager.activateDateTimeDialogActionButtons();
+  footerEventListenerManager.activateDueDateButton();
+  footerEventListenerManager.addEventListenerTaskTitle();
+  footerEventListenerManager.activateDateRequiredDialogOkButton();
   // activateSendButton();
-  footerEL.addEventListenerSubmitForm();
-  footerEL.activateHamburgerMenu();
-  footerEL.customizeFlatpickrDateInput();
-  // customizeFlatpickrTimeInput();
-  footerUtil.adjustDateInputWidthToPlaceHolderWidth();
+  footerEventListenerManager.addEventListenerSubmitForm();
+  footerEventListenerManager.activateHamburgerMenu();
+  // footerEventListenerManager.customizeFlatpickrDateInputOld();
+  // footerEventListenerManager.customizeFlatpickrTimeInput();
+  // footerUtilitiesManager.adjustDateInputWidthToPlaceHolderWidth();
 
   let priorityDropdown = document.querySelector('.priority-dropdown');
 
@@ -46,12 +57,17 @@ function createFooter() {
   let form = document.querySelector('.footer-add-task-form');
   // console.log(taskList[0]);
 
-  // console.log('addTaskFormElements: ' + addTaskFormElements);
-  // console.log('addTaskFormElementDefaultValues: ' + addTaskFormElementDefaultValues);
-  let dialog = document.querySelector('.footer-add-task-dialog');
+  console.log('addTaskFormElements: ' + footerUtilitiesManager.addTaskFormElements);
+  console.log('addTaskFormElementDefaultValues: ' + footerUtilitiesManager.addTaskFormElementDefaultValues);
+  // let dialog = document.querySelector('.footer-add-task-dialog');
+  // let dialog = document.querySelector('.task-date-time-dialog');
+  let dialog = document.querySelector('.date-required-dialog');
   // dialog.showModal();
 
-  footerUtil.storeFormElementsAndDefaultValues();
+  footerUtilitiesManager.storeFormElementsAndDefaultValues();
+
+  console.log(footerUtilitiesManager.addTaskFormElementDefaultValues);
+  console.log(footerUtilitiesManager.addTaskFormElements);
 
   let now = DateTime.now();
   [ now,
@@ -64,6 +80,21 @@ function createFooter() {
   ].forEach((k) => {
     console.log( k.toRelativeCalendar() );
   });
+
+  console.log(now < now.plus({seconds: 1}));
+}
+
+// the circle button with '+' sign
+function createAddTaskButton() {
+  let button = document.createElement('button');
+  button.classList.add('footer-add-task-button');
+
+  let buttonLabel = document.createElement('p');
+  buttonLabel.textContent = '+';
+
+  button.appendChild(buttonLabel);
+
+  return button;
 }
 
 function createFooterBarWithHamburgerMenu() {
@@ -114,19 +145,6 @@ function createDiscardChangesDialog() {
   return dialog;
 }
 
-// the circle button with '+' sign
-function createAddTaskButton() {
-  let button = document.createElement('button');
-  button.classList.add('footer-add-task-button');
-
-  let buttonLabel = document.createElement('p');
-  buttonLabel.textContent = '+';
-
-  button.appendChild(buttonLabel);
-
-  return button;
-}
-
 function createAddTaskDialog() {
   let dialog = document.createElement('dialog');
   dialog.classList.add('footer-add-task-dialog');
@@ -145,38 +163,40 @@ function createAddTaskDialog() {
   description.classList.add('task-description');
   description.placeholder = 'Description';
 
-  let dueDate = document.createElement('input');
-  dueDate.type = 'text';
-  dueDate.placeholder = 'Select Date...';
-  dueDate.classList.add('task-due-date');
-  dueDate.tabIndex = 1;
+  // let dueDate = document.createElement('input');
+  // dueDate.type = 'text';
+  // dueDate.placeholder = 'Select Date...';
+  // dueDate.classList.add('task-due-date');
+  // dueDate.tabIndex = 1;
+
+  let dueDatePara = document.createElement('p');
+  dueDatePara.textContent = 'No Date';
+  dueDatePara.classList.add('task-due-date-para');
   
   let dueDateContainer = document.createElement('div');
-  dueDateContainer.classList.add('task-due-date-container');
-  // dueDateContainer.type = 'button';
+  dueDateContainer.classList.add('task-due-date-button-container');
+  dueDateContainer.type = 'button';
   
   let dueDateSVG = document.createElement('iframe');
   dueDateSVG.setAttribute('src', calendarSVG);
   dueDateSVG.classList.add('calendar-svg');
 
-  let dueDateTime = document.createElement('input');
-  dueDateTime.classList.add('task-due-date-time');
-  dueDateTime.type = 'time';
+  // let dueDateClearButton = document.createElement('button');
+  // dueDateClearButton.classList.add('task-due-date-clear-button');
+  // dueDateClearButton.type = 'button';
+  // dueDateClearButton.textContent = '✖';
 
-  // let customTimePicker = document.createElement('div');
-  // customTimePicker.classList.add('custom-time-picker');
-  // customTimePicker.style.display = 'none';
+  // let dueDateTimeContainer = document.createElement('div');
+  // dueDateTimeContainer.classList.add('task-due-date-time-container');
 
-  // let customTime = document.createElement('input');
-  // customTime.classList.add('custom-time');
+  // let dueDateTime = document.createElement('input');
+  // dueDateTime.classList.add('task-due-date-time');
+  // dueDateTime.type = 'time';
 
-  // let confirmButton = document.createElement('button');
-  // confirmButton.classList.add('confirm-button');
-  // confirmButton.textContent = '✔️';
-
-  // customTimePicker.appendChild(customTime);
-  // customTimePicker.appendChild(confirmButton);
-  // document.body.appendChild(customTimePicker);
+  // let dueDateTimeClearButton = document.createElement('button');
+  // dueDateTimeClearButton.classList.add('task-due-date-time-clear-button');
+  // dueDateTimeClearButton.type = 'button';
+  // dueDateTimeClearButton.textContent = '✖';
 
   let buttons = document.createElement('div');
   buttons.classList.add('date-and-priority-buttons');
@@ -218,17 +238,21 @@ function createAddTaskDialog() {
   let taskLocationDropdown = document.createElement('select');
   taskLocationDropdown.classList.add('task-location-dropdown');
 
-  for (let i = 0; i < footerUtil.locationForTasks.length; i++) {
+  for (let i = 0; i < footerUtilitiesManager.locationForTasks.length; i++) {
     let option = document.createElement('option');
     option.classList.add('option-item');
-    option.value = footerUtil.locationForTasks[i].toLowerCase();
-    option.textContent = footerUtil.locationForTasks[i];
+    option.value = footerUtilitiesManager.locationForTasks[i].toLowerCase();
+    option.textContent = footerUtilitiesManager.locationForTasks[i];
 
     taskLocationDropdown.appendChild(option);
   }
 
   dueDateContainer.appendChild(dueDateSVG);
-  dueDateContainer.appendChild(dueDate);
+  dueDateContainer.appendChild(dueDatePara);
+  // dueDateContainer.appendChild(dueDateClearButton);
+
+  // dueDateTimeContainer.appendChild(dueDateTime);
+  // dueDateTimeContainer.appendChild(dueDateTimeClearButton);
 
   bottomRow.appendChild(taskLocationDropdown);
   bottomRow.appendChild(sendButton);
@@ -237,13 +261,105 @@ function createAddTaskDialog() {
 
   // buttons.appendChild(dueDate);
   buttons.appendChild(dueDateContainer);
-  buttons.appendChild(dueDateTime);
+  // buttons.appendChild(dueDateTimeContainer);
   buttons.appendChild(priorityDropdown);
 
   form.append(title, description, buttons, bottomRow);
   dialog.appendChild(form);
 
   return dialog;
+}
+
+function createDateTimeDialog() {
+  let dateTimeDialog = document.createElement('dialog');
+  dateTimeDialog.classList.add('task-date-time-dialog');
+
+  let dueDateInputContainer = document.createElement('div');
+  dueDateInputContainer.classList.add('task-due-date-input-container');
+
+  let dueDateInput = document.createElement('input');
+  dueDateInput.classList.add('task-due-date-input');
+  dueDateInput.placeholder = 'No Date';
+
+  let dueDateClearButton = document.createElement('button');
+  dueDateClearButton.classList.add('task-due-date-clear-button');
+  dueDateClearButton.type = 'button';
+  dueDateClearButton.textContent = 'Clear Date';
+
+  // let lastSavedDueDate = document.createElement('input');
+  // lastSavedDueDate.classList.add('task-due-date-last-saved');
+  // lastSavedDueDate.type = 'hidden';
+
+  // let dueDateValue = document.createElement('input');
+  // dueDateValue.classList.add('task-due-date-value');
+  // dueDateValue.type = 'hidden';
+
+  let timeInputContainer = document.createElement('div');
+  timeInputContainer.classList.add('task-time-input-container');
+
+  let timeInput = document.createElement('input');
+  timeInput.classList.add('task-time-input');
+  timeInput.type = 'time';
+
+  // let lastSavedTimeInput = document.createElement('input');
+  // lastSavedTimeInput.classList.add('task-time-input-last-saved');
+  // lastSavedTimeInput.type = 'hidden';
+
+  let timeClearButton = document.createElement('button');
+  timeClearButton.classList.add('task-time-clear-button');
+  timeClearButton.type = 'button';
+  timeClearButton.textContent = '✖';
+
+
+  // let timeValue = document.createElement('input');
+  // timeValue.classList.add('.task-time-value');
+  // timeValue.type = 'hidden';
+
+  let dateTimeActionButtons = document.createElement('div');
+  dateTimeActionButtons.classList.add('task-date-time-dialog-action-buttons');
+
+  let cancelButton = document.createElement('button');
+  cancelButton.classList.add('task-date-time-dialog-cancel-button');
+  cancelButton.textContent = 'CANCEL';
+  
+  let saveButton = document.createElement('button');
+  saveButton.classList.add('task-date-time-dialog-save-button');
+  saveButton.textContent = 'SAVE';
+  
+  dueDateInputContainer.appendChild(dueDateInput);
+  dueDateInputContainer.appendChild(dueDateClearButton);
+  
+  timeInputContainer.appendChild(timeInput);
+  timeInputContainer.appendChild(timeClearButton);
+  
+  dateTimeActionButtons.append(cancelButton, saveButton);
+
+  dateTimeDialog.appendChild(dueDateInputContainer);
+  dateTimeDialog.appendChild(timeInputContainer);
+  dateTimeDialog.appendChild(dateTimeActionButtons);
+  return dateTimeDialog;
+}
+
+function createDateRequiredDialog() {
+  let dateRequiredDialog = document.createElement('dialog');
+  dateRequiredDialog.classList.add('date-required-dialog');
+
+  let header = document.createElement('h1');
+  header.classList.add('date-required-dialog-header');
+  header.textContent = 'Date Required With Time';
+
+  let para = document.createElement('p');
+  para.classList.add('date-required-para');
+  para.textContent = `A selected time must be accompanied with a selected date.`;
+
+  let okButton = document.createElement('button');
+  okButton.type = 'button';
+  okButton.classList.add('date-required-dialog-ok-button');
+  okButton.textContent = 'OK';
+
+  dateRequiredDialog.append(header, para, okButton);
+
+  return dateRequiredDialog;
 }
 
 export default createFooter;
