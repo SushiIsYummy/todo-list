@@ -25,7 +25,6 @@ function createFooter() {
   footerContainer.appendChild(createFooterBarWithHamburgerMenu());
   content.appendChild(footerContainer);
 
-
   footerEventListenerManager.initializeElements();
   footerEventListenerManager.initializeFlatpickrDateInput();
   footerEventListenerManager.activateAddTaskButton();
@@ -48,7 +47,6 @@ function createFooter() {
   // footerEventListenerManager.customizeFlatpickrDateInputOld();
   // footerEventListenerManager.customizeFlatpickrTimeInput();
   // footerUtilitiesManager.adjustDateInputWidthToPlaceHolderWidth();
-
   let priorityDropdown = document.querySelector('.priority-dropdown');
 
   // let dialog = document.querySelector('.discard-changes-dialog');
@@ -57,8 +55,8 @@ function createFooter() {
   let form = document.querySelector('.footer-add-task-form');
   // console.log(taskList[0]);
 
-  console.log('addTaskFormElements: ' + footerUtilitiesManager.addTaskFormElements);
-  console.log('addTaskFormElementDefaultValues: ' + footerUtilitiesManager.addTaskFormElementDefaultValues);
+  // console.log('addTaskFormElements: ' + footerUtilitiesManager.addTaskFormElements);
+  // console.log('addTaskFormElementDefaultValues: ' + footerUtilitiesManager.addTaskFormElementDefaultValues);
   // let dialog = document.querySelector('.footer-add-task-dialog');
   // let dialog = document.querySelector('.task-date-time-dialog');
   let dialog = document.querySelector('.date-required-dialog');
@@ -66,22 +64,25 @@ function createFooter() {
 
   footerUtilitiesManager.storeFormElementsAndDefaultValues();
 
-  console.log(footerUtilitiesManager.addTaskFormElementDefaultValues);
-  console.log(footerUtilitiesManager.addTaskFormElements);
+  // console.log(footerUtilitiesManager.addTaskFormElementDefaultValues);
+  // console.log(footerUtilitiesManager.addTaskFormElements);
 
   let now = DateTime.now();
-  [ now,
-    now.plus({hours: 22, minute: 59 }),
-    now.plus({days: 1}),
-    now.plus({days: 4}),
-    now.minus({days: 1}),
-    now.minus({days: 4}),
-    now.minus({days: 20}),
-  ].forEach((k) => {
-    console.log( k.toRelativeCalendar() );
-  });
+  let selectedDate = DateTime.fromISO('2023-07-13');
+  console.log('selected date: ' + selectedDate );
+  // let now = DateTime.now();
+  // [ now,
+  //   now.plus({hours: 22, minute: 59 }),
+  //   now.plus({days: 1}),
+  //   now.plus({days: 4}),
+  //   now.minus({days: 1}),
+  //   now.minus({days: 4}),
+  //   now.minus({days: 20}),
+  // ].forEach((k) => {
+  //   console.log( k.toRelativeCalendar() );
+  // });
 
-  console.log(now < now.plus({seconds: 1}));
+  // console.log(now < now.plus({seconds: 1}));
 }
 
 // the circle button with '+' sign

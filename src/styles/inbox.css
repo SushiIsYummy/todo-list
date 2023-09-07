@@ -133,7 +133,7 @@
 }
 /* STYLES FOR CHECKBOX */
 
-.inbox-list-div.hide {
+.extra-div.hide {
   animation: hideInboxListDiv var(--animation-time-atd-open) ease normal;
 }
 

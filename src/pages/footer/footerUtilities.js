@@ -63,6 +63,16 @@ const footerUtilitiesManager = {
     const pathElement = svgIframeDocument.querySelector('svg');
     pathElement.style.fill = color;
   },
+
+  setTaskItemCalendarIconColor(color) {
+    const svgIframe = document.querySelector('.task-item-calendar');
+    console.log(svgIframe);
+    console.log(color);
+    const svgIframeWindow = svgIframe.contentWindow;
+    const svgIframeDocument = svgIframeWindow.document;
+    const pathElement = svgIframeDocument.querySelector('svg');
+    pathElement.style.fill = color;
+  },
   
   setDueDateParaColor(color) {
     let dueDatePara = document.querySelector('.task-due-date-para');
@@ -88,102 +98,97 @@ const footerUtilitiesManager = {
   getLastSavedTime() {
     return this.lastSavedTime;
   },
-  
-  // setDueDateValue() {
-  //   let timeValue = document.querySelector('.task-time-value');
-  // }
-  
-  // setTimeValue() {
-  //   let dueDateValue = document.querySelector('.task-due-date-value');
-  //   let dueDateFlatpickrInput = document.querySelector('.task-due-date-input.flatpickr-input');
-  //   dueDateValue.value = dueDateFlatpickrInput.value;
-  // }
-  
-  formatDateInputText() {
-    // let dueDate = document.querySelector('.task-due-date');
-    let dateInput = document.querySelector('.task-due-date-input')
-    let dueDatePara = document.querySelector('.task-due-date-para');
-    let timeInput = document.querySelector('.task-time-input');
-  
-    if (dateInput.value !== '') {
-        let altInput = document.querySelector('.task-due-date.form-control');
-        // const dateInput = document.querySelector('.task-due-date-input');
-        console.log('calendar input: ' + dateInput.value);
-        const selectedDate = DateTime.fromISO(dateInput.value);
-  
-        
-        let dayNumber = selectedDate.toFormat('d');
-        const formattedDay = selectedDate.toFormat('cccc'); // Day of the week
-        const formattedYear = selectedDate.toFormat('yyyy'); // Year
-        const formattedMonth = selectedDate.toFormat('LLLL'); // Month
-        
-        console.log('Selected Day:', formattedDay);
-        console.log('Selected Year:', formattedYear);
-        console.log('Selected Month:', formattedMonth);
-        
-        const currentYear = DateTime.now().toFormat('yyyy');
-  
-        const relativeDate = selectedDate.toRelativeCalendar();
-        console.log('relative date: ' + selectedDate.toRelative());
-        
-        if (relativeDate === 'today') {
-          const now = DateTime.now();
-          const dateTime = DateTime.fromISO(dateInput.value + 'T' + timeInput.value);
-          // console.log('dateTime: ' + dateTime);
-          dueDatePara.textContent = 'Today';
-          // console.log('dateTime < now: ' + dateTime < now);
-          if (timeInput.value !== '' && dateTime < now) {
-            this.setCalendarIconColor('red');
-            this.setDueDateParaColor('red');
-          } else {
-            this.setCalendarIconColor('green');
-            this.setDueDateParaColor('green');
-          }
-        } else if (relativeDate === 'tomorrow') {
-          dueDatePara.textContent = 'Tomorrow';
-          this.setCalendarIconColor('#CC6600');
-          this.setDueDateParaColor('#CC6600');
-        } else if (/^in [1-6] day(s)?$/.test(relativeDate)) {
-          dueDatePara.textContent = formattedDay;
-          this.setCalendarIconColor('purple');
-          this.setDueDateParaColor('purple');
-        } else if (formattedYear > currentYear){
-          dueDatePara.textContent = `${formattedMonth.slice(0,3)} ${dayNumber} ${formattedYear}`
-          this.setCalendarIconColor('#646464');
-          this.setDueDateParaColor('#646464');
-        } else {
-          dueDatePara.textContent = `${formattedMonth.slice(0,3)} ${dayNumber}`;
-          this.setCalendarIconColor('#646464');
-          this.setDueDateParaColor('#646464');
-        }
-  
-        // add time to due date para
-        if (timeInput.value !== '') {
-          const time = DateTime.fromFormat(timeInput.value, "HH:mm");
-  
-          // Format the time in 12-hour format with AM/PM
-          const formattedTime = time.toFormat("h:mma");
-          dueDatePara.textContent += ' ' + formattedTime;
-        }
-    } else {
-      // date is empty
-      if (timeInput.value !== '') {
-        let dateRequiredDialog = document.querySelector('.date-required-dialog');
-        dateRequiredDialog.showModal();
-      } else {
-        dueDatePara.textContent = 'No Date';
-        this.setCalendarIconColor('#646464');
-        this.setDueDateParaColor('#646464');
-      }
 
-      console.log('date: ' + dateInput.value);
-      console.log('time: ' + timeInput.value);
-  
-      // dueDateButtonPara.textContent = 'No Date';
-      // console.log(calendarInput.value);
-      // console.log('clear');
+  calculateDateTimeTextColorClasslist(dateString, timeString) {
+    const now = DateTime.now();
+    let formattedDateTime = '';
+    let color = '';
+    let classlist = '';
+    let selectedDate = '';
+    let root = document.querySelector(':root');
+    let rootCS = getComputedStyle(root);
+
+    if (dateString === '' && timeString === '') {
+      formattedDateTime = 'No Date';
+      color = rootCS.getPropertyValue('--no-date-color');
+      classlist = 'no-date';
+      return { formattedDateTime, color, classlist };
     }
-  
+
+    if (timeString === '') {
+      selectedDate = DateTime.fromISO(dateString);
+    } else {
+      selectedDate = DateTime.fromISO(dateString + 'T' + timeString);
+    }
+    
+    let dayNumber = selectedDate.toFormat('d');
+    const formattedDay = selectedDate.toFormat('cccc'); // Day of the week
+    const formattedYear = selectedDate.toFormat('yyyy'); // Year
+    const formattedMonth = selectedDate.toFormat('LLLL'); // Month
+    const currentYear = DateTime.now().toFormat('yyyy');
+
+    let relativeDate = selectedDate.toRelativeCalendar();
+
+    
+    // for overdue task items
+    if (selectedDate < now) {
+      classlist = 'overdue';
+      color = rootCS.getPropertyValue('--overdue-color');
+    } 
+    
+    if (relativeDate === 'today') {
+      formattedDateTime = 'Today';
+      if (timeString !== '' && selectedDate < now) {
+        classlist = 'overdue';
+        color = rootCS.getPropertyValue('--overdue-color');
+      } else {
+        classlist = 'due-later-today';
+        color = rootCS.getPropertyValue('--due-later-today-color');
+      }
+    } else if (relativeDate === 'tomorrow') {
+      formattedDateTime = 'Tomorrow';
+      classlist = 'due-tomorrow';
+      color = rootCS.getPropertyValue('--due-tomorrow-color');
+    } else if (/^in [1-6] day(s)?$/.test(relativeDate)) {
+      formattedDateTime = formattedDay;
+      classlist = 'due-this-week';
+      color = rootCS.getPropertyValue('--due-this-week-color');
+    } else if (formattedYear > currentYear){
+      formattedDateTime = `${formattedMonth.slice(0,3)} ${dayNumber} ${formattedYear}`;
+      classlist = 'due-in-future';
+      color = rootCS.getPropertyValue('--due-in-future-color');
+    } else {
+      formattedDateTime = `${formattedMonth.slice(0,3)} ${dayNumber}`;
+      classlist = 'due-in-future';
+      color = rootCS.getPropertyValue('--due-in-future-color');
+    }
+
+    if (timeString !== '') {
+      // console.log('time string: ' + timeString);
+      const time = DateTime.fromFormat(timeString, "HH:mm");
+
+      // Format the time in 12-hour format with AM/PM
+      const formattedTime = time.toFormat("h:mma");
+
+      formattedDateTime += ' ' + formattedTime;
+    }
+
+    return { formattedDateTime, color, classlist };
+  },
+
+  getFormattedTextBasedOnDateTime(dateString, timeString) {
+    let formattedText = this.calculateDateTimeTextColorClasslist(dateString, timeString).formattedDateTime;
+    return formattedText;
+  },
+
+  getColorBasedOnDateTime(dateString, timeString) {
+    let color = this.calculateDateTimeTextColorClasslist(dateString, timeString).color;
+    return color;
+  },
+
+  getClasslistBasedOnDateTime(dateString, timeString) {
+    let classlist = this.calculateDateTimeTextColorClasslist(dateString, timeString).classlist;
+    return classlist;
   },
   
   
@@ -243,6 +248,18 @@ const footerUtilitiesManager = {
     this.setLastSavedTime('');
     
     footerEventListenerManager.datepicker.clear();
+
+    this.setCalendarIconColor('#646464');
+
+    // remove colors
+    for (let i = 0; i < dueDatePara.classList.length; i++) {
+      if (dueDatePara.classList[i] !== 'task-due-date-para') {
+        dueDatePara.classList.remove(dueDatePara.classList[i]);
+      }
+    }
+
+    dueDatePara.classList.add('no-date');
+    // this.setDueDateParaColor('#646464');
   
     // reset option to last option which is priority 4
     // priorityDropdown.value = priorityDropdown.options[priorityDropdown.options.length-1].value;

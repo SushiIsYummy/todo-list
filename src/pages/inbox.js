@@ -1,5 +1,5 @@
 import scrollIntoView from 'scroll-into-view-if-needed'
-import { updateTaskList } from './tasks';
+import { updateTaskList, addTaskToTaskList } from './tasks';
 import { addMarginBottomToTaskList, addMarginTopToTaskList } from './utils';
 
 function createInbox() {
@@ -37,7 +37,8 @@ function createInbox() {
   // Listen for changes in the localStorage 'taskList' variable
   // window.addEventListener('taskListChange', updateInboxListItems);
   window.addEventListener('taskAddedToLocalStorage', function() {
-    updateTaskList('inbox', inboxList, true);
+    addTaskToTaskList('inbox', inboxList);
+    // updateTaskList('inbox', inboxList, true);
   });
   
   addMarginTopToTaskList(inboxHeader, inboxList);

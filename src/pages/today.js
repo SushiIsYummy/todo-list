@@ -1,4 +1,4 @@
-import { updateTaskList } from "./tasks";
+import { updateTaskList, addTaskToTaskList } from "./tasks";
 import { addMarginBottomToTaskList, addMarginTopToTaskList } from "./utils";
 
 function createToday() {
@@ -29,7 +29,8 @@ function createToday() {
   updateTaskList('today', todayList, false);
     
   window.addEventListener('taskAddedToLocalStorage', function() {
-    updateTaskList('today', todayList, true);
+    addTaskToTaskList('today', todayList);
+    // updateTaskList('today', todayList, true);
   });
 
   addMarginTopToTaskList(todayHeader, todayList);

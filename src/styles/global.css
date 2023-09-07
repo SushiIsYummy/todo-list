@@ -21,4 +21,11 @@
 
   /* atd = add task dialog */
   --animation-time-atd-open: 0.2s;
+
+  --overdue-color: red;
+  --due-later-today-color: green;
+  --due-tomorrow-color: #CC6600;
+  --due-this-week-color: purple;
+  --due-in-future-color: #646464;
+  --no-date-color: #646464;
 }

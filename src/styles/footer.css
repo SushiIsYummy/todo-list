@@ -418,6 +418,48 @@ input[type="date"]::-webkit-datetime-edit {
   padding: 5px;
 }
 
+.task-due-date-para.overdue,
+.task-item-date-and-time.overdue {
+  color: var(--overdue-color);
+}
+
+.task-due-date-para.due-later-today,
+.task-item-date-and-time.due-later-today {
+  color: var(--due-later-today-color);
+}
+
+.task-due-date-para.due-this-week,
+.task-item-date-and-time.due-this-week {
+  color: var(--due-this-week-color);
+}
+
+.task-due-date-para.due-tomorrow,
+.task-item-date-and-time.due-tomorrow {
+  color: var(--due-tomorrow-color);
+}
+
+.task-due-date-para.due-in-future,
+.task-item-date-and-time.due-in-future {
+  color: var(--due-in-future-color);
+}
+
+.task-due-date-para.no-date,
+.task-item-date-and-time {
+  color: var(--no-date-color);
+}
+
+.task-item-date-and-time-container {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.task-item-calendar {
+  width: 20px;
+  height: 20px;
+  border: none;
+}
+
 /* .task-due-date-time { */
   /* color: red; */
   /* height: 100%; */

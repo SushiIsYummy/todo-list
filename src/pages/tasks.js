@@ -1,5 +1,7 @@
 import scrollIntoView from 'scroll-into-view-if-needed';
 import { DateTime } from 'luxon';
+import footerUtils from './footer/footerUtilities';
+import calendarSVG from '../svgs/calendar.svg'
 
 const taskAddedToLocalStorage = new Event('taskAddedToLocalStorage');
 
@@ -109,6 +111,8 @@ function showAddedTaskIfHidden(taskListElement) {
         behavior: 'smooth', // You can customize the scroll behavior
         block: 'start', // Scroll to the bottom of the element
       }); 
+
+      // moveTaskListDown(taskListElement);
     // }
 }
 
@@ -116,22 +120,53 @@ export function updateTaskList(pageName, taskListElement, addedTask) {
   clearTaskList(taskListElement);
   let taskList = JSON.parse(localStorage.getItem('taskList'));
 
-  if (pageName === 'today') {
-    taskList = filterTaskListByToday(taskList);
-  } else {
-    taskList = filterTaskListByLocation(pageName, taskList);
-  }
-  
-  taskList.forEach((task) => {
-    let taskItem = createTaskItem(task);
-    taskListElement.appendChild(taskItem);
-  });
+  // if (addedTask) {
+  //   let addedTaskItem = createTaskItem(taskList[taskList.length-1]);
+  //   console.log('tasklist length: ' + taskList.length);
+  //   console.log('added task item: ' + taskList[taskList.length-1].title);
+  //   taskListElement.appendChild(addedTaskItem);
+  //   showAddedTaskIfHidden(taskListElement);
+  // } else {
+    if (pageName === 'today') {
+      taskList = filterTaskListByToday(taskList);
+    } else {
+      taskList = filterTaskListByLocation(pageName, taskList);
+    }
+    
+    taskList.forEach((task) => {
+      let taskItem = createTaskItem(task);
+      taskListElement.appendChild(taskItem);
+    });
+  // }
 
-  if (addedTask) {
+
+
+  return taskList;
+}
+
+export function addTaskToTaskList(pageName, taskListElement) {
+  let taskList = JSON.parse(localStorage.getItem('taskList'));
+  let addedTask = taskList[taskList.length-1];
+  let taskDate = addedTask.dueDate;
+  let relativeDate = DateTime.fromISO(taskDate).toRelativeCalendar();
+
+  if (pageName === addedTask.taskLocation ||
+      pageName === 'today' && relativeDate === 'today') {
+
+    let extraDiv = taskListElement.querySelector('.extra-div');
+    let addedTaskItem = createTaskItem(taskList[taskList.length-1]);
+    taskListElement.appendChild(addedTaskItem);
+
+    // remove the last item (the div that pushes list up)
+    // on subsequent added tasks
+    if (extraDiv !== null) {
+      extraDiv.remove();
+    }
+
     showAddedTaskIfHidden(taskListElement);
   }
 
-  return taskList;
+
 }
 
 function moveTaskListUp(taskListElement) {
@@ -139,36 +174,43 @@ function moveTaskListUp(taskListElement) {
   // console.log('add task dialog open: ' + addTaskDialog.open);
 
   if (addTaskDialog.open) {
-    let div = document.createElement('div');
+    let extraDiv = document.createElement('div');
     let footerBarHeight = document.querySelector('.footer-bar').offsetHeight;
-    div.classList.add('inbox-list-div');
-    div.style.height = `${addTaskDialog.offsetHeight-footerBarHeight-1}px`;
+    extraDiv.classList.add('extra-div');
+    extraDiv.style.height = `${addTaskDialog.offsetHeight-footerBarHeight-1}px`;
 
-    let div2 = document.createElement('div');
-    div2.style.height = '1px';
+    // let div2 = document.createElement('div');
+    // div2.style.height = '1px';
 
-    taskListElement.appendChild(div);
-    taskListElement.appendChild(div2);
+    taskListElement.appendChild(extraDiv);
+    // taskListElement.appendChild(div2);
 
-    div.addEventListener('animationend', () => {
-      div.remove();
-      div2.remove();
+    extraDiv.addEventListener('animationend', () => {
+      extraDiv.remove();
+      // div2.remove();
     })
   }
 }
 
+function moveTaskListDown(taskListElement) {
+  // let extraDiv = taskListElement.querySelector('extra-div');
+  // extraDiv.addEventListener('animationend', () => {
+  //   extraDiv.remove();
+  //   // div2.remove();
+  // })
+}
+
 function createTaskItem(task) {
+  let nonEmptyOptionalTaskItemElements = [];
+
   let taskItem = document.createElement('li');
   taskItem.classList.add('task-item');
 
-  // let priorityContainer = document.createElement('label');
-  // priorityContainer.classList.add('task-item-priority-container');
   let rootElement = document.querySelector(':root');
   let cs = getComputedStyle(rootElement);
 
   let priorityCheckbox = document.createElement('input');
   priorityCheckbox.type = 'checkbox';
-  // priorityCheckbox.classList.add()
   priorityCheckbox.classList.add('task-item-priority-checkbox');
   // add corresponding priorty color to checkbox border and background color
   priorityCheckbox.classList.add(`task-item-priority-${task.priority}`);
@@ -190,75 +232,43 @@ function createTaskItem(task) {
   if (task.description !== '') {
     description.classList.add('task-item-description');
     description.textContent = task.description;
+    nonEmptyOptionalTaskItemElements.push(description);
   }
 
-  let date = document.createElement('p');
-  if (task.dueDate !== '') {
-    date.classList.add('task-item-date');
-    // date.textContent = task.dueDate;
+  let dateAndTimeContainer = document.createElement('div');
+  dateAndTimeContainer.classList.add('task-item-date-and-time-container');
 
-    // convert the 'yyyy-mm-dd' format to different format
-    // depending on the due date relative to current date
-    let now = DateTime.now();
-    let dueDate = DateTime.fromISO(task.dueDate);
-    let dueDateFormatted = dueDate.toFormat('MMMM d');
-    
-    let relativeDate = dueDate.toRelativeCalendar();
-    // if (relativeDate.endsWith())
-    if (relativeDate === 'today') {
-      dueDateFormatted = 'Today';
-    } else if (relativeDate === 'tomorrow') {
-      dueDateFormatted = 'Tomorrow';  
-    } else if ( /^in [1-6] days$/.test(relativeDate)) {
-      dueDateFormatted = dueDate.weekdayLong;
-    }
-    
-    date.textContent = dueDateFormatted;
-    // console.log(relativeDate);
-
-    
-  }
-
-  let time = document.createElement('p');
-  if (task.dueDateTime !== '') {
-    time.classList.add('task-item-time');
-    // date.textContent = task.dueDateTime;
-
-    // console.log('hours: ' + hours);
-    let hours = parseInt(task.dueDateTime.split(':')[0]);
-    let minutes = task.dueDateTime.split(':')[1];
-    let suffix = hours >= 12 ? "PM":"AM"; 
-
-    // convert 24 hour to 12 hour
-    hours = ((hours + 11) % 12 + 1);
-
-    time.textContent = hours + ':' + minutes + suffix;
-
-  }
-
-  let dateAndTime = document.createElement('div');
+  let calendar = document.createElement('iframe');
+  calendar.classList.add('task-item-calendar');
+  calendar.src = calendarSVG;
+  
+  let dateAndTime = document.createElement('p');
   dateAndTime.classList.add('task-item-date-and-time');
-  dateAndTime.append(date, time);
+  
+  if (task.dueDate !== '') {
+    nonEmptyOptionalTaskItemElements.push(dateAndTimeContainer);
+    dateAndTime.textContent = footerUtils.getFormattedTextBasedOnDateTime(task.dueDate, task.dueDateTime);
+    dateAndTime.classList.add(footerUtils.getClasslistBasedOnDateTime(task.dueDate, task.dueDateTime));
+    
+    // color calendar based on date and time when loaded
+    calendar.addEventListener('load', () => {
+      const svgIframeWindow = calendar.contentWindow;
+      const svgIframeDocument = svgIframeWindow.document;
+      const pathElement = svgIframeDocument.querySelector('svg');
+      pathElement.style.fill = footerUtils.getColorBasedOnDateTime(task.dueDate, task.dueDateTime);
+    });
+  }
 
+  dateAndTimeContainer.append(calendar, dateAndTime);
 
-  taskItem.append(priorityCheckbox, title, description, dateAndTime);
+  // append required elements
+  taskItem.append(priorityCheckbox, title);
 
-  // Array.from(dateAndTime.children).forEach(element => {
-  //   if (element.value === '') {
-  //     element.remove();
-  //   }
-  // });
+  for (let i = 0; i < nonEmptyOptionalTaskItemElements.length; i++) {
+    taskItem.appendChild(nonEmptyOptionalTaskItemElements[i]);
+  }
 
-  // if (dateAndTime.childElementCount === 0) {
-  //   dateAndTime.remove();
-  // }
-
-  // Array.from(taskItem.children).forEach(element => {
-  //   if (element.value === '') {
-  //     element.remove();
-  //   }
-  // })
-
+  
   return taskItem;
 }
 

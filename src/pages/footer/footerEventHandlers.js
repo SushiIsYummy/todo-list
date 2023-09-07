@@ -5,7 +5,7 @@ import { addTaskToLocalStorage, createTask } from '../tasks';
 import flatpickr from 'flatpickr';
 // import { addTaskFormElements } from './footerUtilities';
 
-import footerUtilitiesManager from './footerUtilities';
+import footerUtils from './footerUtilities';
 import * as footerUtil from './footerUtilities';
 import * as tasks from '../tasks';
 
@@ -36,9 +36,9 @@ const footerEventListenerManager = {
       e.preventDefault();
   
       if (this.sendButton.classList.contains('active')) {
-        let task = createTask(footerUtilitiesManager.addTaskFormElements);
+        let task = createTask(footerUtils.addTaskFormElements);
         addTaskToLocalStorage(task);
-        footerUtilitiesManager.clearAddTaskForm();
+        footerUtils.clearAddTaskForm();
         this.addTaskForm.querySelector('.task-title').focus();
         this.sendButton.classList.remove('active');
       }
@@ -66,7 +66,7 @@ const footerEventListenerManager = {
   activateAddTaskButton() {
     this.footerAddTaskButton.addEventListener('click', () => {
       this.addTaskDialog.showModal();
-      footerUtilitiesManager.setCalendarIconColor('#646464');
+      footerUtils.setCalendarIconColor('#646464');
       // set add task dialog at the bottom of page
       // dialog.style.top =  `calc(100% - ${getAddTaskDialogHeight()}px)`;
       // dialog.style.bottom = 0;
@@ -115,16 +115,28 @@ const footerEventListenerManager = {
     cancelButton.addEventListener('click', () => {
       // footerUtilitiesManager.setLastSavedDate(footerUtilitiesManager.getLastSavedDate());
       // footerUtilitiesManager.setLastSavedTime(footerUtilitiesManager.getLastSavedTime());
-      this.datepicker.setDate(footerUtilitiesManager.getLastSavedDate());
+      this.datepicker.setDate(footerUtils.getLastSavedDate());
       this.dateTimeDialog.close();
-      console.log('date: ' + footerUtilitiesManager.getLastSavedDate());
-      console.log('time: ' + footerUtilitiesManager.getLastSavedTime());
+      console.log('date: ' + footerUtils.getLastSavedDate());
+      console.log('time: ' + footerUtils.getLastSavedTime());
     });
-  
+    
+    let taskDueDatePara = document.querySelector('.task-due-date-para');
     saveButton.addEventListener('click', () => {
-      footerUtilitiesManager.setLastSavedDate(this.dueDateInput.value);
-      footerUtilitiesManager.setLastSavedTime(this.timeInput.value);
-      footerUtilitiesManager.formatDateInputText();
+      footerUtils.setLastSavedDate(this.dueDateInput.value);
+      footerUtils.setLastSavedTime(this.timeInput.value);
+      taskDueDatePara.textContent = 
+      footerUtils.getFormattedTextBasedOnDateTime(footerUtils.getLastSavedDate(), footerUtils.getLastSavedTime());
+      footerUtils.setCalendarIconColor(footerUtils.getColorBasedOnDateTime(footerUtils.getLastSavedDate(), footerUtils.getLastSavedTime()));
+      // taskDueDatePara
+      // remove previous color
+      for (let i = 0; i < taskDueDatePara.classList.length; i++) {
+        if (taskDueDatePara.classList[i] !== 'task-due-date-para') {
+          taskDueDatePara.classList.remove(taskDueDatePara.classList[i]);
+        }
+      }
+      // console.log('class name: ' + taskDueDatePara.classList[0]);
+      taskDueDatePara.classList.add(footerUtils.getClasslistBasedOnDateTime(footerUtils.getLastSavedDate(), footerUtils.getLastSavedTime()));
 
       let dateRequiredDialog = document.querySelector('.date-required-dialog');
       if (dateRequiredDialog.open) {
@@ -132,8 +144,8 @@ const footerEventListenerManager = {
       } else {
         this.dateTimeDialog.close();
       }
-      console.log('date: ' + footerUtilitiesManager.getLastSavedDate());
-      console.log('time: ' + footerUtilitiesManager.getLastSavedTime());
+      console.log('date: ' + footerUtils.getLastSavedDate());
+      console.log('time: ' + footerUtils.getLastSavedTime());
     })
   },
   
@@ -145,8 +157,8 @@ const footerEventListenerManager = {
   
     
     dueDateButton.addEventListener('click', () => {
-      this.dueDateInput.value = footerUtilitiesManager.getLastSavedDate();
-      this.timeInput.value = footerUtilitiesManager.getLastSavedTime();
+      this.dueDateInput.value = footerUtils.getLastSavedDate();
+      this.timeInput.value = footerUtils.getLastSavedTime();
       this.dateTimeDialog.showModal();
     })
   },
@@ -199,9 +211,9 @@ const footerEventListenerManager = {
   },
   
   showDiscardChangesDialogIfChangesMade() {
-    if (footerUtilitiesManager.allElementsAreUntouched()) {
+    if (footerUtils.allElementsAreUntouched()) {
       hideAddTaskDialog();
-      footerUtilitiesManager.clearAddTaskForm();
+      footerUtils.clearAddTaskForm();
     } else {
       
       this.discardChangesDialog.showModal();
@@ -274,7 +286,7 @@ const footerEventListenerManager = {
     discardButton.addEventListener('click', () => {
       hideAddTaskDialog();
       this.discardChangesDialog.close();
-      footerUtilitiesManager.clearAddTaskForm();
+      footerUtils.clearAddTaskForm();
     });
   
   },
@@ -319,11 +331,11 @@ function dialogAnimationEnd() {
 function hideAddTaskDialog() {
   let addTaskDialog = document.querySelector('.footer-add-task-dialog');
   addTaskDialog.classList.add('hide');
-
-  let inboxListDiv = document.querySelector('.inbox-list-div');
-  console.log('inbox list div: ' + inboxListDiv);
-  if (inboxListDiv !== null) {
-    inboxListDiv.classList.add('hide');
+  
+  let extraDiv = document.querySelector('.extra-div');
+  console.log('extra div: ' + extraDiv);
+  if (extraDiv !== null) {
+    extraDiv.classList.add('hide');
   }
 
   addTaskDialog.addEventListener('animationend', dialogAnimationEnd);
