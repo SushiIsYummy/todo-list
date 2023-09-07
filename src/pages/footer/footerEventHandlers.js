@@ -123,27 +123,28 @@ const footerEventListenerManager = {
     
     let taskDueDatePara = document.querySelector('.task-due-date-para');
     saveButton.addEventListener('click', () => {
+      let dateRequiredDialog = document.querySelector('.date-required-dialog');
+      if (footerUtils.onlyTimeIsSet()) {
+        dateRequiredDialog.showModal();
+        return;
+      } 
+
       footerUtils.setLastSavedDate(this.dueDateInput.value);
       footerUtils.setLastSavedTime(this.timeInput.value);
       taskDueDatePara.textContent = 
       footerUtils.getFormattedTextBasedOnDateTime(footerUtils.getLastSavedDate(), footerUtils.getLastSavedTime());
       footerUtils.setCalendarIconColor(footerUtils.getColorBasedOnDateTime(footerUtils.getLastSavedDate(), footerUtils.getLastSavedTime()));
-      // taskDueDatePara
+
       // remove previous color
       for (let i = 0; i < taskDueDatePara.classList.length; i++) {
         if (taskDueDatePara.classList[i] !== 'task-due-date-para') {
           taskDueDatePara.classList.remove(taskDueDatePara.classList[i]);
         }
       }
-      // console.log('class name: ' + taskDueDatePara.classList[0]);
+
       taskDueDatePara.classList.add(footerUtils.getClasslistBasedOnDateTime(footerUtils.getLastSavedDate(), footerUtils.getLastSavedTime()));
 
-      let dateRequiredDialog = document.querySelector('.date-required-dialog');
-      if (dateRequiredDialog.open) {
-        // keep date time dialog open
-      } else {
-        this.dateTimeDialog.close();
-      }
+      this.dateTimeDialog.close();
       console.log('date: ' + footerUtils.getLastSavedDate());
       console.log('time: ' + footerUtils.getLastSavedTime());
     })

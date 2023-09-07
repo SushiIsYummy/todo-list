@@ -99,6 +99,15 @@ const footerUtilitiesManager = {
     return this.lastSavedTime;
   },
 
+  onlyTimeIsSet() {
+    let dueDateInput = document.querySelector('.task-due-date-input');
+    let timeInput = document.querySelector('.task-time-input');
+    if (dueDateInput.value === '' && timeInput.value !== '') {
+      return true;
+    }
+    return false;
+  },
+
   calculateDateTimeTextColorClasslist(dateString, timeString) {
     const now = DateTime.now();
     let formattedDateTime = '';
