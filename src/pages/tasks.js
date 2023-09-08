@@ -6,8 +6,6 @@ import calendarSVG from '../svgs/calendar.svg'
 
 const taskAddedToLocalStorage = new Event('taskAddedToLocalStorage');
 
-let sortedTaskListToday = [];
-
 function createTaskBuilder() {
   const task = {};
 
@@ -183,37 +181,38 @@ export function updateTaskList(pageName, taskListElement, addedTask) {
   return taskList;
 }
 
-function addTaskToTaskListToday(taskListElement) {
+export function addTaskToTaskListToday(taskListElement) {
   let taskList = JSON.parse(localStorage.getItem('taskList'));
   let addedTask = taskList[taskList.length-1];
+  let relativeDate = DateTime.fromISO(addedTask.dueDate).toRelativeCalendar();
 
-  if (sortedTaskListToday.length === 0) {
-    if (taskList.length !== 0) {
-      taskList.sort(utils.compareTodayItems);
-      sortedTaskListToday = [...taskList];
-      sortedTaskListToday.pop();
-    }
+  // ignore added task if its due date is not today
+  if (relativeDate !== 'today') {
+    return;
   }
 
-  let indexOfAddedTask = 0;
-  if (addedTask.dueDateTime === '') {
-    // search through the list starting from the bottom
-    for (let i = sortedTaskListToday.length-1; i >= 0; i--) {
-      if (sortedTaskListToday[i].dueDateTime === '') {
-        if (sortedTaskListToday[i].priority < addedTask.priority) {
-          indexOfAddedTask = i;
-          break;
-        }
-      }
-    }
+  taskList = filterTaskListByToday(taskList);
+
+  taskList.sort(utils.compareTodayItems);
+
+  let index = taskList.findIndex(task => task.id === addedTask.id);
+  console.log('index: ' + index);
+
+  let newTaskItem = createTaskItem(addedTask);
+
+  // list is empty or added task is at the end of the list
+  if (taskListElement.childElementCount === 0 || index === taskList.length-1) {
+    taskListElement.appendChild(newTaskItem);
   } else {
-    // search through the list starting from the top
-    for (let i = 0; i < sortedTaskListToday.length-1; i++) {
-      
-      
-    }
-
+    taskListElement.insertBefore(newTaskItem, taskListElement.childNodes[index]);
   }
+
+  // may need to improve scrolling function later on
+  scrollIntoView(newTaskItem, {
+    behavior: 'smooth',
+    // block: 'bottom'
+  });
+  
 }
 
 export function addTaskToTaskList(pageName, taskListElement) {
@@ -226,7 +225,7 @@ export function addTaskToTaskList(pageName, taskListElement) {
       pageName === 'today' && relativeDate === 'today') {
 
     let extraDiv = taskListElement.querySelector('.extra-div');
-    let addedTaskItem = createTaskItem(taskList[taskList.length-1]);
+    let addedTaskItem = createTaskItem(addedTask);
     taskListElement.appendChild(addedTaskItem);
 
     // remove the last item (the div that pushes list up)
