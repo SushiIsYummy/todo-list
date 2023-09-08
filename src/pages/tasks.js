@@ -1,9 +1,12 @@
 import scrollIntoView from 'scroll-into-view-if-needed';
 import { DateTime } from 'luxon';
 import footerUtils from './footer/footerUtilities';
+import * as utils from './utils';
 import calendarSVG from '../svgs/calendar.svg'
 
 const taskAddedToLocalStorage = new Event('taskAddedToLocalStorage');
+
+let sortedTaskListToday = [];
 
 function createTaskBuilder() {
   const task = {};
@@ -65,10 +68,54 @@ export function createTask(listOfFormElements) {
     }
     i++;
   }
-
+  
   let task = builder.build();
+
+  // add id to task
+  let id = localStorage.getItem('idNumber');
+  if (id === null) {
+    // removeIdFromAllTasks();
+    addIdToAllTasks();
+    // console.log('added id');
+    let taskList = JSON.parse(localStorage.getItem('taskList'));
+    if (taskList === null) {
+      taskList = [];
+      localStorage.setItem('taskList', JSON.stringify(taskList));
+    }
+    task.id = taskList.length;
+    let nextId = taskList.length+1;
+    localStorage.setItem('idNumber', JSON.stringify(nextId));
+    // console.log('next id: ' + nextId);
+    // console.log(JSON.parse(localStorage.getItem('idNumber')));
+  } else {
+    id = parseInt(id);
+    task.id = id;
+    id += 1;
+    localStorage.setItem('idNumber', JSON.stringify(id));
+  }
+
   return task;
 }
+
+// function removeIdFromAllTasks() {
+//   let taskList = JSON.parse(localStorage.getItem('taskList'));
+
+//   taskList.forEach(task => {
+//     delete task.id;
+//   })
+// }
+
+function addIdToAllTasks() {
+  let taskList = JSON.parse(localStorage.getItem('taskList'));
+
+  for (let i = 0; i < taskList.length; i++) {
+    console.log(taskList[i]);
+    taskList[i].id = i;
+  }
+
+  localStorage.setItem('taskList', JSON.stringify(taskList));
+}
+
 
 export function addTaskToLocalStorage(task) { 
   // add task to local storage
@@ -93,14 +140,6 @@ const taskAddedInfo = (() => {
   // const setPageTaskWasAdded = 
   return { getTaskAddedOnPageWithTaskList, setTaskAddedOnPageWithTaskList };
 })();
-
-// window.addEventListener('taskAddedToLocalStorage', () => {
-//   if (onPageWithTaskList()) {
-//     taskAddedInfo.setTaskAddedOnPageWithTaskList(true);
-//   } else {
-//     taskAddedInfo.setTaskAddedOnPageWithTaskList(false);
-//   }
-// });
 
 function showAddedTaskIfHidden(taskListElement) {
   // if (taskAddedInfo.getTaskAddedOnPageWithTaskList()) {
@@ -144,6 +183,39 @@ export function updateTaskList(pageName, taskListElement, addedTask) {
   return taskList;
 }
 
+function addTaskToTaskListToday(taskListElement) {
+  let taskList = JSON.parse(localStorage.getItem('taskList'));
+  let addedTask = taskList[taskList.length-1];
+
+  if (sortedTaskListToday.length === 0) {
+    if (taskList.length !== 0) {
+      taskList.sort(utils.compareTodayItems);
+      sortedTaskListToday = [...taskList];
+      sortedTaskListToday.pop();
+    }
+  }
+
+  let indexOfAddedTask = 0;
+  if (addedTask.dueDateTime === '') {
+    // search through the list starting from the bottom
+    for (let i = sortedTaskListToday.length-1; i >= 0; i--) {
+      if (sortedTaskListToday[i].dueDateTime === '') {
+        if (sortedTaskListToday[i].priority < addedTask.priority) {
+          indexOfAddedTask = i;
+          break;
+        }
+      }
+    }
+  } else {
+    // search through the list starting from the top
+    for (let i = 0; i < sortedTaskListToday.length-1; i++) {
+      
+      
+    }
+
+  }
+}
+
 export function addTaskToTaskList(pageName, taskListElement) {
   let taskList = JSON.parse(localStorage.getItem('taskList'));
   let addedTask = taskList[taskList.length-1];
@@ -165,8 +237,6 @@ export function addTaskToTaskList(pageName, taskListElement) {
 
     showAddedTaskIfHidden(taskListElement);
   }
-
-
 }
 
 function moveTaskListUp(taskListElement) {
@@ -190,14 +260,6 @@ function moveTaskListUp(taskListElement) {
       // div2.remove();
     })
   }
-}
-
-function moveTaskListDown(taskListElement) {
-  // let extraDiv = taskListElement.querySelector('extra-div');
-  // extraDiv.addEventListener('animationend', () => {
-  //   extraDiv.remove();
-  //   // div2.remove();
-  // })
 }
 
 function createTaskItem(task) {
@@ -317,6 +379,9 @@ function filterTaskListByToday(taskList) {
         return false;
       }
     });
+
+    // sort list by time, then by priority
+    taskList.sort(utils.compareTodayItems);
   } else {
     taskList = [];
   }

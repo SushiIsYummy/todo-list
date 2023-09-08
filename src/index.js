@@ -11,8 +11,8 @@ import createToday from './pages/today';
 import flatpickr from 'flatpickr';
 createSidebar();
 createFooter(); 
-// createToday();
-createInbox();
+createToday();
+// createInbox();
 
 let content = document.querySelector('#content');
 let inbox = document.querySelector('.sidebar-item.inbox');
