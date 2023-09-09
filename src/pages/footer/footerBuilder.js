@@ -29,11 +29,8 @@ function createFooter() {
   footerEventListenerManager.initializeFlatpickrDateInput();
   footerEventListenerManager.activateAddTaskButton();
   footerEventListenerManager.handleDialogOutsideClick();
-  // activateDueDateButton();
-  // footerEventListenerManager.activateDueDateTime();
-  // footerEventListenerManager.activateDueDateTimeClearButton();
-  // footerEventListenerManager.activateDueDateClearButton();
   footerEventListenerManager.activateTimeInputClearButton();
+  footerEventListenerManager.activateDueDateInputTodayButton();
   footerEventListenerManager.activateDueDateInputClearButton();
   footerEventListenerManager.addEventListenerPriorityDropdown();
   footerEventListenerManager.activateDiscardChangesButtons();
@@ -41,16 +38,8 @@ function createFooter() {
   footerEventListenerManager.activateDueDateButton();
   footerEventListenerManager.addEventListenerTaskTitle();
   footerEventListenerManager.activateDateRequiredDialogOkButton();
-  // activateSendButton();
   footerEventListenerManager.addEventListenerSubmitForm();
   footerEventListenerManager.activateHamburgerMenu();
-  // footerEventListenerManager.customizeFlatpickrDateInputOld();
-  // footerEventListenerManager.customizeFlatpickrTimeInput();
-  // footerUtilitiesManager.adjustDateInputWidthToPlaceHolderWidth();
-  let priorityDropdown = document.querySelector('.priority-dropdown');
-
-  // let dialog = document.querySelector('.discard-changes-dialog');
-  // dialog.close();
 
   let form = document.querySelector('.footer-add-task-form');
   // console.log(taskList[0]);
@@ -282,6 +271,14 @@ function createDateTimeDialog() {
   dueDateInput.classList.add('task-due-date-input');
   dueDateInput.placeholder = 'No Date';
 
+  let dueDateInputButtons = document.createElement('div')
+  dueDateInputButtons.classList.add('task-due-date-input-buttons');
+
+  let dueDateTodayButton = document.createElement('button');
+  dueDateTodayButton.classList.add('task-due-date-today-button');
+  dueDateTodayButton.type = 'button';
+  dueDateTodayButton.textContent = 'Today';
+
   let dueDateClearButton = document.createElement('button');
   dueDateClearButton.classList.add('task-due-date-clear-button');
   dueDateClearButton.type = 'button';
@@ -327,8 +324,10 @@ function createDateTimeDialog() {
   saveButton.classList.add('task-date-time-dialog-save-button');
   saveButton.textContent = 'SAVE';
   
+  dueDateInputButtons.append(dueDateTodayButton, dueDateClearButton);
+
   dueDateInputContainer.appendChild(dueDateInput);
-  dueDateInputContainer.appendChild(dueDateClearButton);
+  dueDateInputContainer.appendChild(dueDateInputButtons);
   
   timeInputContainer.appendChild(timeInput);
   timeInputContainer.appendChild(timeClearButton);

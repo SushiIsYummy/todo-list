@@ -208,13 +208,19 @@
   cursor: pointer;
 }
 
+.task-due-date-input-container {
+  padding-bottom: 10px;
+}
+
+.task-due-date-input-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.task-due-date-today-button,
 .task-due-date-clear-button {
   border: none;
   padding: 7px 10px;
-  margin-bottom: 10px;
-  /* background-color: rgb(197, 197, 197); */
-  /* color: rgb(100, 100, 100); */
-  /* margin-left: 5px; */
   cursor: pointer;
 }
 

@@ -101,6 +101,14 @@ const footerEventListenerManager = {
     });
   },
 
+  activateDueDateInputTodayButton() {
+    let todayButton = document.querySelector('.task-due-date-today-button');
+    let todayFormatted = DateTime.now().toFormat('yyyy-MM-dd');
+    todayButton.addEventListener('click', () => {
+      this.datepicker.setDate(todayFormatted);
+    }) 
+  },
+
   activateDueDateInputClearButton() {
     let clearButton = document.querySelector('.task-due-date-clear-button');
     clearButton.addEventListener('click', () => {
