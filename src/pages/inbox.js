@@ -28,11 +28,26 @@ function createInbox() {
 
   content.appendChild(inboxContainer);
 
-  updateTaskList('inbox', inboxList, false);
+  updateTaskList('inbox', inboxList);
+  // let checkbox = document.querySelector('.task-item-priority-checkbox');
+  // console.log('checkbox is checked: ' + (checkbox.checked === true));
+
+  // checkbox.addEventListener('click', (e) => {
+  //   // e.stopPropagation();
+  //   console.log(checkbox);
+  //   console.log('checkbox is checked: ' + (checkbox.checked === true));
+  // })
   // let rootElement = document.querySelector(':root');
   // let cs = getComputedStyle(rootElement);
   // console.log(cs);
   // console.log(typeof cs.getPropertyValue('--priority-1-color'));
+
+  // let taskList = JSON.parse(localStorage.getItem('taskList'));
+  // taskList.forEach(task => {
+  //   task.checked = true;
+  // })
+  // console.log(taskList);
+  // localStorage.setItem('taskList', JSON.stringify(taskList));
 
   // Listen for changes in the localStorage 'taskList' variable
   // window.addEventListener('taskListChange', updateInboxListItems);

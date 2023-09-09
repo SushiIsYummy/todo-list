@@ -15,8 +15,8 @@ import flatpickr from 'flatpickr';
 createSidebar();
 createFooter(); 
 // createToday();
-// createInbox();
-createUpcoming();
+createInbox();
+// createUpcoming();
 
 let content = document.querySelector('#content');
 let inbox = document.querySelector('.sidebar-item.inbox');

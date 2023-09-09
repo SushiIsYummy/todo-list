@@ -56,7 +56,6 @@ function createTaskBuilder() {
   return builder;
 }
 
-
 export function createTask(listOfFormElements) {
   let builder = createTaskBuilder();
   let i = 0;
@@ -91,6 +90,9 @@ export function createTask(listOfFormElements) {
     id += 1;
     localStorage.setItem('idNumber', JSON.stringify(id));
   }
+
+  // add checked property to false on creation of task
+  task.checked = false;
 
   return task;
 }
@@ -129,28 +131,13 @@ export function addTaskToLocalStorage(task) {
   window.dispatchEvent(taskAddedToLocalStorage);
 }
 
-const taskAddedInfo = (() => {
-  let taskAddedOnPageWithTaskList = false;
-  let pageTaskWasAdded = '';
-  const getTaskAddedOnPageWithTaskList = () => taskAddedOnPageWithTaskList;
-  const setTaskAddedOnPageWithTaskList = (boolean) => taskAddedOnPageWithTaskList = boolean;
-  const getPageTaskWasAdded = () => pageTaskWasAdded;
-  // const setPageTaskWasAdded = 
-  return { getTaskAddedOnPageWithTaskList, setTaskAddedOnPageWithTaskList };
-})();
-
 function showAddedTaskIfHidden(taskListElement) {
-  // if (taskAddedInfo.getTaskAddedOnPageWithTaskList()) {
-    // if (taskListElement != null && taskListElement.childElementCount > 0) {
-      moveTaskListUp(taskListElement);
-      
-      scrollIntoView(taskListElement.lastElementChild, {
-        behavior: 'smooth', // You can customize the scroll behavior
-        block: 'start', // Scroll to the bottom of the element
-      }); 
-
-      // moveTaskListDown(taskListElement);
-    // }
+  moveTaskListUp(taskListElement);
+  
+  scrollIntoView(taskListElement.lastElementChild, {
+    behavior: 'smooth', // You can customize the scroll behavior
+    block: 'start', // Scroll to the bottom of the element
+  }); 
 }
 
 export function updateTaskList(pageName, taskListElement) {
@@ -218,7 +205,9 @@ export function updateTaskListWithDateHeaders(pageName, taskListElement) {
   });
 
   // add last li
-  taskListElement.appendChild(listItem);
+  if (listItem !== undefined) {
+    taskListElement.appendChild(listItem);
+  }
 
   return taskList;
 }
@@ -312,6 +301,7 @@ function createTaskItem(task) {
 
   let taskItem = document.createElement('li');
   taskItem.classList.add('task-item');
+  taskItem.setAttribute('data-task-id', task.id);
 
   let rootElement = document.querySelector(':root');
   let cs = getComputedStyle(rootElement);
@@ -321,6 +311,21 @@ function createTaskItem(task) {
   priorityCheckbox.classList.add('task-item-priority-checkbox');
   // add corresponding priority color to checkbox border and background color
   priorityCheckbox.classList.add(`task-item-priority-${task.priority}`);
+
+  // save value of checkbox to corresponding task in local storage
+  // when a checkbox is clicked
+  priorityCheckbox.addEventListener('click', () => {
+    let taskList = JSON.parse(localStorage.getItem('taskList'));
+    let targetTask = taskList.find(task => parseInt(task.id) === parseInt(taskItem.dataset.taskId));
+
+    targetTask.checked = (priorityCheckbox.checked === true);
+
+    localStorage.setItem('taskList', JSON.stringify(taskList));
+  });
+
+  if (task.checked === true) {
+    priorityCheckbox.checked = true;
+  }
 
   let title = document.createElement('h1');
   title.classList.add('task-item-title');

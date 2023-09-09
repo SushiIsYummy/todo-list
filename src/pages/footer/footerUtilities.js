@@ -139,10 +139,26 @@ const footerUtilitiesManager = {
     let relativeDate = selectedDate.toRelativeCalendar();
 
     
-    // for overdue task items
-    if (selectedDate < now) {
+    // for overdue task items not including today
+    if (selectedDate < now && relativeDate !== 'today') {
+      if (formattedYear < currentYear) {
+        formattedDateTime = `${formattedMonth.slice(0,3)} ${dayNumber} ${formattedYear}`;
+      } else {
+        formattedDateTime = `${formattedMonth.slice(0,3)} ${dayNumber}`;
+      }
       classlist = 'overdue';
       color = rootCS.getPropertyValue('--overdue-color');
+
+      if (timeString !== '') {
+        const time = DateTime.fromFormat(timeString, "HH:mm");
+  
+        // Format the time in 12-hour format with AM/PM
+        const formattedTime = time.toFormat("h:mma");
+  
+        formattedDateTime += ' ' + formattedTime;
+      }
+
+      return { formattedDateTime, color, classlist };
     } 
     
     if (relativeDate === 'today') {
@@ -166,7 +182,7 @@ const footerUtilitiesManager = {
       formattedDateTime = `${formattedMonth.slice(0,3)} ${dayNumber} ${formattedYear}`;
       classlist = 'due-in-future';
       color = rootCS.getPropertyValue('--due-in-future-color');
-    } else {
+    } else  {
       formattedDateTime = `${formattedMonth.slice(0,3)} ${dayNumber}`;
       classlist = 'due-in-future';
       color = rootCS.getPropertyValue('--due-in-future-color');

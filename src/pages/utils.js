@@ -78,26 +78,4 @@ export function compareUpcomingTasks(a, b) {
       }
     }
   }
-
-  // // compare by time vs no time
-  // if (a.dueDateTime === '' && b.dueDateTime === '') {
-  //   return a.priority - b.priority; 
-  // } else if (a.dueDateTime === '') {
-  //   return 1;
-  // } else if (b.dueDateTime === '') {
-  //   return -1;
-  // }
-
-  // // Compare by time
-  // const aTime = DateTime.fromISO(a.dueDateTime);
-  // const bTime = DateTime.fromISO(b.dueDateTime);
-
-  // if (aTime < bTime) {
-  //   return -1;
-  // } else if (aTime > bTime) {
-  //   return 1;
-  // } else {
-  //   return a.priority - b.priority;
-  // }
-
 }

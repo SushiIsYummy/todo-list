@@ -160,11 +160,7 @@ const footerEventListenerManager = {
   
   activateDueDateButton() {
     let dueDateButton = document.querySelector('.task-due-date-button-container');
-    
-    let dueDateInputDisplayed = document.querySelector('.task-due-date-input.form-control');
-    
-  
-    
+      
     dueDateButton.addEventListener('click', () => {
       this.dueDateInput.value = footerUtils.getLastSavedDate();
       this.timeInput.value = footerUtils.getLastSavedTime();
