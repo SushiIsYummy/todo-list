@@ -153,30 +153,72 @@ function showAddedTaskIfHidden(taskListElement) {
     // }
 }
 
-export function updateTaskList(pageName, taskListElement, addedTask) {
+export function updateTaskList(pageName, taskListElement) {
   clearTaskList(taskListElement);
   let taskList = JSON.parse(localStorage.getItem('taskList'));
 
-  // if (addedTask) {
-  //   let addedTaskItem = createTaskItem(taskList[taskList.length-1]);
-  //   console.log('tasklist length: ' + taskList.length);
-  //   console.log('added task item: ' + taskList[taskList.length-1].title);
-  //   taskListElement.appendChild(addedTaskItem);
-  //   showAddedTaskIfHidden(taskListElement);
-  // } else {
-    if (pageName === 'today') {
-      taskList = filterTaskListByToday(taskList);
-    } else {
-      taskList = filterTaskListByLocation(pageName, taskList);
+  if (pageName === 'today') {
+    taskList = filterTaskListByToday(taskList);
+  } else if (pageName === 'upcoming') {
+    taskList = filterTaskListByUpcoming(taskList);
+  } else {
+    taskList = filterTaskListByLocation(pageName, taskList);
+  }
+  
+  taskList.forEach((task) => {
+    let taskItem = createTaskItem(task);
+    taskListElement.appendChild(taskItem);
+  });
+
+  return taskList;
+}
+
+export function updateTaskListWithDateHeaders(pageName, taskListElement) {
+  clearTaskList(taskListElement);
+  let taskList = JSON.parse(localStorage.getItem('taskList'));
+
+  if (pageName === 'upcoming') {
+    taskList = filterTaskListByUpcoming(taskList);
+  } else {
+    return;
+  }
+
+  let lastDate =  '';
+  let listItem;
+  let list;
+
+  taskList.forEach((task) => {
+    let taskItem = createTaskItem(task);
+
+    if (task.dueDate !== '' && task.dueDate !== lastDate) {
+      if (listItem !== undefined) {
+        taskListElement.appendChild(listItem);
+      }
+      listItem = document.createElement('li');
+
+      let dayOfWeek = DateTime.fromISO(task.dueDate).weekdayLong;
+      console.log(dayOfWeek)
+      let dueDateFormatted = DateTime.fromISO(task.dueDate).toFormat(`MMM d`);
+      dueDateFormatted += ' · ' + dayOfWeek
+      let header = document.createElement('h1');
+      header.classList.add('task-item-date-header');
+      header.textContent = dueDateFormatted;
+
+      list = document.createElement('ul');
+
+      listItem.appendChild(header);
+      listItem.appendChild(list);
+
+      lastDate = task.dueDate;
     }
-    
-    taskList.forEach((task) => {
-      let taskItem = createTaskItem(task);
-      taskListElement.appendChild(taskItem);
-    });
-  // }
 
+    if (listItem !== undefined) {
+      list.appendChild(taskItem);
+    }
+  });
 
+  // add last li
+  taskListElement.appendChild(listItem);
 
   return taskList;
 }
@@ -193,7 +235,7 @@ export function addTaskToTaskListToday(taskListElement) {
 
   taskList = filterTaskListByToday(taskList);
 
-  taskList.sort(utils.compareTodayItems);
+  taskList.sort(utils.compareTodayTasks);
 
   let index = taskList.findIndex(task => task.id === addedTask.id);
   console.log('index: ' + index);
@@ -219,10 +261,14 @@ export function addTaskToTaskList(pageName, taskListElement) {
   let taskList = JSON.parse(localStorage.getItem('taskList'));
   let addedTask = taskList[taskList.length-1];
   let taskDate = addedTask.dueDate;
+  let taskDateLuxon = DateTime.fromISO(taskDate);
   let relativeDate = DateTime.fromISO(taskDate).toRelativeCalendar();
+  let now = DateTime.now();
 
+  // console.log('if: ' + (pageName === 'upcoming' && relativeDate !== 'today' && addedTask.dueDate > now));
   if (pageName === addedTask.taskLocation ||
-      pageName === 'today' && relativeDate === 'today') {
+      pageName === 'today' && relativeDate === 'today' ||
+      (pageName === 'upcoming' && relativeDate !== 'today' && taskDateLuxon > now)) {
 
     let extraDiv = taskListElement.querySelector('.extra-div');
     let addedTaskItem = createTaskItem(addedTask);
@@ -273,18 +319,9 @@ function createTaskItem(task) {
   let priorityCheckbox = document.createElement('input');
   priorityCheckbox.type = 'checkbox';
   priorityCheckbox.classList.add('task-item-priority-checkbox');
-  // add corresponding priorty color to checkbox border and background color
+  // add corresponding priority color to checkbox border and background color
   priorityCheckbox.classList.add(`task-item-priority-${task.priority}`);
 
-  // priorityCheckbox.style.color = cs.getPropertyValue(`--priority-${task.priority}-color`);
-  // priorityCheckbox.style.backgroundColor = 'rgba(cs.getPropertyValue(`--priority-${task.priority}-color`), 0.1)';
-  // priorityCheckbox.style
-  // priorityCheckbox.style.color = 
-
-  // let span = document.createElement('span');
-  // span.classList.add('task-item-priority-checkmark');
-
-  // priorityContainer.append(priorityCheckbox, span);
   let title = document.createElement('h1');
   title.classList.add('task-item-title');
   title.textContent = task.title;
@@ -380,7 +417,32 @@ function filterTaskListByToday(taskList) {
     });
 
     // sort list by time, then by priority
-    taskList.sort(utils.compareTodayItems);
+    taskList.sort(utils.compareTodayTasks);
+  } else {
+    taskList = [];
+  }
+
+  return taskList;
+}
+
+function filterTaskListByUpcoming(taskList) {
+  if (taskList !== null) {
+    taskList = taskList.filter((task) => {
+      if (task.dueDate !== '') {
+        let now = DateTime.now();
+        let dueDate = DateTime.fromISO(task.dueDate);
+        let relativeDate = dueDate.toRelativeCalendar();
+
+        if (relativeDate !== 'today' && dueDate > now) {
+          return true;
+        }
+        return false;
+      }
+    });
+
+    // sort list by date, then time, then by priority
+    console.log(taskList);
+    taskList.sort(utils.compareUpcomingTasks);
   } else {
     taskList = [];
   }
@@ -394,17 +456,3 @@ function clearTaskList(taskListElement) {
     taskListElement.lastChild.remove();
   }
 }
-
-// function removeLastItem() {
-//   let taskList = JSON.parse(localStorage.getItem('taskList'));
-
-//   if (taskList !== null) {
-//     taskList.pop();
-//   }
-  
-//   localStorage.setItem('taskList', JSON.stringify(taskList));
-
-//   console.log(localStorage.getItem('taskList'));
-// }
-
-// removeLastItem();

@@ -27,14 +27,11 @@
   border-radius: 50%;
   width: 60px;
   height: 60px;
-  /* font-size: 17px; */
-
 }
 
 .hamburger-menu {
   width: 30px;
   height: 20px;
-  /* background-color: white; */
   padding: 0px 0;
   display: flex;
   flex-direction: column;
@@ -82,7 +79,6 @@
   left: 50%;
   transform: translate(-50%, -50%);
 
-  /* width: 100%; */
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -144,10 +140,7 @@
   flex-wrap: wrap;
   border-bottom: 1px solid rgb(212, 209, 209);
   padding: 10px;
-  /* overflow-x: auto; */
-
 }
-
 
 .priority-0-color {
   color: black;
@@ -169,14 +162,9 @@
   color: gray;
 }
 
-/* .priority-dropdown option:checked {
-  color: inherit; 
-} */
-
 .calendar-svg {
   width: 20px;
   height: 20px;
-  /* cursor: inherit; */
   border: none;
   pointer-events: none;
 }
@@ -222,44 +210,6 @@
   border: none;
   padding: 7px 10px;
   cursor: pointer;
-}
-
-/* .task-due-date-button {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  width: max-content;
-
-  background-color: rgb(197, 197, 197);
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-} */
-
-/* .task-due-date-button * {
-  pointer-events: none;
-}
-
-.task-due-date-button:hover {
-  cursor: pointer;
-}
-
-.task-due-date-button:active {
-  filter: brightness(1.1);
-} */
-
-
-input[type="date"]::-webkit-inner-spin-button,
-input[type="date"]::-webkit-calendar-picker-indicator {
-  /* display: none;
-  -webkit-appearance: none; */
-  /* margin:0; */
-  /* border: none; */
-  
-}
-
-input[type="date"]::-webkit-datetime-edit {
-  display:none;
 }
 
 .bottom-row {
@@ -353,30 +303,9 @@ input[type="date"]::-webkit-datetime-edit {
   flex-direction: column;
 }
 
-/* Position Flatpickr calendar above the input */
-.flatpickr-calendar {
-  /* position: absolute; */
-  /* bottom: 100%; Display the calendar above the input */
-  /* transform: translateY(-10px); Adjust this value to fine-tune the position */
-}
-
-/* .flatpickr-calendar { z-index: 999999; }
-.flatpickr-calendar.open {
-  z-index: 10000;
-} */
-
 .flatpickr-calendar.hasTime {
   width: 200px;
 }
-
-/* .task-due-date.form-control {
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 1rem;
-}
-
-.task-due-date.form-control::placeholder {
-  color: #646464;
-} */
 
 .task-due-date-para {
   font-size: 1rem;
@@ -453,53 +382,3 @@ input[type="date"]::-webkit-datetime-edit {
 .task-item-date-and-time {
   color: var(--no-date-color);
 }
-
-.task-item-date-and-time-container {
-  display: flex;
-  gap: 3px;
-  align-items: center;
-}
-
-.task-item-calendar {
-  width: 20px;
-  height: 20px;
-  border: none;
-}
-
-/* .task-due-date-time { */
-  /* color: red; */
-  /* height: 100%; */
-  /* min-width: 101px; */
-/* } */
-
-/* .task-due-date-time-container { */
-  /* display: flex; */
-  /* flex-direction: row; */
-  /* gap: 5px; */
-
-  /* overflow: hidden; */
-  /* white-space: nowrap; */
-/* } */
-
-/* .task-due-date-time-clear-button { */
-  /* height: 100%; */
-  /* padding: 0 5px; */
-  /* background-color: ; */
-  /* color: red; */
-  /* border: none; */
-  /* border-radius: 5px; */
-/* } */
-
-/* .custom-time-picker {
-  position: relative;
-}
-
-.custom-time-picker .confirm-button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 5px;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  cursor: pointer;
-} */

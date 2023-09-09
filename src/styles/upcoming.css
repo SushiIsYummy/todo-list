@@ -1,8 +1,8 @@
-.today-container {
+.upcoming-container {
   /* padding: 0 30px; */
 }
 
-.today-header {
+.upcoming-header {
   position: fixed;
   top: 0;
   width: 100%;
@@ -10,10 +10,15 @@
   background-color: white;
 }
 
-.today-title {
+.upcoming-title {
   padding: 10px 20px;
 }
 
-.today-list {
+.upcoming-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  
   list-style: none;
 }
+
