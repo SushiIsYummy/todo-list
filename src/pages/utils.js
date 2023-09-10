@@ -42,9 +42,7 @@ export function compareUpcomingTasks(a, b) {
     return 1; 
   } else if (b.dueDate === '') {
     return -1; 
-  } else {
-    
-  }
+  } 
 
   // Compare by date
   if (a.dueDate !== '' && b.dueDate !== '') {
@@ -78,4 +76,15 @@ export function compareUpcomingTasks(a, b) {
       }
     }
   }
+}
+
+export function compareDates(a, b) {
+  // Parse the dates as strings into Date objects
+  const dateA = new Date(a);
+  const dateB = new Date(b);
+
+  // Compare the Date objects
+  if (dateA < dateB) return -1;
+  if (dateA > dateB) return 1;
+  return 0;
 }

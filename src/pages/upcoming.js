@@ -1,4 +1,4 @@
-import { updateTaskListWithDateHeaders, addTaskToTaskList } from "./tasks";
+import { updateTaskListWithDateHeaders, addTaskToTaskListUpcoming, updateTaskList } from "./tasks";
 import { addMarginBottomToTaskList, addMarginTopToTaskList } from "./utils";
 
 function createUpcoming() {
@@ -29,7 +29,8 @@ function createUpcoming() {
   updateTaskListWithDateHeaders('upcoming', upcomingList);
     
   window.addEventListener('taskAddedToLocalStorage', function() {
-    addTaskToTaskList('upcoming', upcomingList);
+    addTaskToTaskListUpcoming(upcomingList);
+    // updateTaskListWithDateHeaders('upcoming', upcomingList);
   });
 
   addMarginTopToTaskList(upcomingHeader, upcomingList);

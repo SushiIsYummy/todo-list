@@ -108,12 +108,14 @@ export function createTask(listOfFormElements) {
 function addIdToAllTasks() {
   let taskList = JSON.parse(localStorage.getItem('taskList'));
 
-  for (let i = 0; i < taskList.length; i++) {
-    console.log(taskList[i]);
-    taskList[i].id = i;
+  if (taskList !== null) {
+    for (let i = 0; i < taskList.length; i++) {
+      console.log(taskList[i]);
+      taskList[i].id = i;
+    }
+  
+    localStorage.setItem('taskList', JSON.stringify(taskList));
   }
-
-  localStorage.setItem('taskList', JSON.stringify(taskList));
 }
 
 
@@ -157,7 +159,6 @@ export function updateTaskList(pageName, taskListElement) {
     taskListElement.appendChild(taskItem);
   });
 
-  return taskList;
 }
 
 export function updateTaskListWithDateHeaders(pageName, taskListElement) {
@@ -170,46 +171,57 @@ export function updateTaskListWithDateHeaders(pageName, taskListElement) {
     return;
   }
 
-  let lastDate =  '';
-  let listItem;
-  let list;
+  taskList.sort(utils.compareUpcomingTasks);
 
-  taskList.forEach((task) => {
-    let taskItem = createTaskItem(task);
+  let groupedTasks = Object.values(groupByDueDate(taskList));
+  // console.log(groupedTasks);
+  groupedTasks.forEach((taskGroup) => {
+    let groupedTasksByDate = document.createElement('li');
+    groupedTasksByDate.classList.add('grouped-tasks-by-date');
+    groupedTasksByDate.setAttribute('data-due-date', taskGroup[0].dueDate);
 
-    if (task.dueDate !== '' && task.dueDate !== lastDate) {
-      if (listItem !== undefined) {
-        taskListElement.appendChild(listItem);
-      }
-      listItem = document.createElement('li');
+    let dayOfWeek = DateTime.fromISO(taskGroup[0].dueDate).weekdayLong;
+    let dueDateFormatted = DateTime.fromISO(taskGroup[0].dueDate).toFormat(`MMM d`);
+    dueDateFormatted += ' · ' + dayOfWeek
 
-      let dayOfWeek = DateTime.fromISO(task.dueDate).weekdayLong;
-      console.log(dayOfWeek)
-      let dueDateFormatted = DateTime.fromISO(task.dueDate).toFormat(`MMM d`);
-      dueDateFormatted += ' · ' + dayOfWeek
-      let header = document.createElement('h1');
-      header.classList.add('task-item-date-header');
-      header.textContent = dueDateFormatted;
+    let headerDate = document.createElement('h1');
+    headerDate.classList.add('grouped-task-items-date-header');
+    headerDate.textContent = dueDateFormatted;
 
-      list = document.createElement('ul');
+    let groupedTaskItems = document.createElement('ul');
+    groupedTaskItems.classList.add('grouped-task-items');
 
-      listItem.appendChild(header);
-      listItem.appendChild(list);
+    groupedTasksByDate.appendChild(headerDate);
+    groupedTasksByDate.appendChild(groupedTaskItems);
 
-      lastDate = task.dueDate;
+    taskGroup.forEach((task) =>  {
+      let taskItem = createTaskItem(task);
+      groupedTaskItems.appendChild(taskItem);
+    });
+
+    taskListElement.appendChild(groupedTasksByDate);
+  })
+
+}
+
+function groupByDueDate(taskList) {
+
+  // Create an object to group tasks by due date
+  const groupedTasks = {};
+
+  // Iterate through the tasks and group them by due date
+  for (const task of taskList) {
+    const dueDate = task.dueDate;
+    if (!groupedTasks[dueDate]) {
+      groupedTasks[dueDate] = [];
     }
-
-    if (listItem !== undefined) {
-      list.appendChild(taskItem);
-    }
-  });
-
-  // add last li
-  if (listItem !== undefined) {
-    taskListElement.appendChild(listItem);
+    groupedTasks[dueDate].push(task);
   }
 
-  return taskList;
+  // Convert the grouped tasks object to an array of arrays
+  // const result = Object.values(groupedTasks);
+
+  return groupedTasks;
 }
 
 export function addTaskToTaskListToday(taskListElement) {
@@ -217,7 +229,6 @@ export function addTaskToTaskListToday(taskListElement) {
   let addedTask = taskList[taskList.length-1];
   let relativeDate = DateTime.fromISO(addedTask.dueDate).toRelativeCalendar();
 
-  // ignore added task if its due date is not today
   if (relativeDate !== 'today') {
     return;
   }
@@ -243,7 +254,104 @@ export function addTaskToTaskListToday(taskListElement) {
     behavior: 'smooth',
     // block: 'bottom'
   });
+}
+
+export function addTaskToTaskListUpcoming(taskListElement) {
+  let taskList = JSON.parse(localStorage.getItem('taskList'));
+  let addedTask = taskList[taskList.length-1];
+  let taskListWithoutAddedTask = [...taskList];
+  taskListWithoutAddedTask.pop();
   
+  let now = DateTime.now();
+  let dueDate = DateTime.fromISO(addedTask.dueDate);
+  let relativeDate = DateTime.fromISO(addedTask.dueDate).toRelativeCalendar();
+
+  if (addedTask.dueDate === '' || (dueDate < now && relativeDate === 'today')) {
+    return;
+  }
+
+  taskList.sort(utils.compareUpcomingTasks);
+  taskListWithoutAddedTask.sort(utils.compareUpcomingTasks);
+
+  let newTaskItem = createTaskItem(addedTask);
+
+  let groupedTasksObjectWithoutAddedTask = groupByDueDate(taskListWithoutAddedTask);
+  
+  if (!groupedTasksObjectWithoutAddedTask[addedTask.dueDate]) {
+    console.log('new date added!');
+    let groupedTasksByDate = document.createElement('li');
+    groupedTasksByDate.classList.add('grouped-tasks-by-date');
+    groupedTasksByDate.setAttribute('data-due-date', addedTask.dueDate);
+
+    let dayOfWeek = DateTime.fromISO(addedTask.dueDate).weekdayLong;
+    let dueDateFormatted = DateTime.fromISO(addedTask.dueDate).toFormat(`MMM d`);
+    dueDateFormatted += ' · ' + dayOfWeek
+
+    let headerDate = document.createElement('h1');
+    headerDate.classList.add('grouped-task-items-date-header');
+    headerDate.textContent = dueDateFormatted;
+
+    let groupedTaskItems = document.createElement('ul');
+    groupedTaskItems.classList.add('grouped-task-items');
+
+    groupedTasksByDate.appendChild(headerDate);
+    groupedTasksByDate.appendChild(groupedTaskItems);
+
+    groupedTaskItems.appendChild(newTaskItem);
+
+    let dueDatesWithoutAddedTask = Object.keys(groupedTasksObjectWithoutAddedTask);
+    let dueDatesWithAddedTask = [...dueDatesWithoutAddedTask];
+    dueDatesWithAddedTask.push(addedTask.dueDate);
+    dueDatesWithoutAddedTask.sort(utils.compareDates);
+    dueDatesWithAddedTask.sort(utils.compareDates);
+
+    // console.log(dueDatesWithoutAddedTask);
+
+    let index = dueDatesWithAddedTask.findIndex(dueDate => dueDate === addedTask.dueDate);
+    console.log('index:' + index);
+
+    if (index === 0) {
+      if (taskListElement.childElementCount === 0) {
+        taskListElement.appendChild(groupedTasksByDate);
+      } else {
+        taskListElement.insertBefore(groupedTasksByDate, taskListElement.firstChild);
+      }
+    } else if (index === dueDatesWithAddedTask.length-1) {
+      taskListElement.appendChild(groupedTasksByDate);
+    } else {
+      let allGroupedTasks = [];
+      dueDatesWithoutAddedTask.forEach(dueDate => {
+        allGroupedTasks.push(taskListElement.querySelector(`.grouped-tasks-by-date[data-due-date="${dueDate}"]`));
+      })
+      // console.log(allGroupedTasks);
+      taskListElement.insertBefore(groupedTasksByDate, allGroupedTasks[index]);
+    }
+    
+  } else {
+    let groupedTasksByDate = taskListElement.querySelector(`.grouped-tasks-by-date[data-due-date="${addedTask.dueDate}"]`);
+    let groupedTaskItems = groupedTasksByDate.querySelector('.grouped-task-items');
+    let taskItemElements = Array.from(groupedTaskItems.querySelectorAll('.task-item'));
+    let tasksWithoutAddedTask = groupedTasksObjectWithoutAddedTask[addedTask.dueDate];
+    let tasksWithAddedTask = [...tasksWithoutAddedTask];
+    tasksWithAddedTask.push(addedTask);
+    tasksWithAddedTask.sort(utils.compareUpcomingTasks);
+    tasksWithoutAddedTask.sort(utils.compareUpcomingTasks);
+
+    let index = tasksWithAddedTask.findIndex((task) => task.id === addedTask.id);
+
+    if (index === tasksWithoutAddedTask.length) {
+      groupedTaskItems.appendChild(newTaskItem);
+    } else {
+      groupedTaskItems.insertBefore(newTaskItem, taskItemElements[index]);
+    } 
+
+  }
+
+  // may need to improve scrolling function later on
+  scrollIntoView(newTaskItem, {
+    behavior: 'smooth',
+    // block: 'bottom'
+  });
 }
 
 export function addTaskToTaskList(pageName, taskListElement) {
@@ -446,8 +554,8 @@ function filterTaskListByUpcoming(taskList) {
     });
 
     // sort list by date, then time, then by priority
-    console.log(taskList);
-    taskList.sort(utils.compareUpcomingTasks);
+    // console.log(taskList);
+    // taskList.sort(utils.compareUpcomingTasks);
   } else {
     taskList = [];
   }

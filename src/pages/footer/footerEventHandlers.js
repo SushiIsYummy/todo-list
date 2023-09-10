@@ -67,30 +67,19 @@ const footerEventListenerManager = {
     this.footerAddTaskButton.addEventListener('click', () => {
       this.addTaskDialog.showModal();
       footerUtils.setCalendarIconColor('#646464');
-      // set add task dialog at the bottom of page
-      // dialog.style.top =  `calc(100% - ${getAddTaskDialogHeight()}px)`;
-      // dialog.style.bottom = 0;
     })
   },
   
-  // activateDueDateTime() {
-  //   let dueDateTime = document.querySelector('.task-due-date-time');
-  //   let dueDate = document.querySelector('.task-due-date');
-  
-  //   // A task cannot have a time and no date
-  //   // change date to Today if time is chosen and date is empty
-  //   dueDateTime.addEventListener('change', () => {
-  //     if (dueDate.value === '') {
-  //       // dueDate.value = DateTime.now().toFormat('yyyy-MM-dd');
-  
-  //       // Manually trigger the the change for dueDate
-  //       const changeEvent = new Event('change', { bubbles: true });
-  //       dueDate.dispatchEvent(changeEvent);
-  
-  //       console.log('dispatched event!');
-  //     }
-  //   })
-  // },
+  activateTaskItemCheckbox() {
+    let taskItemCheckboxes = document.querySelectorAll('.task-item-checkboxes');
+    let taskList = JSON.parse(localStorage.getItem('taskList'));
+    
+    taskItemCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('click', () => {
+        
+      });
+    })
+  },
   
   activateTimeInputClearButton() {
     let clearButton = document.querySelector('.task-time-clear-button');
