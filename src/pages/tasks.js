@@ -270,7 +270,10 @@ export function addTaskToTaskListUpcoming(taskListElement) {
     return;
   }
 
-  taskList.sort(utils.compareUpcomingTasks);
+  // taskList = filterTaskListByUpcoming(taskList);
+  taskListWithoutAddedTask = filterTaskListByUpcoming(taskListWithoutAddedTask);
+
+  // taskList.sort(utils.compareUpcomingTasks);
   taskListWithoutAddedTask.sort(utils.compareUpcomingTasks);
 
   let newTaskItem = createTaskItem(addedTask);
@@ -323,7 +326,7 @@ export function addTaskToTaskListUpcoming(taskListElement) {
       dueDatesWithoutAddedTask.forEach(dueDate => {
         allGroupedTasks.push(taskListElement.querySelector(`.grouped-tasks-by-date[data-due-date="${dueDate}"]`));
       })
-      // console.log(allGroupedTasks);
+      console.log(allGroupedTasks);
       taskListElement.insertBefore(groupedTasksByDate, allGroupedTasks[index]);
     }
     
