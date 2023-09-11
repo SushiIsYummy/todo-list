@@ -12,35 +12,59 @@ import './styles/upcoming.css';
 import './styles/task-item.css';
 import createToday from './pages/today';
 import flatpickr from 'flatpickr';
-createSidebar();
 createFooter(); 
+createSidebar();
 // createToday();
 // createInbox();
-createUpcoming();
+// createUpcoming();
 
 let content = document.querySelector('#content');
-let inbox = document.querySelector('.sidebar-item.inbox');
-let today = document.querySelector('.sidebar-item.today');
-let upcoming = document.querySelector('.sidebar-item.upcoming');
+let inboxSidebarItem = document.querySelector('.sidebar-item.inbox');
+let todaySidebarItem = document.querySelector('.sidebar-item.today');
+let upcomingSidebarItem = document.querySelector('.sidebar-item.upcoming');
 let sidebarDialog = document.querySelector('.sidebar-dialog');
+// sidebarDialog.showModal();
+let addProjectDialog = document.querySelector('.add-project-dialog');
+// addProjectDialog.showModal();
+let todayContainer = document.querySelector('.today-container');
+let upcomingContainer = document.querySelector('.upcoming-container');
 
-inbox.addEventListener('click', () => {
-  removeAllElementsExceptFooterAndSidebar();
-  createInbox();
+inboxSidebarItem.addEventListener('click', () => {
+  let inboxContainer = document.querySelector('.inbox-container');
+  if (inboxContainer === null) {
+    removeAllElementsExceptFooterAndSidebar();
+    createInbox();
+  }
 });
 
-today.addEventListener('click', () => {
-  removeAllElementsExceptFooterAndSidebar();
-  createToday();
+todaySidebarItem.addEventListener('click', () => {
+  let todayContainer = document.querySelector('.today-container');
+  if (todayContainer === null) {
+    removeAllElementsExceptFooterAndSidebar();
+    createToday();
+  }
 });
 
-upcoming.addEventListener('click', () => {
-  removeAllElementsExceptFooterAndSidebar();
-  createUpcoming();
+upcomingSidebarItem.addEventListener('click', () => {
+  let upcomingContainer = document.querySelector('.upcoming-container');
+  if (upcomingContainer === null) {
+    removeAllElementsExceptFooterAndSidebar();
+    createUpcoming();
+  }
 })
 
 function removeAllElementsExceptFooterAndSidebar() {
-  while (content.childElementCount > 2) {
-    content.lastChild.remove();
+  let elementsToBeRemoved = content.children;
+
+  for (let i = elementsToBeRemoved.length - 1; i >= 0; i--) {
+    const child = elementsToBeRemoved[i];
+    
+    // Check if the child element does not have the specified class name
+    if (!child.classList.contains('footer-container') &&
+        !child.classList.contains('sidebar-dialog') &&
+        !child.classList.contains('add-project-dialog')) {
+      // Remove the child element from the parent
+      content.removeChild(child);
+    }
   }
 }

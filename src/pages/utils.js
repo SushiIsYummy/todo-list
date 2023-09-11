@@ -88,3 +88,40 @@ export function compareDates(a, b) {
   if (dateA > dateB) return 1;
   return 0;
 }
+
+export function clearElementList(listElement) {
+  while (listElement.childElementCount > 0) {
+    listElement.lastChild.remove();
+  }
+}
+// export function handleDialogOutsideClick(dialogElement, extraActions) {
+  
+//     let isMouseOutsideModal = false;
+  
+//     dialogElement.addEventListener("mousedown", (event) => {
+//       const dialogDimensions = dialogElement.getBoundingClientRect();
+//       if (
+//         event.clientX < dialogDimensions.left ||
+//         event.clientX > dialogDimensions.right ||
+//         event.clientY < dialogDimensions.top ||
+//         event.clientY > dialogDimensions.bottom
+//       ) {
+//         isMouseOutsideModal = true;
+//       } else {
+//         isMouseOutsideModal = false;
+//       }
+//     });
+  
+//     dialogElement.addEventListener("mouseup", (event) => {
+//       const modalArea = dialogElement.getBoundingClientRect();
+//       // console.log(isMouseOutsideModal);
+//       if (isMouseOutsideModal && 
+//         (event.clientX < modalArea.left ||
+//         event.clientX > modalArea.right ||
+//         event.clientY < modalArea.top ||
+//         event.clientY > modalArea.bottom)) {
+//         isMouseOutsideModal = false;
+//           this.showDiscardChangesDialogIfChangesMade();
+//       }
+//     });
+// }

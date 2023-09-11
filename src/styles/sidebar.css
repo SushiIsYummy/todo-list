@@ -51,12 +51,31 @@
 }
 
 .sidebar-item-list.projects {
-  background-color: rgb(184, 184, 184);
+
 }
+
+.projects-header {
+  background-color: rgb(184, 184, 184);
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.add-project-button {
+  width: 20px;
+  height: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .sidebar-item:not(.projects):hover {
   background-color: #E6E6E6;
 }
 
+.projects-header,
+.projects-list-item,
 .sidebar-item a,
 .sidebar-item-list a {
   display: flex;
@@ -78,4 +97,32 @@
   width: 25px;
   height: 25px;
   border: none;
+}
+
+.add-project-dialog {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  border: none;
+  border-radius: 5%;
+  padding: 10px;
+
+  /* width: 100px; */
+  /* height: 100px; */
+  /* background-color: blue; */
+}
+
+.add-project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.add-project-dialog-action-buttons {
+  align-self: flex-end;
+}
+
+.add-project-dialog-name-input {
+  outline: none;
 }

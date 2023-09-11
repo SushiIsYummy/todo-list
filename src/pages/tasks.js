@@ -347,7 +347,6 @@ export function addTaskToTaskListUpcoming(taskListElement) {
     } else {
       groupedTaskItems.insertBefore(newTaskItem, taskItemElements[index]);
     } 
-
   }
 
   // may need to improve scrolling function later on
