@@ -70,6 +70,7 @@
   align-items: center;
 }
 
+.projects-list-item:hover,
 .sidebar-item:not(.projects):hover {
   background-color: #E6E6E6;
 }
@@ -125,4 +126,8 @@
 
 .add-project-dialog-name-input {
   outline: none;
+}
+
+.projects-list-item {
+  cursor: pointer;
 }

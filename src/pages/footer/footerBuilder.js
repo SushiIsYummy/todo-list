@@ -4,8 +4,8 @@ import calendarSVG from '../../svgs/calendar-outline.svg';
 import { addTaskToLocalStorage, createTask } from '../tasks';
 import flatpickr from 'flatpickr';
 
-import footerEventListenerManager from './footerEventHandlers';
-import footerUtilitiesManager from './footerUtilities';
+import footerEventListenerManager from './footerEventListenerManager';
+import footerUtils from './footerUtilities';
 
 // console.log('local storage: ' + JSON.parse(localStorage.getItem('sidebarItems'))[0]);
 
@@ -25,23 +25,30 @@ function createFooter() {
   footerContainer.appendChild(createFooterBarWithHamburgerMenu());
   content.appendChild(footerContainer);
 
-  footerEventListenerManager.initializeElements();
-  footerEventListenerManager.initializeFlatpickrDateInput();
-  footerEventListenerManager.activateAddTaskButton();
-  footerEventListenerManager.handleDialogOutsideClick();
-  footerEventListenerManager.activateTimeInputClearButton();
-  footerEventListenerManager.activateDueDateInputTodayButton();
-  footerEventListenerManager.activateDueDateInputClearButton();
-  footerEventListenerManager.addEventListenerPriorityDropdown();
-  footerEventListenerManager.activateDiscardChangesButtons();
-  footerEventListenerManager.activateDateTimeDialogActionButtons();
-  footerEventListenerManager.activateDueDateButton();
-  footerEventListenerManager.addEventListenerTaskTitle();
-  footerEventListenerManager.activateDateRequiredDialogOkButton();
-  footerEventListenerManager.addEventListenerSubmitForm();
-  footerEventListenerManager.activateHamburgerMenu();
-  footerEventListenerManager.populateTaskLocationDropdown();
-  footerUtilitiesManager.storeFormElementsAndDefaultValues();
+  // footerEventListenerManager.initializeElements();
+  // footerEventListenerManager.initializeFlatpickrDateInput();
+  // footerEventListenerManager.activateAddTaskButton();
+  // footerEventListenerManager.handleDialogOutsideClick();
+  // footerEventListenerManager.activateTimeInputClearButton();
+  // footerEventListenerManager.activateDueDateInputTodayButton();
+  // footerEventListenerManager.activateDueDateInputClearButton();
+  // footerEventListenerManager.addEventListenerPriorityDropdown();
+  // footerEventListenerManager.activateDiscardChangesButtons();
+  // footerEventListenerManager.activateDateTimeDialogActionButtons();
+  // footerEventListenerManager.activateDueDateButton();
+  // footerEventListenerManager.addEventListenerTaskTitle();
+  // footerEventListenerManager.activateDateRequiredDialogOkButton();
+  // footerEventListenerManager.addEventListenerSubmitForm();
+  // footerEventListenerManager.activateHamburgerMenu();
+  // footerUtils.populateTaskLocationDropdown();
+  // footerUtils.storeFormElementsAndDefaultValues();
+
+  // // console.log(footerUtils.addTaskFormElements);
+  // // console.log(footerUtils.addTaskFormElementDefaultValues);
+
+  // window.addEventListener('addProjectToLocalStorage', () => {
+  //   footerUtils.populateTaskLocationDropdown();
+  // })
 }
 
 // the circle button with '+' sign

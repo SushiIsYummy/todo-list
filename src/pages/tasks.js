@@ -150,7 +150,8 @@ export function updateTaskList(pageName, taskListElement) {
     taskList = filterTaskListByToday(taskList);
   } else if (pageName === 'upcoming') {
     taskList = filterTaskListByUpcoming(taskList);
-  } else {
+  } else { 
+    // taskList = filterTaskListByUpcoming(taskList);
     taskList = filterTaskListByLocation(pageName, taskList);
   }
   
@@ -365,9 +366,7 @@ export function addTaskToTaskList(pageName, taskListElement) {
   let now = DateTime.now();
 
   // console.log('if: ' + (pageName === 'upcoming' && relativeDate !== 'today' && addedTask.dueDate > now));
-  if (pageName === addedTask.taskLocation ||
-      pageName === 'today' && relativeDate === 'today' ||
-      (pageName === 'upcoming' && relativeDate !== 'today' && taskDateLuxon > now)) {
+  if (pageName === addedTask.taskLocation) {
 
     let extraDiv = taskListElement.querySelector('.extra-div');
     let addedTaskItem = createTaskItem(addedTask);
@@ -486,13 +485,11 @@ function createTaskItem(task) {
 }
 
 function filterTaskListByLocation(pageName, taskList) {
-  // let pageNameLower = pageName.toLowerCase();
+  let pageNameLower = pageName.toLowerCase();
   // let taskList = JSON.parse(localStorage.getItem('taskList'));
 
   if (taskList !== null) {
-    taskList.filter((task) => {
-      task.taskLocation === pageName;
-    })
+    taskList = taskList.filter((task) => task.taskLocation === pageNameLower);
   } else {
     taskList = [];
   }

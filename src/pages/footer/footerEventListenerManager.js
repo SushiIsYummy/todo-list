@@ -312,36 +312,6 @@ const footerEventListenerManager = {
     })
   },
 
-  populateTaskLocationDropdown() {
-    let taskLocationDropdown = document.querySelector('.task-location-dropdown');
-    let projectList = JSON.parse(localStorage.getItem('projectList'));
-
-    if (projectList === null) {
-      projectList = ['Home'];
-      localStorage.setItem('projectList', JSON.stringify(projectList));
-    }
-
-    // add default locations
-    for (let i = 0; i < footerUtils.locationForTasks.length; i++) {
-      let option = document.createElement('option');
-      option.classList.add('option-item');
-      option.value = footerUtils.locationForTasks[i].toLowerCase();
-      option.textContent = footerUtils.locationForTasks[i];
-
-      taskLocationDropdown.appendChild(option);
-    }
-
-    // add projects
-    for (let i = 0; i < projectList.length; i++) {
-      let option = document.createElement('option');
-      option.classList.add('option-item');
-      option.value = projectList[i].toLowerCase();
-      option.textContent = projectList[i];
-
-      taskLocationDropdown.appendChild(option);
-    }
-  }
-
 };
 
 // the two functions below dont work properly when they are in the 

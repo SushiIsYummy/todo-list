@@ -4,8 +4,9 @@ import calendarSVG from '../../svgs/calendar-outline.svg';
 import { addTaskToLocalStorage, createTask } from '../tasks';
 import flatpickr from 'flatpickr';
 
-import * as footerEL from './footerEventHandlers';
-import footerEventListenerManager from './footerEventHandlers';
+import * as footerEL from './footerEventListenerManager';
+import footerEventListenerManager from './footerEventListenerManager';
+import * as utils from '../utils';
 
 
 const footerUtilitiesManager = {
@@ -326,8 +327,36 @@ const footerUtilitiesManager = {
 
   },
 
-  moveClearButtonNextToDateInput() {
+  populateTaskLocationDropdown() {
+    let taskLocationDropdown = document.querySelector('.task-location-dropdown');
+    let projectList = JSON.parse(localStorage.getItem('projectsList'));
+  
+    utils.clearAllChildrenOfElement(taskLocationDropdown);
 
+    if (projectList === null) {
+      projectList = ['Home'];
+      localStorage.setItem('projectsList', JSON.stringify(projectList));
+    }
+  
+    // add default locations
+    for (let i = 0; i < this.locationForTasks.length; i++) {
+      let option = document.createElement('option');
+      option.classList.add('option-item');
+      option.value = this.locationForTasks[i].toLowerCase();
+      option.textContent = this.locationForTasks[i];
+  
+      taskLocationDropdown.appendChild(option);
+    }
+  
+    // add projects
+    for (let i = 0; i < projectList.length; i++) {
+      let option = document.createElement('option');
+      option.classList.add('option-item');
+      option.value = projectList[i].toLowerCase();
+      option.textContent = projectList[i];
+  
+      taskLocationDropdown.appendChild(option);
+    }
   }
 
 

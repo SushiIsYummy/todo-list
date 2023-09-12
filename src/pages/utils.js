@@ -89,9 +89,25 @@ export function compareDates(a, b) {
   return 0;
 }
 
-export function clearElementList(listElement) {
+export function clearAllChildrenOfElement(listElement) {
   while (listElement.childElementCount > 0) {
     listElement.lastChild.remove();
+  }
+}
+
+export function removeAllElementsExceptFooterAndSidebar() {
+  let elementsToBeRemoved = content.children;
+
+  for (let i = elementsToBeRemoved.length - 1; i >= 0; i--) {
+    const child = elementsToBeRemoved[i];
+    
+    // Check if the child element does not have the specified class name
+    if (!child.classList.contains('footer-container') &&
+        !child.classList.contains('sidebar-dialog') &&
+        !child.classList.contains('add-project-dialog')) {
+      // Remove the child element from the parent
+      content.removeChild(child);
+    }
   }
 }
 // export function handleDialogOutsideClick(dialogElement, extraActions) {
