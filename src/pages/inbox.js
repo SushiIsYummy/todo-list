@@ -1,6 +1,6 @@
 import scrollIntoView from 'scroll-into-view-if-needed'
 import { updateTaskList, addTaskToTaskList } from './tasks';
-import { addMarginBottomToTaskList, addMarginTopToTaskList } from './utils';
+import { addMarginBottomToTaskList, addMarginTopToTaskList } from '../utils';
 
 function createInbox() {
   let content = document.querySelector('#content');

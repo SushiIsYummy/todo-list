@@ -1,5 +1,5 @@
 import { updateTaskList, addTaskToTaskListToday } from "./tasks";
-import { addMarginBottomToTaskList, addMarginTopToTaskList } from "./utils";
+import { addMarginBottomToTaskList, addMarginTopToTaskList } from "../utils";
 
 function createToday() {
   let content = document.querySelector('#content');

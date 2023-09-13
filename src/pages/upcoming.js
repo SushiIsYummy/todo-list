@@ -1,5 +1,5 @@
 import { updateTaskListWithDateHeaders, addTaskToTaskListUpcoming, updateTaskList } from "./tasks";
-import { addMarginBottomToTaskList, addMarginTopToTaskList } from "./utils";
+import { addMarginBottomToTaskList, addMarginTopToTaskList } from "../utils";
 
 function createUpcoming() {
   let content = document.querySelector('#content');

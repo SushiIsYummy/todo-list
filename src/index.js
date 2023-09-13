@@ -11,60 +11,45 @@ import './styles/footer.css'
 import './styles/inbox.css'
 import './styles/today.css';
 import './styles/upcoming.css';
-import './styles/task-item.css';
 import './styles/project.css';
+import './styles/task-item.css';
+
+import createAddTaskDialog, { populateTaskLocationDropdown, storeFormElementsAndDefaultValues } from './pages/dialogs/addTaskDialog';
+import createDateRequiredDialog from './pages/dialogs/dateRequiredDialog';
+import createDateTimeDialog from './pages/dialogs/dateTimeDialog';
+import createDiscardChangesDialog from './pages/dialogs/discardChangesDialog';
+import createAddProjectDialog from './pages/dialogs/addProjectDialog';
 
 import footerEventListenerManager from './pages/footer/footerEventListenerManager';
 import footerUtils from './pages/footer/footerUtilities';
-import sidebarELM from './pages/sidebar/sidebarEventListenerManager';
+import sidebarELM from './pages/sidebar/sidebarEventListenerManager.js';
 import sidebarUtils from './pages/sidebar/sidebarUtilitiesManager';
+import { addEditFunctionToAllTaskItems, createEditTaskDialog } from './pages/tasks';
+import * as utils from '/src/utils';
+import sharedDialogElements from './pages/dialogs/sharedDialogElements';
 
-
-createFooter(); 
-createSidebar();
-
-footerEventListenerManager.initializeElements();
-footerEventListenerManager.initializeFlatpickrDateInput();
-footerEventListenerManager.activateAddTaskButton();
-footerEventListenerManager.handleDialogOutsideClick();
-footerEventListenerManager.activateTimeInputClearButton();
-footerEventListenerManager.activateDueDateInputTodayButton();
-footerEventListenerManager.activateDueDateInputClearButton();
-footerEventListenerManager.addEventListenerPriorityDropdown();
-footerEventListenerManager.activateDiscardChangesButtons();
-footerEventListenerManager.activateDateTimeDialogActionButtons();
-footerEventListenerManager.activateDueDateButton();
-footerEventListenerManager.addEventListenerTaskTitle();
-footerEventListenerManager.activateDateRequiredDialogOkButton();
-footerEventListenerManager.addEventListenerSubmitForm();
-footerEventListenerManager.activateHamburgerMenu();
-footerUtils.populateTaskLocationDropdown();
-footerUtils.storeFormElementsAndDefaultValues();
-
-sidebarELM.handleSidebarDialogOutsideClick();
-sidebarELM.activateAddProjectDialogActionButtons();
-sidebarELM.activateAddProjectButton();
-sidebarUtils.updateSidebarProjectsList();
-sidebarELM.closeSidebarOnItemClick();
-sidebarELM.goToProjectPageOnProjectItemClick();
-
-// console.log(footerUtils.addTaskFormElements);
-// console.log(footerUtils.addTaskFormElementDefaultValues);
-
-window.addEventListener('projectAddedToLocalStorage', () => {
-  footerUtils.populateTaskLocationDropdown();
-  sidebarELM.closeSidebarOnItemClick();
-  sidebarELM.goToProjectPageOnProjectItemClick();
-  // sidebarELM.activateNewProjectItemClick();
-})
-
-// createProjectPage('Home');
-
-// createToday();
-// createInbox();
-// createUpcoming();
 
 let content = document.querySelector('#content');
+
+createFooter();
+createSidebar();
+createDateTimeDialog();
+createAddTaskDialog();
+createDateRequiredDialog();
+createDiscardChangesDialog();
+createAddProjectDialog();
+sharedDialogElements.initializeElements();
+
+storeFormElementsAndDefaultValues();
+
+createToday();
+// addEditFunctionToAllTaskItems();
+// createInbox();
+// createUpcoming();
+// createEditTaskDialog();
+// let editTaskDialog = document.querySelector('.edit-task-dialog');
+// editTaskDialog.showModal();
+
 let inboxSidebarItem = document.querySelector('.sidebar-item.inbox');
 let todaySidebarItem = document.querySelector('.sidebar-item.today');
 let upcomingSidebarItem = document.querySelector('.sidebar-item.upcoming');
@@ -80,7 +65,7 @@ let projectsListItems = document.querySelectorAll('.projects-list-item');
 inboxSidebarItem.addEventListener('click', () => {
   let inboxContainer = document.querySelector('.inbox-container');
   if (inboxContainer === null) {
-    removeAllElementsExceptFooterAndSidebar();
+    utils.removeAllElementsExceptFooterSidebarDialogs();
     createInbox();
   }
 });
@@ -88,7 +73,7 @@ inboxSidebarItem.addEventListener('click', () => {
 todaySidebarItem.addEventListener('click', () => {
   let todayContainer = document.querySelector('.today-container');
   if (todayContainer === null) {
-    removeAllElementsExceptFooterAndSidebar();
+    utils.removeAllElementsExceptFooterSidebarDialogs();
     createToday();
   }
 });
@@ -96,7 +81,7 @@ todaySidebarItem.addEventListener('click', () => {
 upcomingSidebarItem.addEventListener('click', () => {
   let upcomingContainer = document.querySelector('.upcoming-container');
   if (upcomingContainer === null) {
-    removeAllElementsExceptFooterAndSidebar();
+    utils.removeAllElementsExceptFooterSidebarDialogs();
     createUpcoming();
   }
 })
@@ -123,23 +108,3 @@ upcomingSidebarItem.addEventListener('click', () => {
 //     })
 //   })
 // });
-
-
-
-
-
-function removeAllElementsExceptFooterAndSidebar() {
-  let elementsToBeRemoved = content.children;
-
-  for (let i = elementsToBeRemoved.length - 1; i >= 0; i--) {
-    const child = elementsToBeRemoved[i];
-    
-    // Check if the child element does not have the specified class name
-    if (!child.classList.contains('footer-container') &&
-        !child.classList.contains('sidebar-dialog') &&
-        !child.classList.contains('add-project-dialog')) {
-      // Remove the child element from the parent
-      content.removeChild(child);
-    }
-  }
-}

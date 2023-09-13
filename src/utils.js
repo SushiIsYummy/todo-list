@@ -95,49 +95,78 @@ export function clearAllChildrenOfElement(listElement) {
   }
 }
 
-export function removeAllElementsExceptFooterAndSidebar() {
+export function removeAllElementsExceptFooterSidebarDialogs() {
   let elementsToBeRemoved = content.children;
 
-  for (let i = elementsToBeRemoved.length - 1; i >= 0; i--) {
+  for (let i = 0; i < elementsToBeRemoved.length; i++) {
     const child = elementsToBeRemoved[i];
     
-    // Check if the child element does not have the specified class name
     if (!child.classList.contains('footer-container') &&
-        !child.classList.contains('sidebar-dialog') &&
-        !child.classList.contains('add-project-dialog')) {
-      // Remove the child element from the parent
+        child.nodeName !== 'DIALOG') {
       content.removeChild(child);
     }
   }
 }
-// export function handleDialogOutsideClick(dialogElement, extraActions) {
+
+export function elementContainsClassEndingWith(element, suffix) {
+  const classList = element.classList;
+  for (let i = 0; i < classList.length; i++) {
+    if (classList[i].endsWith(suffix)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function handleDialogOutsideClick(dialogElement, actionWhenClickedOutside) {
+  let isMouseOutsideModal = false;
+
+  dialogElement.addEventListener("mousedown", (event) => {
+    const dialogDimensions = dialogElement.getBoundingClientRect();
+    if (
+      event.clientX < dialogDimensions.left ||
+      event.clientX > dialogDimensions.right ||
+      event.clientY < dialogDimensions.top ||
+      event.clientY > dialogDimensions.bottom
+    ) {
+      isMouseOutsideModal = true;
+    } else {
+      isMouseOutsideModal = false;
+    }
+  });
+
+  dialogElement.addEventListener("mouseup", (event) => {
+    const modalArea = dialogElement.getBoundingClientRect();
+    if (isMouseOutsideModal && 
+      (event.clientX < modalArea.left ||
+      event.clientX > modalArea.right ||
+      event.clientY < modalArea.top ||
+      event.clientY > modalArea.bottom)) {
+      isMouseOutsideModal = false;
+        if (actionWhenClickedOutside !== undefined) {
+          actionWhenClickedOutside();
+        }
+    }
+  });
+}
+
+// to use this function, the dialog needs to have an animation when
+// the dialog has a class of 'hide'
+export function hideDialogWithAnimation(dialog) {
+  dialog.classList.add('hide');
   
-//     let isMouseOutsideModal = false;
+  let extraDiv = document.querySelector('.extra-div');
+  console.log('extra div: ' + extraDiv);
+  if (extraDiv !== null) {
+    extraDiv.classList.add('hide');
+  }
   
-//     dialogElement.addEventListener("mousedown", (event) => {
-//       const dialogDimensions = dialogElement.getBoundingClientRect();
-//       if (
-//         event.clientX < dialogDimensions.left ||
-//         event.clientX > dialogDimensions.right ||
-//         event.clientY < dialogDimensions.top ||
-//         event.clientY > dialogDimensions.bottom
-//       ) {
-//         isMouseOutsideModal = true;
-//       } else {
-//         isMouseOutsideModal = false;
-//       }
-//     });
-  
-//     dialogElement.addEventListener("mouseup", (event) => {
-//       const modalArea = dialogElement.getBoundingClientRect();
-//       // console.log(isMouseOutsideModal);
-//       if (isMouseOutsideModal && 
-//         (event.clientX < modalArea.left ||
-//         event.clientX > modalArea.right ||
-//         event.clientY < modalArea.top ||
-//         event.clientY > modalArea.bottom)) {
-//         isMouseOutsideModal = false;
-//           this.showDiscardChangesDialogIfChangesMade();
-//       }
-//     });
-// }
+  dialog.addEventListener('animationend', dialogAnimationEnd);
+}
+
+function dialogAnimationEnd(e) {
+  let dialog = e.target;
+  dialog.close();
+  dialog.classList.remove('hide');
+  dialog.removeEventListener('animationend', dialogAnimationEnd);
+}

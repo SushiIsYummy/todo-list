@@ -1,8 +1,9 @@
 import scrollIntoView from 'scroll-into-view-if-needed';
 import { DateTime } from 'luxon';
 import footerUtils from './footer/footerUtilities';
-import * as utils from './utils';
+import * as utils from '../utils';
 import calendarSVG from '../svgs/calendar.svg'
+import sendButtonSVG from '../svgs/send.svg';
 
 const taskAddedToLocalStorage = new Event('taskAddedToLocalStorage');
 
@@ -567,4 +568,95 @@ function clearTaskList(taskListElement) {
   while (taskListElement.lastChild) {
     taskListElement.lastChild.remove();
   }
+}
+
+export function addEditFunctionToAllTaskItems() {
+  let allTaskItems = document.querySelectorAll('.task-item');
+
+  // allTaskItems.forEach(task => {
+  //   task.addEventListener('click', );
+  // });
+}
+
+export function createEditTaskDialog() {
+  let content = document.querySelector('#content');
+
+  let editTaskDialog = document.createElement('dialog');
+  editTaskDialog.classList.add('edit-task-dialog');
+
+  let form = document.createElement('form');
+  form.classList.add('task-form');
+  form.method = 'dialog';
+
+  let title = document.createElement('input');
+  title.type = 'text';
+  title.classList.add('task-title');
+  title.placeholder = 'e.g. buy eggs at store';
+
+  let description = document.createElement('input');
+  description.type = 'text';
+  description.classList.add('task-description');
+  description.placeholder = 'Description';
+
+  let dueDatePara = document.createElement('p');
+  dueDatePara.textContent = 'No Date';
+  dueDatePara.classList.add('task-due-date-para');
+  
+  let dueDateContainer = document.createElement('div');
+  dueDateContainer.classList.add('task-due-date-button-container');
+  dueDateContainer.type = 'button';
+  
+  let dueDateSVG = document.createElement('iframe');
+  dueDateSVG.setAttribute('src', calendarSVG);
+  dueDateSVG.classList.add('calendar-svg');
+
+  let buttons = document.createElement('div');
+  buttons.classList.add('date-and-priority-buttons');
+
+  let priorityDropdown = document.createElement('select');
+  priorityDropdown.classList.add('priority-dropdown');
+
+  for (let i = 1; i <= 4; i++) {
+    let option = document.createElement('option');
+    option.classList.add(`priority-${i}`);
+    option.value = i;
+    option.textContent = `Priority ${i}`;
+
+    if (i === 4) {
+      option.setAttribute('selected', true);
+    }
+    priorityDropdown.appendChild(option);
+  }
+
+  let sendButton = document.createElement('button');
+  sendButton.type = 'submit';
+  sendButton.classList.add('send-button');
+  sendButton.setAttribute('fill', 'white');
+
+  let buttonSVG = document.createElement('object');
+  buttonSVG.classList.add('send-button-svg');
+  buttonSVG.setAttribute('data', sendButtonSVG);
+  buttonSVG.setAttribute('type', 'image/svg+xml');
+
+  let bottomRow = document.createElement('div');
+  bottomRow.classList.add('bottom-row');
+
+  let taskLocationDropdown = document.createElement('select');
+  taskLocationDropdown.classList.add('task-location-dropdown');
+  
+  dueDateContainer.appendChild(dueDateSVG);
+  dueDateContainer.appendChild(dueDatePara);
+
+  bottomRow.appendChild(taskLocationDropdown);
+  bottomRow.appendChild(sendButton);
+  
+  sendButton.appendChild(buttonSVG);
+
+  buttons.appendChild(dueDateContainer);
+  buttons.appendChild(priorityDropdown);
+
+  form.append(title, description, buttons, bottomRow);
+  editTaskDialog.appendChild(form);
+
+  content.appendChild(editTaskDialog);
 }

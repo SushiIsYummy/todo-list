@@ -6,7 +6,7 @@ import flatpickr from 'flatpickr';
 
 import * as footerEL from './footerEventListenerManager';
 import footerEventListenerManager from './footerEventListenerManager';
-import * as utils from '../utils';
+import * as utils from '../../utils';
 
 
 const footerUtilitiesManager = {
@@ -80,34 +80,34 @@ const footerUtilitiesManager = {
     dueDatePara.style.color = color;
   },
   
-  setLastSavedDate(date) {
-    let dueDateInput = document.querySelector('.task-due-date-input');
-    dueDateInput.value = date;
-    this.lastSavedDate = date;
-  },
+  // setLastSavedDate(date) {
+  //   let dueDateInput = document.querySelector('.task-due-date-input');
+  //   dueDateInput.value = date;
+  //   this.lastSavedDate = date;
+  // },
   
-  getLastSavedDate() {
-    return this.lastSavedDate;
-  },
+  // getLastSavedDate() {
+  //   return this.lastSavedDate;
+  // },
 
-  setLastSavedTime(time) {
-    let timeInput = document.querySelector('.task-time-input');
-    timeInput.value = time;
-    this.lastSavedTime = time;
-  },
+  // setLastSavedTime(time) {
+  //   let timeInput = document.querySelector('.task-time-input');
+  //   timeInput.value = time;
+  //   this.lastSavedTime = time;
+  // },
   
-  getLastSavedTime() {
-    return this.lastSavedTime;
-  },
+  // getLastSavedTime() {
+  //   return this.lastSavedTime;
+  // },
 
-  onlyTimeIsSet() {
-    let dueDateInput = document.querySelector('.task-due-date-input');
-    let timeInput = document.querySelector('.task-time-input');
-    if (dueDateInput.value === '' && timeInput.value !== '') {
-      return true;
-    }
-    return false;
-  },
+  // onlyTimeIsSet() {
+  //   let dueDateInput = document.querySelector('.task-due-date-input');
+  //   let timeInput = document.querySelector('.task-time-input');
+  //   if (dueDateInput.value === '' && timeInput.value !== '') {
+  //     return true;
+  //   }
+  //   return false;
+  // },
 
   calculateDateTimeTextColorClasslist(dateString, timeString) {
     const now = DateTime.now();
@@ -327,37 +327,37 @@ const footerUtilitiesManager = {
 
   },
 
-  populateTaskLocationDropdown() {
-    let taskLocationDropdown = document.querySelector('.task-location-dropdown');
-    let projectList = JSON.parse(localStorage.getItem('projectsList'));
+  // populateTaskLocationDropdown() {
+  //   let taskLocationDropdown = document.querySelector('.task-location-dropdown');
+  //   let projectList = JSON.parse(localStorage.getItem('projectsList'));
   
-    utils.clearAllChildrenOfElement(taskLocationDropdown);
+  //   utils.clearAllChildrenOfElement(taskLocationDropdown);
 
-    if (projectList === null) {
-      projectList = ['Home'];
-      localStorage.setItem('projectsList', JSON.stringify(projectList));
-    }
+  //   if (projectList === null) {
+  //     projectList = ['Home'];
+  //     localStorage.setItem('projectsList', JSON.stringify(projectList));
+  //   }
   
-    // add default locations
-    for (let i = 0; i < this.locationForTasks.length; i++) {
-      let option = document.createElement('option');
-      option.classList.add('option-item');
-      option.value = this.locationForTasks[i].toLowerCase();
-      option.textContent = this.locationForTasks[i];
+  //   // add default locations
+  //   for (let i = 0; i < this.locationForTasks.length; i++) {
+  //     let option = document.createElement('option');
+  //     option.classList.add('option-item');
+  //     option.value = this.locationForTasks[i].toLowerCase();
+  //     option.textContent = this.locationForTasks[i];
   
-      taskLocationDropdown.appendChild(option);
-    }
+  //     taskLocationDropdown.appendChild(option);
+  //   }
   
-    // add projects
-    for (let i = 0; i < projectList.length; i++) {
-      let option = document.createElement('option');
-      option.classList.add('option-item');
-      option.value = projectList[i].toLowerCase();
-      option.textContent = projectList[i];
+  //   // add projects
+  //   for (let i = 0; i < projectList.length; i++) {
+  //     let option = document.createElement('option');
+  //     option.classList.add('option-item');
+  //     option.value = projectList[i].toLowerCase();
+  //     option.textContent = projectList[i];
   
-      taskLocationDropdown.appendChild(option);
-    }
-  }
+  //     taskLocationDropdown.appendChild(option);
+  //   }
+  // }
 
 
 }

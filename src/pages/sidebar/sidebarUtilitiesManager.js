@@ -1,38 +1,28 @@
-import * as utils from '../utils';
+import * as utils from '/src/utils';
 
 const sidebarUtilitiesManager = {
   updateSidebarProjectsList() {
-    let projectList = JSON.parse(localStorage.getItem('projectsList'));
+    let projectsList = JSON.parse(localStorage.getItem('projectsList'));
     let projectsListElement = document.querySelector('.projects-list');
     utils.clearAllChildrenOfElement(projectsListElement);
 
-    if (projectList !== null) {
-      for (let i = 0; i < projectList.length; i++) {
-        let projectItem = document.createElement('li');
-        projectItem.classList.add('projects-list-item');
-        projectItem.setAttribute('data-project-name', projectList[i]);
-    
-        let projectItemName = document.createElement('p');
-        projectItemName.textContent = projectList[i];
-    
-        projectItem.appendChild(projectItemName);
-        projectsListElement.appendChild(projectItem);
-      }
+    if (projectsList === null) {
+      projectsList = ['Home'];
+      localStorage.setItem('projectsList', JSON.stringify(projectsList));
     }
-  },
 
-  clearAddProjectForm() {
-    let addProjectDialogForm = document.querySelector('.add-project-form');
-    addProjectDialogForm.reset();
-  },
+    for (let i = 0; i < projectsList.length; i++) {
+      let projectItem = document.createElement('li');
+      projectItem.classList.add('projects-list-item');
+      projectItem.classList.add('close-sidebar');
+      projectItem.setAttribute('data-project-name', projectsList[i]);
   
-  projectNameExists(projectName) {
-    let projectsList = JSON.parse(localStorage.getItem('projectsList'));
-    if (projectsList.includes(projectName)) {
-      return true;
+      let projectItemName = document.createElement('p');
+      projectItemName.textContent = projectsList[i];
+  
+      projectItem.appendChild(projectItemName);
+      projectsListElement.appendChild(projectItem);
     }
-  
-    return false;
   }
 }
 

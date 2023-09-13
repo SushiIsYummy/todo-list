@@ -12,6 +12,10 @@
   border-bottom: 1px solid rgb(211,211,211);
 }
 
+.task-item:active:active {
+  background-color: #E6E6E6;
+}
+
 .task-item-title {
   font-size: 1.6rem;
   font-weight: normal;

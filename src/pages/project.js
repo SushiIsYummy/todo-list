@@ -1,6 +1,6 @@
 import scrollIntoView from 'scroll-into-view-if-needed'
 import { updateTaskList, addTaskToTaskList } from './tasks';
-import { addMarginBottomToTaskList, addMarginTopToTaskList } from './utils';
+import { addMarginBottomToTaskList, addMarginTopToTaskList } from '../utils';
 
 function createProjectPage(projectName) {
   let content = document.querySelector('#content');
@@ -10,6 +10,7 @@ function createProjectPage(projectName) {
 
   let projectHeader = document.createElement('header');
   projectHeader.classList.add('project-header');
+  projectHeader.setAttribute('data-project-name', projectName);
 
   let projectTitle = document.createElement('h1');
   projectTitle.classList.add('project-title');
@@ -32,7 +33,6 @@ function createProjectPage(projectName) {
 
   window.addEventListener('taskAddedToLocalStorage', function() {
     addTaskToTaskList(projectName, projectList);
-    console.log('task added')
   });
   
   addMarginTopToTaskList(projectHeader, projectList);
