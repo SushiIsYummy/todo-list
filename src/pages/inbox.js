@@ -29,13 +29,16 @@ function createInbox() {
   content.appendChild(inboxContainer);
 
   updateTaskList('inbox', inboxList);
-
+  
   // Listen for changes in the localStorage 'taskList' variable
   // window.addEventListener('taskListChange', updateInboxListItems);
   window.addEventListener('taskAddedToLocalStorage', function() {
     addTaskToTaskList('inbox', inboxList);
     // updateTaskList('inbox', inboxList, true);
   });
+  window.addEventListener('taskItemUpdated', () => {
+    updateTaskList('inbox', inboxList);
+  })
   
   addMarginTopToTaskList(inboxHeader, inboxList);
   addMarginBottomToTaskList(inboxList);

@@ -1,9 +1,10 @@
 import sendButtonSVG from '/src/svgs/send.svg';
 import calendarSVG from '/src/svgs/calendar-outline.svg';
-import { getLastSavedDate, getLastSavedTime, setLastSavedDate, setLastSavedTime } from './dateTimeDialog';
-import sharedDialogElements from './sharedDialogElements';
+import { getLastSavedDate, getLastSavedTime, resetLastSavedDateAndTime, setLastSavedDate, setLastSavedTime } from './dateTimeDialog';
+import sharedElements from './sharedElements';
 import { addTaskToLocalStorage, createTask } from '../tasks';
 import * as utils from '../../utils';
+import * as dateTimeDialogUtils from '/src/pages/dialogs/dateTimeDialog';
 
 let addTaskFormElementDefaultValues = [];
 let addTaskFormElements = [];
@@ -40,6 +41,9 @@ function createAddTaskDialog() {
   let dueDateSVG = document.createElement('iframe');
   dueDateSVG.setAttribute('src', calendarSVG);
   dueDateSVG.classList.add('calendar-svg');
+  dueDateSVG.addEventListener('load', () => {
+    setCalendarIconColor(dateTimeDialogUtils.getColorBasedOnDateTime(dateTimeDialogUtils.getLastSavedDate(), dateTimeDialogUtils.getLastSavedTime()));
+  });
 
   let buttons = document.createElement('div');
   buttons.classList.add('date-and-priority-buttons');
@@ -91,23 +95,21 @@ function createAddTaskDialog() {
 
   content.appendChild(dialog);
 
-  populateTaskLocationDropdown();
-  // storeFormElementsAndDefaultValues();
-  addEventListenerPriorityDropdown();
+  populateTaskLocationDropdown(taskLocationDropdown);
+  addEventListenerPriorityDropdown(priorityDropdown);
   addEventListenerTaskTitle();
-  // handleDialogOutsideClick(dialog);
   utils.handleDialogOutsideClick(dialog, function () { showDiscardChangesDialogIfChangesMade(dialog) });
-  activateDueDateButton();
+  activateDueDateButtonOnClick(dueDateContainer);
   setUpFormSubmitHandler();
-  console.log(addTaskFormElementDefaultValues);
+  // console.log(addTaskFormElementDefaultValues);
 
   window.addEventListener('projectAddedToLocalStorage', () => {
-    populateTaskLocationDropdown();
+    populateTaskLocationDropdown(taskLocationDropdown);
   })
 }
 
-function addEventListenerPriorityDropdown() {
-  let priorityDropdown = document.querySelector('.priority-dropdown');
+export function addEventListenerPriorityDropdown(priorityDropdown) {
+  // let priorityDropdown = document.querySelector('.priority-dropdown');
 
   // set color of initial selected item (priority 4)
   let currentOptionElement = document.querySelector(`.priority-${priorityDropdown.value}`);
@@ -163,6 +165,17 @@ function allElementsAreUntouched() {
   return true;
 }
 
+export function setCurrentPriorityValueWithCorrespondingColor(priorityDropdown) {
+  // let priorityDropdown = document.querySelector('.priority-dropdown');
+  priorityDropdown.classList.forEach(className => {
+    if (/^priority-\d-color$/.test(className)) {
+      priorityDropdown.classList.remove(className);
+    }
+  })
+
+  // reset to last option's color (priority 4)
+  priorityDropdown.classList.add(`priority-${priorityDropdown.value}-color`);
+}
 export function clearAddTaskForm() {
   let form = document.querySelector('.footer-add-task-form');
   form.reset();
@@ -175,23 +188,15 @@ export function clearAddTaskForm() {
   dueDateFlatpickrInput.value = '';
 
   let dueDateInput = document.querySelector('.task-due-date-input');
-
+  let calendarIcon = document.querySelector('.calendar-svg');
   // adjustDateInputWidthToPlaceHolderWidth();
   // let dueDateButtonPara = document.querySelector('.task-due-date-button-para');
   // dueDateButtonPara.textContent = 'No Date';
 
   let priorityDropdown = document.querySelector('.priority-dropdown');
-  priorityDropdown.classList.forEach(className => {
-    if (/^priority-\d-color$/.test(className)) {
-      priorityDropdown.classList.remove(className);
-    }
-  })
+  setCurrentPriorityValueWithCorrespondingColor(priorityDropdown);
 
-  // reset to last option's color (priority 4)
-  priorityDropdown.classList.add(`priority-${priorityDropdown.value}-color`);
-
-  setLastSavedDate('');
-  setLastSavedTime('');
+  resetLastSavedDateAndTime();
   
   dueDateInput._flatpickr.clear();
 
@@ -227,7 +232,6 @@ export function setCalendarIconColor(color) {
 }
 
 export function storeFormElementsAndDefaultValues() {
-    
   let title = document.querySelector('.task-title');
   let description = document.querySelector('.task-description');
   let date = document.querySelector('.task-due-date-input');
@@ -262,20 +266,20 @@ function processFormData(addTaskForm) {
   sendButton.classList.remove('active');
 }
 
-function activateDueDateButton() {
-  let dueDateButton = document.querySelector('.task-due-date-button-container');
+export function activateDueDateButtonOnClick(dueDateButton) {
+  // let dueDateButton = document.querySelector('.task-due-date-button-container');
   let timeInput = document.querySelector('.task-time-input');
   let dueDateInput = document.querySelector('.task-due-date-input'); 
     
   dueDateButton.addEventListener('click', () => {
     dueDateInput.value = getLastSavedDate();
     timeInput.value = getLastSavedTime();
-    sharedDialogElements.dateTimeDialog.showModal();
+    sharedElements.dateTimeDialog.showModal();
   })
 }
 
-export function populateTaskLocationDropdown() {
-  let taskLocationDropdown = document.querySelector('.task-location-dropdown');
+export function populateTaskLocationDropdown(taskLocationDropdown) {
+  // let taskLocationDropdown = document.querySelector('.task-location-dropdown');
   let projectList = JSON.parse(localStorage.getItem('projectsList'));
 
   utils.clearAllChildrenOfElement(taskLocationDropdown);

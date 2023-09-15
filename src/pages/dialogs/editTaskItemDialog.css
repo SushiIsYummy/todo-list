@@ -1,0 +1,13 @@
+.edit-task-item-dialog {
+  display: flex;
+  flex-direction: column;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+}
+
+.edit-task-item-dialog:not([open]) {
+  display: none;
+}

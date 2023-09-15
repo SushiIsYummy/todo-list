@@ -4,6 +4,9 @@ import footerUtils from './footer/footerUtilities';
 import * as utils from '../utils';
 import calendarSVG from '../svgs/calendar.svg'
 import sendButtonSVG from '../svgs/send.svg';
+import { showEditTaskItemDialog } from '/src/pages/dialogs/editTaskItemDialog'
+import { setEditTaskItemDialogInputs } from './dialogs/editTaskItemDialog';
+import * as dateTimeDialog from '/src/pages/dialogs/dateTimeDialog';
 
 const taskAddedToLocalStorage = new Event('taskAddedToLocalStorage');
 
@@ -424,7 +427,7 @@ function createTaskItem(task) {
 
   // save value of checkbox to corresponding task in local storage
   // when a checkbox is clicked
-  priorityCheckbox.addEventListener('click', () => {
+  priorityCheckbox.addEventListener('click', (e) => {
     let taskList = JSON.parse(localStorage.getItem('taskList'));
     let targetTask = taskList.find(task => parseInt(task.id) === parseInt(taskItem.dataset.taskId));
 
@@ -460,15 +463,15 @@ function createTaskItem(task) {
   
   if (task.dueDate !== '') {
     nonEmptyOptionalTaskItemElements.push(dateAndTimeContainer);
-    dateAndTime.textContent = footerUtils.getFormattedTextBasedOnDateTime(task.dueDate, task.dueDateTime);
-    dateAndTime.classList.add(footerUtils.getClasslistBasedOnDateTime(task.dueDate, task.dueDateTime));
+    dateAndTime.textContent = dateTimeDialog.getFormattedTextBasedOnDateTime(task.dueDate, task.dueDateTime);
+    dateAndTime.classList.add(dateTimeDialog.getClasslistBasedOnDateTime(task.dueDate, task.dueDateTime));
     
     // color calendar based on date and time when loaded
     calendar.addEventListener('load', () => {
       const svgIframeWindow = calendar.contentWindow;
       const svgIframeDocument = svgIframeWindow.document;
       const pathElement = svgIframeDocument.querySelector('svg');
-      pathElement.style.fill = footerUtils.getColorBasedOnDateTime(task.dueDate, task.dueDateTime);
+      pathElement.style.fill = dateTimeDialog.getColorBasedOnDateTime(task.dueDate, task.dueDateTime);
     });
   }
 
@@ -571,92 +574,38 @@ function clearTaskList(taskListElement) {
 }
 
 export function addEditFunctionToAllTaskItems() {
-  let allTaskItems = document.querySelectorAll('.task-item');
+  let taskListElement = document.querySelector('main ul');
+  let taskList = JSON.parse(localStorage.getItem('taskList'));
 
-  // allTaskItems.forEach(task => {
-  //   task.addEventListener('click', );
-  // });
+  taskListElement.addEventListener('click', (e) => {
+    let elementClicked = e.target;
+    if (elementClicked.tagName === 'LI' && elementClicked.classList.contains('task-item')) {
+      if (taskList !== null) {
+        let taskId = elementClicked.dataset.taskId;
+        console.log(taskId);
+        let task = getTaskFromTaskList(taskId);
+        console.log(task);
+        setEditTaskItemDialogInputs(task);
+        showEditTaskItemDialog();
+      }
+    } else if (elementClicked.tagName !== 'LI' && elementClicked.type !== 'checkbox') {
+      let liElement = elementClicked.closest('li');
+      if (liElement.classList.contains('task-item')) {
+        if (taskList !== null) {
+          let taskId = liElement.dataset.taskId;
+          console.log(taskId);
+          let task = getTaskFromTaskList(taskId);
+          console.log(task);
+          setEditTaskItemDialogInputs(task);
+          showEditTaskItemDialog();
+        }
+      }
+    }
+  });
 }
 
-export function createEditTaskDialog() {
-  let content = document.querySelector('#content');
-
-  let editTaskDialog = document.createElement('dialog');
-  editTaskDialog.classList.add('edit-task-dialog');
-
-  let form = document.createElement('form');
-  form.classList.add('task-form');
-  form.method = 'dialog';
-
-  let title = document.createElement('input');
-  title.type = 'text';
-  title.classList.add('task-title');
-  title.placeholder = 'e.g. buy eggs at store';
-
-  let description = document.createElement('input');
-  description.type = 'text';
-  description.classList.add('task-description');
-  description.placeholder = 'Description';
-
-  let dueDatePara = document.createElement('p');
-  dueDatePara.textContent = 'No Date';
-  dueDatePara.classList.add('task-due-date-para');
-  
-  let dueDateContainer = document.createElement('div');
-  dueDateContainer.classList.add('task-due-date-button-container');
-  dueDateContainer.type = 'button';
-  
-  let dueDateSVG = document.createElement('iframe');
-  dueDateSVG.setAttribute('src', calendarSVG);
-  dueDateSVG.classList.add('calendar-svg');
-
-  let buttons = document.createElement('div');
-  buttons.classList.add('date-and-priority-buttons');
-
-  let priorityDropdown = document.createElement('select');
-  priorityDropdown.classList.add('priority-dropdown');
-
-  for (let i = 1; i <= 4; i++) {
-    let option = document.createElement('option');
-    option.classList.add(`priority-${i}`);
-    option.value = i;
-    option.textContent = `Priority ${i}`;
-
-    if (i === 4) {
-      option.setAttribute('selected', true);
-    }
-    priorityDropdown.appendChild(option);
-  }
-
-  let sendButton = document.createElement('button');
-  sendButton.type = 'submit';
-  sendButton.classList.add('send-button');
-  sendButton.setAttribute('fill', 'white');
-
-  let buttonSVG = document.createElement('object');
-  buttonSVG.classList.add('send-button-svg');
-  buttonSVG.setAttribute('data', sendButtonSVG);
-  buttonSVG.setAttribute('type', 'image/svg+xml');
-
-  let bottomRow = document.createElement('div');
-  bottomRow.classList.add('bottom-row');
-
-  let taskLocationDropdown = document.createElement('select');
-  taskLocationDropdown.classList.add('task-location-dropdown');
-  
-  dueDateContainer.appendChild(dueDateSVG);
-  dueDateContainer.appendChild(dueDatePara);
-
-  bottomRow.appendChild(taskLocationDropdown);
-  bottomRow.appendChild(sendButton);
-  
-  sendButton.appendChild(buttonSVG);
-
-  buttons.appendChild(dueDateContainer);
-  buttons.appendChild(priorityDropdown);
-
-  form.append(title, description, buttons, bottomRow);
-  editTaskDialog.appendChild(form);
-
-  content.appendChild(editTaskDialog);
+function getTaskFromTaskList(taskId) {
+  let taskList = JSON.parse(localStorage.getItem('taskList'));
+  let targetTask = taskList.find((task) => parseInt(task.id) === parseInt(taskId));
+  return targetTask;
 }

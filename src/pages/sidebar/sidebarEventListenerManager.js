@@ -34,6 +34,8 @@ const sidebarEventListenerManager = {
         }
         utils.removeAllElementsExceptFooterSidebarDialogs();
         createProjectPage(e.target.dataset.projectName);
+        const pageChanged = new Event('pageChanged');
+        window.dispatchEvent(pageChanged);
       }
     });
   },

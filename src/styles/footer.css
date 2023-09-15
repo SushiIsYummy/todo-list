@@ -162,6 +162,7 @@
   color: gray;
 }
 
+.edit-calendar-svg,
 .calendar-svg {
   width: 20px;
   height: 20px;
@@ -169,6 +170,7 @@
   pointer-events: none;
 }
 
+.edit-task-due-date-button-container,
 .task-due-date-button-container {
   display: flex;
   align-items: center;
@@ -179,6 +181,7 @@
   border-radius: 7px;
 }
 
+.edit-task-due-date-button-container:hover,
 .task-due-date-button-container:hover {
   cursor: pointer;
 }
@@ -353,31 +356,37 @@
   padding: 5px;
 }
 
+.edit-task-due-date-para.overdue,
 .task-due-date-para.overdue,
 .task-item-date-and-time.overdue {
   color: var(--overdue-color);
 }
 
+.edit-task-due-date-para.due-later-today,
 .task-due-date-para.due-later-today,
 .task-item-date-and-time.due-later-today {
   color: var(--due-later-today-color);
 }
 
+.edit-task-due-date-para.due-this-week,
 .task-due-date-para.due-this-week,
 .task-item-date-and-time.due-this-week {
   color: var(--due-this-week-color);
 }
 
+.edit-task-due-date-para.due-tomorrow,
 .task-due-date-para.due-tomorrow,
 .task-item-date-and-time.due-tomorrow {
   color: var(--due-tomorrow-color);
 }
 
+.edit-task-due-date-para.due-in-future,
 .task-due-date-para.due-in-future,
 .task-item-date-and-time.due-in-future {
   color: var(--due-in-future-color);
 }
 
+.edit-task-due-date-para.no-date,
 .task-due-date-para.no-date,
 .task-item-date-and-time {
   color: var(--no-date-color);

@@ -12,7 +12,7 @@
   border-bottom: 1px solid rgb(211,211,211);
 }
 
-.task-item:active:active {
+.task-item:active {
   background-color: #E6E6E6;
 }
 

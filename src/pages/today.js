@@ -27,11 +27,16 @@ function createToday() {
     
   content.appendChild(todayContainer);
   updateTaskList('today', todayList, false);
-    
+  
   window.addEventListener('taskAddedToLocalStorage', function() {
     addTaskToTaskListToday(todayList);
     // updateTaskList('today', todayList, true);
   });
+  window.addEventListener('taskItemUpdated', () => {
+    console.log('HELLO!');
+    updateTaskList('today', todayList, false);
+  })
+  
 
   addMarginTopToTaskList(todayHeader, todayList);
   addMarginBottomToTaskList(todayList);

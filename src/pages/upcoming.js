@@ -27,12 +27,15 @@ function createUpcoming() {
     
   content.appendChild(upcomingContainer);
   updateTaskListWithDateHeaders('upcoming', upcomingList);
-    
+  
   window.addEventListener('taskAddedToLocalStorage', function() {
     addTaskToTaskListUpcoming(upcomingList);
     // updateTaskListWithDateHeaders('upcoming', upcomingList);
   });
-
+  
+  window.addEventListener('taskItemUpdated', () => {
+    updateTaskListWithDateHeaders('upcoming', upcomingList);
+  })
   addMarginTopToTaskList(upcomingHeader, upcomingList);
   addMarginBottomToTaskList(upcomingList);
 }

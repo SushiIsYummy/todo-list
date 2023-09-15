@@ -1,6 +1,6 @@
 import flatpickr from "flatpickr";
 import { DateTime } from 'luxon';
-import sharedDialogElements from "./sharedDialogElements";
+import sharedElements from "./sharedElements";
 import { setCalendarIconColor } from "./addTaskDialog";
 
 let lastSavedDate = '';
@@ -101,7 +101,7 @@ function activateDateTimeDialogActionButtons() {
   let dateTimeDialog = document.querySelector('.task-date-time-dialog');
   let cancelButton = document.querySelector('.task-date-time-dialog-cancel-button');
   let saveButton = document.querySelector('.task-date-time-dialog-save-button');
-
+  
   cancelButton.addEventListener('click', () => {
     dueDateInput._flatpickr.setDate(getLastSavedDate());
     dateTimeDialog.close();
@@ -111,6 +111,7 @@ function activateDateTimeDialogActionButtons() {
   
   saveButton.addEventListener('click', () => {
     let dateRequiredDialog = document.querySelector('.date-required-dialog');
+    let calendarIcon = document.querySelector('.calendar-svg');
     if (onlyTimeIsSet()) {
       dateRequiredDialog.showModal();
       return;
@@ -118,23 +119,28 @@ function activateDateTimeDialogActionButtons() {
 
     setLastSavedDate(dueDateInput.value);
     setLastSavedTime(timeInput.value);
-    sharedDialogElements.dueDatePara.textContent = 
+    sharedElements.dueDatePara.textContent = 
     getFormattedTextBasedOnDateTime(getLastSavedDate(), getLastSavedTime());
     setCalendarIconColor(getColorBasedOnDateTime(getLastSavedDate(), getLastSavedTime()));
 
     // remove previous color
-    for (let i = 0; i < sharedDialogElements.dueDatePara.classList.length; i++) {
-      if (sharedDialogElements.dueDatePara.classList[i] !== 'task-due-date-para') {
-        sharedDialogElements.dueDatePara.classList.remove(sharedDialogElements.dueDatePara.classList[i]);
+    for (let i = 0; i < sharedElements.dueDatePara.classList.length; i++) {
+      if (sharedElements.dueDatePara.classList[i] !== 'task-due-date-para') {
+        sharedElements.dueDatePara.classList.remove(sharedElements.dueDatePara.classList[i]);
       }
     }
 
-    sharedDialogElements.dueDatePara.classList.add(getClasslistBasedOnDateTime(getLastSavedDate(), getLastSavedTime()));
+    sharedElements.dueDatePara.classList.add(getClasslistBasedOnDateTime(getLastSavedDate(), getLastSavedTime()));
 
     dateTimeDialog.close();
     console.log('date: ' + getLastSavedDate());
     console.log('time: ' + getLastSavedTime());
   })
+}
+
+export function resetLastSavedDateAndTime() {
+  setLastSavedDate('');
+  setLastSavedTime('');
 }
 
 export function setLastSavedDate(date) {
@@ -276,17 +282,17 @@ function calculateDateTimeTextColorClasslist(dateString, timeString) {
   return { formattedDateTime, color, classlist };
 } 
 
-function getFormattedTextBasedOnDateTime(dateString, timeString) {
+export function getFormattedTextBasedOnDateTime(dateString, timeString) {
   let formattedText = calculateDateTimeTextColorClasslist(dateString, timeString).formattedDateTime;
   return formattedText;
 } 
 
-function getColorBasedOnDateTime(dateString, timeString) {
+export function getColorBasedOnDateTime(dateString, timeString) {
   let color = calculateDateTimeTextColorClasslist(dateString, timeString).color;
   return color;
 } 
 
-function getClasslistBasedOnDateTime(dateString, timeString) {
+export function getClasslistBasedOnDateTime(dateString, timeString) {
   let classlist = calculateDateTimeTextColorClasslist(dateString, timeString).classlist;
   return classlist;
 }

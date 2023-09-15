@@ -13,6 +13,7 @@ import './styles/today.css';
 import './styles/upcoming.css';
 import './styles/project.css';
 import './styles/task-item.css';
+import '/src/pages/dialogs/editTaskItemDialog.css'
 
 import createAddTaskDialog, { populateTaskLocationDropdown, storeFormElementsAndDefaultValues } from './pages/dialogs/addTaskDialog';
 import createDateRequiredDialog from './pages/dialogs/dateRequiredDialog';
@@ -24,9 +25,10 @@ import footerEventListenerManager from './pages/footer/footerEventListenerManage
 import footerUtils from './pages/footer/footerUtilities';
 import sidebarELM from './pages/sidebar/sidebarEventListenerManager.js';
 import sidebarUtils from './pages/sidebar/sidebarUtilitiesManager';
-import { addEditFunctionToAllTaskItems, createEditTaskDialog } from './pages/tasks';
+import { addEditFunctionToAllTaskItems } from './pages/tasks';
 import * as utils from '/src/utils';
-import sharedDialogElements from './pages/dialogs/sharedDialogElements';
+import sharedElements from './pages/dialogs/sharedElements';
+import createEditTaskItemDialog from '/src/pages/dialogs/editTaskItemDialog';
 
 
 let content = document.querySelector('#content');
@@ -38,7 +40,7 @@ createAddTaskDialog();
 createDateRequiredDialog();
 createDiscardChangesDialog();
 createAddProjectDialog();
-sharedDialogElements.initializeElements();
+sharedElements.initializeElements();
 
 storeFormElementsAndDefaultValues();
 
@@ -46,7 +48,7 @@ createToday();
 // addEditFunctionToAllTaskItems();
 // createInbox();
 // createUpcoming();
-// createEditTaskDialog();
+content.appendChild(createEditTaskItemDialog());
 // let editTaskDialog = document.querySelector('.edit-task-dialog');
 // editTaskDialog.showModal();
 
@@ -62,11 +64,14 @@ let upcomingContainer = document.querySelector('.upcoming-container');
 let projectsList = JSON.parse(localStorage.getItem('projectsList'));
 let projectsListItems = document.querySelectorAll('.projects-list-item');
 
+const pageChanged = new Event('pageChanged');
+
 inboxSidebarItem.addEventListener('click', () => {
   let inboxContainer = document.querySelector('.inbox-container');
   if (inboxContainer === null) {
     utils.removeAllElementsExceptFooterSidebarDialogs();
     createInbox();
+    window.dispatchEvent(pageChanged);
   }
 });
 
@@ -75,6 +80,7 @@ todaySidebarItem.addEventListener('click', () => {
   if (todayContainer === null) {
     utils.removeAllElementsExceptFooterSidebarDialogs();
     createToday();
+    window.dispatchEvent(pageChanged);
   }
 });
 
@@ -83,8 +89,14 @@ upcomingSidebarItem.addEventListener('click', () => {
   if (upcomingContainer === null) {
     utils.removeAllElementsExceptFooterSidebarDialogs();
     createUpcoming();
+    window.dispatchEvent(pageChanged);
   }
 })
+
+addEditFunctionToAllTaskItems();
+window.addEventListener('pageChanged', () => {
+  addEditFunctionToAllTaskItems();
+});
 
   // for (let i = 0; i < 10; i++) {
   //   Array.from(projectsListItems).forEach(projectItem => {

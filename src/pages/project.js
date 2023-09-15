@@ -30,10 +30,13 @@ function createProjectPage(projectName) {
   content.appendChild(projectContainer);
 
   updateTaskList(projectName, projectList);
-
+  
   window.addEventListener('taskAddedToLocalStorage', function() {
     addTaskToTaskList(projectName, projectList);
   });
+  window.addEventListener('taskItemUpdated', () => {
+    updateTaskList(projectName, projectList);
+  })
   
   addMarginTopToTaskList(projectHeader, projectList);
   addMarginBottomToTaskList(projectList);

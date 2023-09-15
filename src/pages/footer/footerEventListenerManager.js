@@ -1,15 +1,24 @@
-import sharedDialogElements from '../dialogs/sharedDialogElements';
+import { clearAddTaskForm } from '../dialogs/addTaskDialog';
+import { setLastSavedDate, setLastSavedTime } from '../dialogs/dateTimeDialog';
+import sharedElements from '../dialogs/sharedElements';
 import footerUtils from './footerUtilities';
+import * as addTaskDialogUtils from '/src/pages/dialogs/addTaskDialog';
 
 const footerEventListenerManager = {
   
   activateAddTaskButton() {
     let footerAddTaskButton = document.querySelector('.footer-add-task-button');
-    // let addTaskDialog = document.querySelector('.footer-add-task-dialog');
 
     footerAddTaskButton.addEventListener('click', () => {
-      sharedDialogElements.addTaskDialog.showModal();
-      footerUtils.setCalendarIconColor('#646464');
+      let addTaskDialog = sharedElements.addTaskDialog;
+      let dateAndPriorityButtons = addTaskDialog.querySelector('.date-and-priority-buttons');
+      let dueDateButton = document.querySelector('.task-due-date-button-container');
+      let priorityDropdown = document.querySelector('.priority-dropdown');
+      clearAddTaskForm();
+      if (dateAndPriorityButtons.querySelector('.task-due-date-button-container') === null) {
+        dateAndPriorityButtons.insertBefore(dueDateButton, priorityDropdown);
+      }
+      addTaskDialog.showModal();
     })
   },
   
@@ -18,7 +27,7 @@ const footerEventListenerManager = {
     
     hamburgerMenu.addEventListener('click', () => {
       // let sidebarDialog = document.querySelector('.sidebar-dialog');
-      let sidebarDialog = sharedDialogElements.sidebarDialog;
+      let sidebarDialog = sharedElements.sidebarDialog;
       if (sidebarDialog !== null) {
         sidebarDialog.showModal();
       }

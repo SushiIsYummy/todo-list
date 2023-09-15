@@ -1,6 +1,6 @@
 import { hideDialogWithAnimation } from "../../utils";
 import { clearAddTaskForm } from "./addTaskDialog";
-import sharedDialogElements from "./sharedDialogElements";
+import sharedElements from "./sharedElements";
 
 function createDiscardChangesDialog() {
   let content = document.querySelector('#content');
@@ -48,7 +48,7 @@ function activateDiscardChangesButtons() {
   });
 
   discardButton.addEventListener('click', () => {
-    hideDialogWithAnimation(sharedDialogElements.addTaskDialog);
+    hideDialogWithAnimation(sharedElements.addTaskDialog);
     discardChangesDialog.close();
     clearAddTaskForm();
   });
