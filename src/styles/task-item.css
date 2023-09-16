@@ -7,26 +7,41 @@
   grid-template-columns: max-content 1fr;
   column-gap: 10px;
 
-  padding: 10px 0px;
+  padding: 10px 10px;
   margin: 0px 20px;
   border-bottom: 1px solid rgb(211,211,211);
 }
 
-.task-item:active {
+.highlighted {
   background-color: #E6E6E6;
 }
+
+/* li.task-item:active {
+  background-color: #E6E6E6;
+} */
+
+/* ul .task-item:not(input[type='checkbox']):active .task-item,
+.task-item *:not(input[type='checkbox']):active {
+  background-color: #E6E6E6;
+} */
 
 .task-item-title {
   font-size: 1.6rem;
   font-weight: normal;
+  width: fit-content;
 }
 
 .task-item-description {
   color: rgb(82, 82, 82);
+  width: fit-content;
 }
 
 .task-item > *:not(input[type='checkbox']) {
   grid-column: 2;
+}
+
+.task-item-date-and-time-container {
+  width: fit-content;
 }
 
 .task-item-date-and-time {

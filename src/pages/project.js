@@ -10,7 +10,7 @@ function createProjectPage(projectName) {
 
   let projectHeader = document.createElement('header');
   projectHeader.classList.add('project-header');
-  projectHeader.setAttribute('data-project-name', projectName);
+  projectHeader.setAttribute('data-task-location', projectName);
 
   let projectTitle = document.createElement('h1');
   projectTitle.classList.add('project-title');
@@ -34,9 +34,6 @@ function createProjectPage(projectName) {
   window.addEventListener('taskAddedToLocalStorage', function() {
     addTaskToTaskList(projectName, projectList);
   });
-  window.addEventListener('taskItemUpdated', () => {
-    updateTaskList(projectName, projectList);
-  })
   
   addMarginTopToTaskList(projectHeader, projectList);
   addMarginBottomToTaskList(projectList);

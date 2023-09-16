@@ -1,7 +1,6 @@
 import { clearAddTaskForm } from '../dialogs/addTaskDialog';
 import { setLastSavedDate, setLastSavedTime } from '../dialogs/dateTimeDialog';
 import sharedElements from '../dialogs/sharedElements';
-import footerUtils from './footerUtilities';
 import * as addTaskDialogUtils from '/src/pages/dialogs/addTaskDialog';
 
 const footerEventListenerManager = {

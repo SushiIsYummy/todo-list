@@ -9,6 +9,7 @@ function createToday() {
 
   let todayHeader = document.createElement('header');
   todayHeader.classList.add('today-header');
+  todayHeader.setAttribute('data-page-name', 'today');
 
   let todayTitle = document.createElement('h1');
   todayTitle.classList.add('today-title');
@@ -32,10 +33,6 @@ function createToday() {
     addTaskToTaskListToday(todayList);
     // updateTaskList('today', todayList, true);
   });
-  window.addEventListener('taskItemUpdated', () => {
-    console.log('HELLO!');
-    updateTaskList('today', todayList, false);
-  })
   
 
   addMarginTopToTaskList(todayHeader, todayList);

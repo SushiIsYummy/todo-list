@@ -10,6 +10,7 @@ function createInbox() {
 
   let inboxHeader = document.createElement('header');
   inboxHeader.classList.add('inbox-header');
+  inboxHeader.setAttribute('data-task-location', 'inbox');
 
   let inboxTitle = document.createElement('h1');
   inboxTitle.classList.add('inbox-title');
@@ -36,9 +37,6 @@ function createInbox() {
     addTaskToTaskList('inbox', inboxList);
     // updateTaskList('inbox', inboxList, true);
   });
-  window.addEventListener('taskItemUpdated', () => {
-    updateTaskList('inbox', inboxList);
-  })
   
   addMarginTopToTaskList(inboxHeader, inboxList);
   addMarginBottomToTaskList(inboxList);

@@ -9,6 +9,7 @@ function createUpcoming() {
 
   let upcomingHeader = document.createElement('header');
   upcomingHeader.classList.add('upcoming-header');
+  upcomingHeader.setAttribute('data-page-name', 'upcoming');
 
   let upcomingTitle = document.createElement('h1');
   upcomingTitle.classList.add('upcoming-title');
@@ -32,10 +33,7 @@ function createUpcoming() {
     addTaskToTaskListUpcoming(upcomingList);
     // updateTaskListWithDateHeaders('upcoming', upcomingList);
   });
-  
-  window.addEventListener('taskItemUpdated', () => {
-    updateTaskListWithDateHeaders('upcoming', upcomingList);
-  })
+
   addMarginTopToTaskList(upcomingHeader, upcomingList);
   addMarginBottomToTaskList(upcomingList);
 }

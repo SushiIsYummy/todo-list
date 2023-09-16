@@ -3,6 +3,7 @@ import { getLastSavedTime, getLastSavedDate, resetLastSavedDateAndTime, setLastS
 import sharedElements from './sharedElements';
 import calendarSVG from '/src/svgs/calendar-outline.svg';
 import * as dateTimeDialog from '/src/pages/dialogs/dateTimeDialog';
+import { removeHighlightedTaskItem, updateSingleTaskItem } from '../tasks';
 
 let editTaskItem = null;
 
@@ -11,12 +12,14 @@ function createEditTaskItemDialog() {
   editTaskItemDialog.classList.add('edit-task-item-dialog');
 
   let taskTitle = document.createElement('input');
-  taskTitle.type = 'text';
   taskTitle.classList.add('edit-task-title');
+  taskTitle.type = 'text';
+  taskTitle.placeholder = 'Title';
 
   let taskDescription = document.createElement('input');
-  taskDescription.type = 'text';
   taskDescription.classList.add('edit-task-description');
+  taskDescription.type = 'text';
+  taskDescription.placeholder = 'Description';
 
   // let dueDateContainer = document.createElement('div');
   // dueDateContainer.classList.add('edit-task-due-date-button-container');
@@ -81,6 +84,7 @@ function activateEditTaskItemDialogActionButtons(cancelButton, saveButton, taskT
 
   cancelButton.addEventListener('click', () => {
     closeEditTaskItemDialog();
+    removeHighlightedTaskItem();
   })
 
   saveButton.addEventListener('click', () => {
@@ -89,9 +93,9 @@ function activateEditTaskItemDialogActionButtons(cancelButton, saveButton, taskT
       taskTitle.reportValidity();
     } else {
       saveEditTaskItemData();
-      const taskItemUpdated = new Event('taskItemUpdated');
-      window.dispatchEvent(taskItemUpdated);
+      updateSingleTaskItem()
       closeEditTaskItemDialog();
+      removeHighlightedTaskItem();
     }
   })
 
@@ -117,14 +121,14 @@ function saveEditTaskItemData() {
 
   let index = taskList.findIndex((task) => parseInt(task.id) == parseInt(editTaskItem.id));
   console.log(index);
-  let taskToBeReplaced = taskList[index];
+  let taskToBeUpdated = taskList[index];
 
-  taskToBeReplaced.title = taskTitle.value;
-  taskToBeReplaced.description = taskDescription.value;
-  taskToBeReplaced.dueDate = dueDate.value;
-  taskToBeReplaced.priority = priorityDropdown.value;
-  taskToBeReplaced.dueDateTime = dueDateTime.value;
-  taskToBeReplaced.taskLocation = taskLocationDropdown.value;
+  taskToBeUpdated.title = taskTitle.value;
+  taskToBeUpdated.description = taskDescription.value;
+  taskToBeUpdated.dueDate = dueDate.value;
+  taskToBeUpdated.priority = priorityDropdown.value;
+  taskToBeUpdated.dueDateTime = dueDateTime.value;
+  taskToBeUpdated.taskLocation = taskLocationDropdown.value;
 
   localStorage.setItem('taskList', JSON.stringify(taskList));
 }
@@ -178,7 +182,5 @@ export function closeEditTaskItemDialog() {
   let dialog = document.querySelector('.edit-task-item-dialog');
   dialog.close();
 }
-
-
 
 export default createEditTaskItemDialog;
