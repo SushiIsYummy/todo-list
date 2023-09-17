@@ -4,6 +4,7 @@ import sharedElements from './sharedElements';
 import calendarSVG from '/src/svgs/calendar-outline.svg';
 import * as dateTimeDialog from '/src/pages/dialogs/dateTimeDialog';
 import { removeHighlightedTaskItem, updateSingleTaskItem } from '../tasks';
+import { calculateTextareaRows } from '../../utils';
 
 let editTaskItem = null;
 
@@ -11,18 +12,30 @@ function createEditTaskItemDialog() {
   let editTaskItemDialog = document.createElement('dialog');
   editTaskItemDialog.classList.add('edit-task-item-dialog');
 
-  let taskTitle = document.createElement('input');
+  let header = document.createElement('h1');
+  header.classList.add('edit-task-item-header');
+  header.textContent = 'Edit Task';
+
+  // growing textarea
+  // https://codepen.io/devrasta07/pen/GRMPMGG
+
+  let taskTitle = document.createElement('textarea');
   taskTitle.classList.add('edit-task-title');
-  taskTitle.type = 'text';
+  taskTitle.rows = '1';
   taskTitle.placeholder = 'Title';
+  taskTitle.addEventListener("input", () => {
+    taskTitle.style.height = "auto"
+    taskTitle.style.height = taskTitle.scrollHeight + "px"
+  })
 
-  let taskDescription = document.createElement('input');
+  let taskDescription = document.createElement('textarea');
   taskDescription.classList.add('edit-task-description');
-  taskDescription.type = 'text';
+  taskDescription.rows = '1';
   taskDescription.placeholder = 'Description';
-
-  let buttons = document.createElement('div');
-  buttons.classList.add('edit-date-and-priority-buttons');
+  taskDescription.addEventListener("input", () => {
+    taskDescription.style.height = "auto"
+    taskDescription.style.height = taskDescription.scrollHeight + "px"
+  })
 
   let priorityDropdown = document.createElement('select');
   priorityDropdown.classList.add('edit-priority-dropdown');
@@ -38,6 +51,9 @@ function createEditTaskItemDialog() {
   let taskLocationDropdown = document.createElement('select');
   taskLocationDropdown.classList.add('edit-task-location-dropdown');
 
+  let actionButtons = document.createElement('div');
+  actionButtons.classList.add('edit-task-item-action-buttons');
+
   let cancelButton = document.createElement('button');
   cancelButton.classList.add('edit-task-item-cancel-button');
   cancelButton.type = 'button';
@@ -48,9 +64,12 @@ function createEditTaskItemDialog() {
   saveButton.type = 'button';
   saveButton.textContent = 'SAVE';
 
+  // taskTitleGrowWrap.appendChild(taskTitle);
+  // dropdownsAndDueDateButton.append(taskLocationDropdown, priorityDropdown);
+  actionButtons.append(cancelButton, saveButton)
   // dueDateContainer.append(dueDateSVG, dueDatePara);
-  editTaskItemDialog.append(taskTitle, taskDescription, priorityDropdown, taskLocationDropdown);
-  editTaskItemDialog.append(cancelButton, saveButton);
+  editTaskItemDialog.append(header, taskTitle, taskDescription, taskLocationDropdown, priorityDropdown);
+  editTaskItemDialog.append(actionButtons);
 
   // activateDueDateButtonOnClick(dueDateContainer);
   addEventListenerPriorityDropdown(priorityDropdown);
@@ -153,14 +172,26 @@ export function setEditTaskItemDialogInputs(task) {
 
 export function showEditTaskItemDialog() {
   let dialog = document.querySelector('.edit-task-item-dialog');
-  let cancelButton = document.querySelector('.edit-task-item-cancel-button');
+  let taskLocationDropdown = document.querySelector('.edit-task-location-dropdown');
   let dueDateButton = document.querySelector('.task-due-date-button-container');
+  let taskDescription = document.querySelector('.edit-task-description');
+  let taskTitle = document.querySelector('.edit-task-title');
 
+  // console.log('textarea rows: ' + calculateTextareaRows(taskTitle));
+  // taskTitle.style.height = 'auto';
+  // taskTitle.style.height = taskTitle.scrollHeight + 'px';
+  // taskDescription.style.height = taskTitle.scrollHeight + 'px';
   if (dialog.querySelector('.task-due-date-button-container') === null) {
-    dialog.insertBefore(dueDateButton, cancelButton);
+    dialog.insertBefore(dueDateButton, taskLocationDropdown);
   } 
 
   dialog.showModal();
+  console.log(taskTitle.scrollHeight)
+  // set title and description to height of content
+  taskTitle.style.height = 'auto';
+  taskTitle.style.height = taskTitle.scrollHeight + 'px';
+  taskDescription.style.height = 'auto';
+  taskDescription.style.height = taskDescription.scrollHeight + 'px';
 }
 
 export function closeEditTaskItemDialog() {
