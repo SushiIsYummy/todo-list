@@ -293,7 +293,7 @@ export function populateTaskLocationDropdown(taskLocationDropdown) {
   for (let i = 0; i < locationForTasks.length; i++) {
     let option = document.createElement('option');
     option.classList.add('option-item');
-    option.value = locationForTasks[i].toLowerCase();
+    option.value = locationForTasks[i];
     option.textContent = locationForTasks[i];
 
     taskLocationDropdown.appendChild(option);
@@ -303,7 +303,7 @@ export function populateTaskLocationDropdown(taskLocationDropdown) {
   for (let i = 0; i < projectList.length; i++) {
     let option = document.createElement('option');
     option.classList.add('option-item');
-    option.value = projectList[i].toLowerCase();
+    option.value = projectList[i];
     option.textContent = projectList[i];
 
     taskLocationDropdown.appendChild(option);

@@ -36,7 +36,9 @@ function createToday() {
   
 
   addMarginTopToTaskList(todayHeader, todayList);
-  addMarginBottomToTaskList(todayList);
+  // addMarginBottomToTaskList(todayList);
+  let footerBar = document.querySelector('.footer-bar');
+  todayList.style.marginBottom = `${parseInt(getComputedStyle(footerBar).height) + 30}px`;
 }
 
 export default createToday;

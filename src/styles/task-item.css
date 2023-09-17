@@ -40,6 +40,15 @@
   grid-column: 2;
 }
 
+.task-item-date-time-and-location-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.task-item-location {
+  align-self: flex-end;
+}
+
 .task-item-date-and-time-container {
   width: fit-content;
 }

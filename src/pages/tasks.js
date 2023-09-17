@@ -6,6 +6,7 @@ import sendButtonSVG from '../svgs/send.svg';
 import { showEditTaskItemDialog } from '/src/pages/dialogs/editTaskItemDialog'
 import { setEditTaskItemDialogInputs } from './dialogs/editTaskItemDialog';
 import * as dateTimeDialog from '/src/pages/dialogs/dateTimeDialog';
+import { getClasslistBasedOnDateTime, getColorBasedOnDateTime } from './dialogs/dateTimeDialog';
 
 const taskAddedToLocalStorage = new Event('taskAddedToLocalStorage');
 
@@ -138,6 +139,11 @@ export function updateTaskList(pageName, taskListElement) {
 
   if (pageName === 'today') {
     taskList = filterTaskListByToday(taskList);
+    taskList.forEach((task) => {
+      let taskItem = createTaskItemTodayUpcoming(task);
+      taskListElement.appendChild(taskItem);
+    });
+    return;
   } else if (pageName === 'upcoming') {
     taskList = filterTaskListByUpcoming(taskList);
   } else { 
@@ -186,7 +192,7 @@ export function updateTaskListWithDateHeaders(pageName, taskListElement) {
     groupedTasksByDate.appendChild(groupedTaskItems);
 
     taskGroup.forEach((task) =>  {
-      let taskItem = createTaskItem(task);
+      let taskItem = createTaskItemTodayUpcoming(task);
       groupedTaskItems.appendChild(taskItem);
     });
 
@@ -231,7 +237,7 @@ export function addTaskToTaskListToday(taskListElement) {
   let index = taskList.findIndex(task => task.id === addedTask.id);
   console.log('index: ' + index);
 
-  let newTaskItem = createTaskItem(addedTask);
+  let newTaskItem = createTaskItemTodayUpcoming(addedTask);
 
   // list is empty or added task is at the end of the list
   if (taskListElement.childElementCount === 0 || index === taskList.length-1) {
@@ -265,7 +271,7 @@ export function addTaskToTaskListUpcoming(taskListElement) {
 
   taskListWithoutAddedTask.sort(utils.compareUpcomingTasks);
 
-  let newTaskItem = createTaskItem(addedTask);
+  let newTaskItem = createTaskItemTodayUpcoming(addedTask);
 
   let groupedTasksObjectWithoutAddedTask = groupByDueDate(taskListWithoutAddedTask);
   
@@ -392,7 +398,6 @@ function moveTaskListUp(taskListElement) {
     })
   }
 }
-
 function createTaskItem(task) {
   let nonEmptyOptionalTaskItemElements = [];
 
@@ -472,12 +477,100 @@ function createTaskItem(task) {
   return taskItem;
 }
 
+function createTaskItemTodayUpcoming(task) {
+  let nonEmptyOptionalTaskItemElements = [];
+
+  let taskItem = document.createElement('li');
+  taskItem.classList.add('task-item');
+  taskItem.setAttribute('data-task-id', task.id);
+
+  let rootElement = document.querySelector(':root');
+  let cs = getComputedStyle(rootElement);
+
+  let priorityCheckbox = document.createElement('input');
+  priorityCheckbox.type = 'checkbox';
+  priorityCheckbox.classList.add('task-item-priority-checkbox');
+  // add corresponding priority color to checkbox border and background color
+  priorityCheckbox.classList.add(`task-item-priority-${task.priority}`);
+
+  // save value of checkbox to corresponding task in local storage
+  // when a checkbox is clicked
+  priorityCheckbox.addEventListener('click', (e) => {
+    let taskList = JSON.parse(localStorage.getItem('taskList'));
+    let targetTask = taskList.find(task => parseInt(task.id) === parseInt(taskItem.dataset.taskId));
+
+    targetTask.checked = (priorityCheckbox.checked === true);
+
+    localStorage.setItem('taskList', JSON.stringify(taskList));
+  });
+
+  if (task.checked === true) {
+    priorityCheckbox.checked = true;
+  }
+
+  let title = document.createElement('h1');
+  title.classList.add('task-item-title');
+  title.textContent = task.title;
+
+  let description = document.createElement('p');
+  if (task.description !== '') {
+    description.classList.add('task-item-description');
+    description.textContent = task.description;
+    nonEmptyOptionalTaskItemElements.push(description);
+  }
+
+  let dateTimeAndLocationContainer = document.createElement('div');
+  dateTimeAndLocationContainer.classList.add('task-item-date-time-and-location-container');
+
+  let location = document.createElement('p');
+  location.classList.add('task-item-location');
+  location.textContent = task.taskLocation;
+
+  let dateTimeContainer = document.createElement('div');
+  dateTimeContainer.classList.add('task-item-date-and-time-container');
+
+  let calendar = document.createElement('iframe');
+  calendar.classList.add('task-item-calendar');
+  calendar.src = calendarSVG;
+  
+  let dateAndTime = document.createElement('p');
+  dateAndTime.classList.add('task-item-date-and-time');
+  
+  if (task.dueDate !== '') {
+    // nonEmptyOptionalTaskItemElements.push(dateTimeContainer);
+    dateAndTime.textContent = dateTimeDialog.getFormattedTextBasedOnDateTime(task.dueDate, task.dueDateTime);
+    dateAndTime.classList.add(dateTimeDialog.getClasslistBasedOnDateTime(task.dueDate, task.dueDateTime));
+    
+    // color calendar based on date and time when loaded
+    calendar.addEventListener('load', () => {
+      const svgIframeWindow = calendar.contentWindow;
+      const svgIframeDocument = svgIframeWindow.document;
+      const pathElement = svgIframeDocument.querySelector('svg');
+      pathElement.style.fill = dateTimeDialog.getColorBasedOnDateTime(task.dueDate, task.dueDateTime);
+    });
+    dateTimeContainer.append(calendar, dateAndTime);
+  }
+
+  dateTimeAndLocationContainer.append(dateTimeContainer, location);
+
+  // append required elements
+  taskItem.append(priorityCheckbox, title);
+
+  for (let i = 0; i < nonEmptyOptionalTaskItemElements.length; i++) {
+    taskItem.appendChild(nonEmptyOptionalTaskItemElements[i]);
+  }
+  taskItem.appendChild(dateTimeAndLocationContainer);
+
+  
+  return taskItem;
+}
+
 function filterTaskListByLocation(pageName, taskList) {
-  let pageNameLower = pageName.toLowerCase();
+  // let pageNameLower = pageName.toLowerCase();
   // let taskList = JSON.parse(localStorage.getItem('taskList'));
 
   if (taskList !== null) {
-    taskList = taskList.filter((task) => task.taskLocation === pageNameLower);
+    taskList = taskList.filter((task) => task.taskLocation === pageName);
   } else {
     taskList = [];
   }
@@ -583,18 +676,25 @@ export function updateSingleTaskItem() {
   let task = getTaskFromTaskList(taskItemId);
   let headerElementLocation = document.querySelector('header[data-task-location]');
   let headerElementPageName = document.querySelector('header[data-page-name]');
-  
+
+  let updatedTaskItem = null;
+  if (headerElementLocation) {
+    updatedTaskItem = createTaskItem(task);
+  } else if (headerElementPageName) {
+    updatedTaskItem = createTaskItemTodayUpcoming(task);
+  }
+
   if (selectedTaskItem && task) {
-    let updatedTaskItem = createTaskItem(task);
+    // editTaskItem(selectedTaskItem, task);
     selectedTaskItem.replaceWith(updatedTaskItem);
     // selectedTaskItem = updatedTaskItem;
     // selectedTaskItem = document.querySelector('.task-item.highlighted');
     console.log(updatedTaskItem);
   }
-  // remove element if updated page is not the current page opened
+  // remove element if updated task location is not the current page opened
   if (headerElementLocation) {
     if (task.taskLocation !== headerElementLocation.dataset.taskLocation) {
-      selectedTaskItem.remove();
+      updatedTaskItem.remove();
       return;
     }
   }
@@ -606,13 +706,13 @@ export function updateSingleTaskItem() {
     let pageName = headerElementPageName.dataset.pageName;
     if ((pageName === 'today' && relativeDate !== 'today') ||
         (pageName === 'upcoming' && relativeDate === 'today')) {
-      selectedTaskItem.remove();
+      updatedTaskItem.remove();
       return;
     }
 
     // not working properly
     if (pageName === 'upcoming' && relativeDate !== 'today' && dueDate > now) {
-      updateTaskItemOnUpcoming(task, selectedTaskItem);
+      updateTaskItemOnUpcoming(task, updatedTaskItem);
       console.log(selectedTaskItem.closest('.grouped-tasks-by-date'));
       // selectedTaskItem.remove();
       return;
@@ -620,7 +720,7 @@ export function updateSingleTaskItem() {
   }
 }
 
-function updateTaskItemOnUpcoming(taskToUpdate, selectedTaskItem) {
+function updateTaskItemOnUpcoming(taskToUpdate, updatedTaskItem) {
   let taskList = getTaskListFromLocalStorage();
   let groupedTasks = groupByDueDate(taskList);
   let now = DateTime.now();
@@ -633,26 +733,26 @@ function updateTaskItemOnUpcoming(taskToUpdate, selectedTaskItem) {
   taskGroup.forEach(task => console.log(task.id));
   console.log('task to update id: ' + taskToUpdate.id);
   console.log('sorted dates: ' + sortedDates);
-  let updatedTaskItem = createTaskItem(taskToUpdate);
-  // let oldGroupedTasksByDateElement = selectedTaskItem.closest('.grouped-tasks-by-date');
-
+  // let updatedTaskItem = createTaskItem(taskToUpdate);
+  let oldGroupedTasksByDateElement = updatedTaskItem.closest('.grouped-tasks-by-date');
+  console.log(oldGroupedTasksByDateElement);
   // task group was created, it did not exist before
+  console.log('task group length: ' + taskGroup.length);
   if (taskGroup.length === 1) {
     let indexInGroupedTasks = sortedDates.indexOf(taskToUpdate.dueDate);
     let groupedTasksByDateElement = createGroupedTasksByDateElement(taskToUpdate, updatedTaskItem);
     let groupedTasksByDateListDOM = document.querySelector('main ul');
-    console.log(groupedTasksByDateElement);
-    console.log('indexInGroupedTasks: ' + indexInGroupedTasks);
     if (indexInGroupedTasks === sortedDates.length) {
       groupedTasksByDateListDOM.appendChild(groupedTasksByDateElement);
     } else {
       let referenceElement = groupedTasksByDateListDOM.children[indexInGroupedTasks];
       groupedTasksByDateListDOM.insertBefore(groupedTasksByDateElement, referenceElement);
+      // oldGroupedTasksByDateElement.remove();
     }
-    if (groupedTasksByDateElement.querySelector('.grouped-task-items').childElementCount <= 1) {
-      groupedTasksByDateElement.remove();
-    }
-    // oldGroupedTasksByDateElement.remove();
+    console.log('old grouped task items length: ' + oldGroupedTasksByDateElement.querySelector('.grouped-task-items').childElementCount)
+    // if (oldGroupedTasksByDateElement.querySelector('.grouped-task-items').childElementCount === 0) {
+    //   oldGroupedTasksByDateElement.remove();
+    // }
   } else if (taskGroup.length > 1) {
     // task group already exists
     let groupedTasksDOM = document.querySelector(`.grouped-tasks-by-date[data-due-date="${taskToUpdate.dueDate}"]`);
@@ -668,7 +768,18 @@ function updateTaskItemOnUpcoming(taskToUpdate, selectedTaskItem) {
       groupedTaskItems.insertBefore(updatedTaskItem, referenceTaskElement);
     }
   }
-  selectedTaskItem.remove();
+
+  if (oldGroupedTasksByDateElement.querySelector('.grouped-task-items').childElementCount === 0) {
+    oldGroupedTasksByDateElement.remove();
+  }
+
+  let groupedTasksByDate = updatedTaskItem.closest('.grouped-tasks-by-date');
+  let groupedTasksByDateListDOM = document.querySelector('main ul');
+  if (groupedTasksByDate.nextSibling) {
+    if (groupedTasksByDate.nextSibling.dataset.dueDate < groupedTasksByDate.dataset.dueDate) {
+      groupedTasksByDateListDOM.insertBefore(groupedTasksByDate.nextSibling, groupedTasksByDate);
+    }
+  }
 
 
 }

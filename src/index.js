@@ -32,6 +32,22 @@ import createEditTaskItemDialog from '/src/pages/dialogs/editTaskItemDialog';
 
 let content = document.querySelector('#content');
 
+// function setTasks() {
+//   let taskList = JSON.parse(localStorage.getItem('taskListPremade'));
+//   // let taskList = getTaskListFromLocalStorage();
+//   taskList.forEach(task => {
+//     if (task.taskLocation === 'inbox') {
+//       task.taskLocation = 'Inbox';
+//     }
+  
+//     if (task.taskLocation === 'home') {
+//       task.taskLocation = 'Home';
+//     }
+//   })
+//   localStorage.setItem('taskList', JSON.stringify(taskList));
+
+// }
+// setTasks();
 createFooter();
 createSidebar();
 createDateTimeDialog();

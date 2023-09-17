@@ -21,21 +21,6 @@ function createEditTaskItemDialog() {
   taskDescription.type = 'text';
   taskDescription.placeholder = 'Description';
 
-  // let dueDateContainer = document.createElement('div');
-  // dueDateContainer.classList.add('edit-task-due-date-button-container');
-  // dueDateContainer.type = 'button';
-
-  // let dueDatePara = document.createElement('p');
-  // dueDatePara.textContent = 'No Date';
-  // dueDatePara.classList.add('edit-task-due-date-para');
-  
-  // let dueDateSVG = document.createElement('iframe');
-  // dueDateSVG.setAttribute('src', calendarSVG);
-  // dueDateSVG.classList.add('edit-calendar-svg');
-  // dueDateSVG.addEventListener('load', () => {
-  //   setCalendarIconColor(dueDateSVG, '#646464');
-  // });
-
   let buttons = document.createElement('div');
   buttons.classList.add('edit-date-and-priority-buttons');
 
@@ -92,7 +77,7 @@ function activateEditTaskItemDialogActionButtons(cancelButton, saveButton, taskT
       taskTitle.setCustomValidity('Title must be at least one character.');
       taskTitle.reportValidity();
     } else {
-      saveEditTaskItemData();
+      saveTaskItemDataToLocalStorage();
       updateSingleTaskItem()
       closeEditTaskItemDialog();
       removeHighlightedTaskItem();
@@ -107,7 +92,7 @@ function activateEditTaskItemDialogActionButtons(cancelButton, saveButton, taskT
   });
 }
 
-function saveEditTaskItemData() {
+function saveTaskItemDataToLocalStorage() {
   let taskTitle = document.querySelector('.edit-task-title');
   let taskDescription = document.querySelector('.edit-task-description');
   let dueDatePara = document.querySelector('.task-due-date-para');

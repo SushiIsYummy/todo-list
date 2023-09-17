@@ -10,7 +10,7 @@ function createInbox() {
 
   let inboxHeader = document.createElement('header');
   inboxHeader.classList.add('inbox-header');
-  inboxHeader.setAttribute('data-task-location', 'inbox');
+  inboxHeader.setAttribute('data-task-location', 'Inbox');
 
   let inboxTitle = document.createElement('h1');
   inboxTitle.classList.add('inbox-title');
@@ -29,12 +29,12 @@ function createInbox() {
 
   content.appendChild(inboxContainer);
 
-  updateTaskList('inbox', inboxList);
+  updateTaskList('Inbox', inboxList);
   
   // Listen for changes in the localStorage 'taskList' variable
   // window.addEventListener('taskListChange', updateInboxListItems);
   window.addEventListener('taskAddedToLocalStorage', function() {
-    addTaskToTaskList('inbox', inboxList);
+    addTaskToTaskList('Inbox', inboxList);
     // updateTaskList('inbox', inboxList, true);
   });
   

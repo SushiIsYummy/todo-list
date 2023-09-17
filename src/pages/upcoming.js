@@ -35,7 +35,9 @@ function createUpcoming() {
   });
 
   addMarginTopToTaskList(upcomingHeader, upcomingList);
-  addMarginBottomToTaskList(upcomingList);
+  // addMarginBottomToTaskList(upcomingList);
+  let footerBar = document.querySelector('.footer-bar');
+  upcomingList.style.marginBottom = `${parseInt(getComputedStyle(footerBar).height) + 30}px`;
 }
 
 export default createUpcoming;
