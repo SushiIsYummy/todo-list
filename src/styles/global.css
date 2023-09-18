@@ -29,3 +29,11 @@
   --due-in-future-color: #646464;
   --no-date-color: #646464;
 }
+
+.overflow-y-hidden {
+  overflow-y: hidden;
+}
+
+.overflow-y-visible {
+  overflow-y: visible;
+}

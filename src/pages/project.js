@@ -1,6 +1,6 @@
 import scrollIntoView from 'scroll-into-view-if-needed'
-import { updateTaskList, addTaskToTaskList } from './tasks';
-import { addMarginBottomToTaskList, addMarginTopToTaskList } from '../utils';
+import { updateTaskList, addTaskToTaskList } from './task-list-updater';
+import { addMarginBottomToTaskList, addMarginTopToTaskList, setDropdownLocationToCurrentPage } from '../utils';
 
 function createProjectPage(projectName) {
   let content = document.querySelector('#content');
@@ -30,7 +30,8 @@ function createProjectPage(projectName) {
   content.appendChild(projectContainer);
 
   updateTaskList(projectName, projectList);
-  
+  // setDropdownLocationToCurrentPage();
+
   window.addEventListener('taskAddedToLocalStorage', function() {
     addTaskToTaskList(projectName, projectList);
   });

@@ -2,8 +2,9 @@ import sendButtonSVG from '/src/svgs/send.svg';
 import calendarSVG from '/src/svgs/calendar-outline.svg';
 import { getLastSavedDate, getLastSavedTime, resetLastSavedDateAndTime, setLastSavedDate, setLastSavedTime } from './dateTimeDialog';
 import sharedElements from './sharedElements';
-import { addTaskToLocalStorage, createTask } from '../tasks';
-import * as utils from '../../utils';
+import { addTaskToLocalStorage } from '../tasks';
+import { createTask } from '../task-creator'; 
+import * as utils from '/src/utils';
 import * as dateTimeDialogUtils from '/src/pages/dialogs/dateTimeDialog';
 
 let addTaskFormElementDefaultValues = [];
@@ -14,21 +15,34 @@ function createAddTaskDialog() {
   let content = document.querySelector('#content');
 
   let dialog = document.createElement('dialog');
-  dialog.classList.add('footer-add-task-dialog');
+  dialog.classList.add('add-task-dialog');
 
   let form = document.createElement('form');
-  form.classList.add('footer-add-task-form');
+  form.classList.add('add-task-form');
   form.method = 'dialog';
 
-  let title = document.createElement('input');
-  title.type = 'text';
+  let title = document.createElement('textarea');
   title.classList.add('task-title');
   title.placeholder = 'e.g. buy eggs at store';
+  title.rows = '1';
+  title.addEventListener("input", () => {
+    title.style.height = "auto";
+    title.style.height = title.scrollHeight + "px";
+  })
+  title.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+  }
+  });
 
-  let description = document.createElement('input');
-  description.type = 'text';
+  let description = document.createElement('textarea');
   description.classList.add('task-description');
   description.placeholder = 'Description';
+  description.rows = '1';
+  description.addEventListener("input", () => {
+    description.style.height = "auto";
+    description.style.height = description.scrollHeight + "px";
+  })
 
   let dueDatePara = document.createElement('p');
   dueDatePara.textContent = 'No Date';
@@ -147,7 +161,7 @@ function addEventListenerTaskTitle() {
 
 function showDiscardChangesDialogIfChangesMade(addTaskDialog) {
   let discardChangesDialog = document.querySelector('.discard-changes-dialog');
-  // let addTaskDialog = document.querySelector('.footer-add-task-dialog');
+  // let addTaskDialog = document.querySelector('.add-task-dialog');
   if (allElementsAreUntouched()) {
     utils.hideDialogWithAnimation(addTaskDialog);
     clearAddTaskForm();
@@ -177,8 +191,15 @@ export function setCurrentPriorityValueWithCorrespondingColor(priorityDropdown) 
   priorityDropdown.classList.add(`priority-${priorityDropdown.value}-color`);
 }
 export function clearAddTaskForm() {
-  let form = document.querySelector('.footer-add-task-form');
+  let form = document.querySelector('.add-task-form');
   form.reset();
+
+  // reset height of title and description to 1 row
+  let taskTitle = document.querySelector('.task-title');
+  utils.setTextAreaHeightToContentHeight(taskTitle);
+
+  let taskDescription = document.querySelector('.task-description');
+  utils.setTextAreaHeightToContentHeight(taskDescription);
 
   let dueDatePara = document.querySelector('.task-due-date-para');
   dueDatePara.textContent = 'No Date';
@@ -188,10 +209,6 @@ export function clearAddTaskForm() {
   dueDateFlatpickrInput.value = '';
 
   let dueDateInput = document.querySelector('.task-due-date-input');
-  let calendarIcon = document.querySelector('.calendar-svg');
-  // adjustDateInputWidthToPlaceHolderWidth();
-  // let dueDateButtonPara = document.querySelector('.task-due-date-button-para');
-  // dueDateButtonPara.textContent = 'No Date';
 
   let priorityDropdown = document.querySelector('.priority-dropdown');
   setCurrentPriorityValueWithCorrespondingColor(priorityDropdown);
@@ -240,14 +257,15 @@ export function storeFormElementsAndDefaultValues() {
   let taskLocationDropdown = document.querySelector('.task-location-dropdown');
   
   addTaskFormElements = [title, description, date, time, priorityDropdown, taskLocationDropdown];
+  addTaskFormElementDefaultValues = [];
   addTaskFormElements.forEach(element => {
-    console.log(element);
+    console.log(element.value);
     addTaskFormElementDefaultValues.push(element.value);
   })
 }
 
 function setUpFormSubmitHandler() {
-  let addTaskForm = document.querySelector('.footer-add-task-form');
+  let addTaskForm = document.querySelector('.add-task-form');
   let sendButton = document.querySelector('.send-button');
   addTaskForm.addEventListener('submit', (e) => {
     e.preventDefault();  

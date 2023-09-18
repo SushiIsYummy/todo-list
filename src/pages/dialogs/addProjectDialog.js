@@ -81,13 +81,13 @@ function activateAddProjectDialogActionButtons() {
       projectList.push(nameInput.value);
       localStorage.setItem('projectsList', JSON.stringify(projectList));
       clearAddProjectForm();
-      sidebarUtils.updateSidebarProjectsList();
     } else {
       projectList = ['Home'];
       projectList.push(nameInput.value);
       localStorage.setItem('projectsList', JSON.stringify(projectList));
-      sidebarUtils.updateSidebarProjectsList();
     }
+    sidebarUtils.updateSidebarProjectsList();
+
     const projectAddedToLocalStorage = new Event('projectAddedToLocalStorage');
     window.dispatchEvent(projectAddedToLocalStorage);
     addProjectDialog.close();

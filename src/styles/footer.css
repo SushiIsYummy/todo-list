@@ -74,7 +74,7 @@
   filter: brightness(0.9);
 }
 
-.discard-changes-dialog {
+/* .discard-changes-dialog {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -86,15 +86,15 @@
   padding: 10px;
   border: none;
   border-radius: 5px;
-}
+} */
 
-.discard-changes-dialog:not([open]),
+/* .discard-changes-dialog:not([open]),
 .task-date-time-dialog:not([open]), 
 .date-required-dialog:not([open]) {
   display: none;
-}
+} */
 
-.discard-changes-dialog-header {
+/* .discard-changes-dialog-header {
   font-weight: bold;
   font-size: 1.1rem;
 }
@@ -120,14 +120,16 @@
 .discard-changes-discard-button {
   background-color: red;
   color: white;
-}
+} */
 
-.task-title,
+/* .task-title,
 .task-description {
   padding: 5px 10px;
   caret-color: red;
   border: none;
   outline: none;
+  resize: none;
+  overflow-y: hidden;
 }
 
 .task-description {
@@ -140,9 +142,9 @@
   flex-wrap: wrap;
   border-bottom: 1px solid rgb(212, 209, 209);
   padding: 10px;
-}
+} */
 
-.priority-0-color {
+/* .priority-0-color {
   color: black;
 }
 .priority-1,
@@ -160,9 +162,9 @@
 .priority-4,
 .priority-4-color {
   color: gray;
-}
+} */
 
-.edit-calendar-svg,
+/* .edit-calendar-svg,
 .calendar-svg {
   width: 20px;
   height: 20px;
@@ -188,14 +190,12 @@
 
 .task-due-date {
   background-color: rgb(197, 197, 197);
-  /* padding: 5px; */
   height: 100%;
   border: none;
-  /* min-width: 100px; */
   outline: none;
-}
+} */
 
-.task-due-date:hover {
+/* .task-due-date:hover {
   cursor: pointer;
 }
 
@@ -213,9 +213,9 @@
   border: none;
   padding: 7px 10px;
   cursor: pointer;
-}
+} */
 
-.bottom-row {
+/* .bottom-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -241,54 +241,34 @@
 .send-button.active {
   background-color: red;
   cursor: pointer;
-}
+} */
 
-.send-button-svg {
+/* .send-button-svg {
   width: 25px;
   height: 25px;
 }
 
 .send-button * {
   pointer-events: none;
-}
+} */
 
-.footer-add-task-dialog {
-  /* for some reason without max-width: 100% !important, 
-    width: 100% isn't really 100% */
-    max-width: 100% !important;
-    width: 100%;  
-    /* position: fixed; */
-    inset-block-start: auto; /* Allow the element to be positioned based on normal flow */
-    inset-block-end: 0px; /* Keep the bottom edge aligned with the bottom of the containing block */
-    /* bottom: 0; */
-    /* height: 100%; */
-    /* z-index: 5; */
-  /* top is calculated and set in footer.js */
-  border: 1px solid gray;
-  border-radius: 10px 10px 0 0;
-  /* border-left: none; */
-  /* border-radius: none; */
-  border-bottom: none;
-}
-
-.footer-add-task-dialog .task-title {
+/* .add-task-dialog .task-title {
   font-size: 1.5rem;
 }
 
-.footer-add-task-dialog::backdrop {
-  /* background-color: white; */
+.add-task-dialog::backdrop {
   opacity: 0;
 }
 
-.footer-add-task-dialog[open] {
+.add-task-dialog[open] {
   animation: show var(--animation-time-atd-open) ease normal;
 }
 
-.footer-add-task-dialog.hide {
+.add-task-dialog.hide {
   animation: hide var(--animation-time-atd-open) ease normal;
-}
+} */
 
-@keyframes show{
+/* @keyframes show{
   from {
     transform: translateY(100%);
   }
@@ -301,39 +281,37 @@
   }
 }
 
-.footer-add-task-form {
+.add-task-form {
   display: flex;
   flex-direction: column;
-}
+} */
 
-.flatpickr-calendar.hasTime {
+/* .flatpickr-calendar.hasTime {
   width: 200px;
-}
+} */
 
-.task-due-date-para {
+/* .task-due-date-para {
   font-size: 1rem;
   color: #646464;
-}
+} */
 
-.task-date-time-dialog {
+/* .task-date-time-dialog {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 20px;
   border-radius: 5px;
   border: none;
-  /* height: 1000px; */
-  /* width: 300px; */
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
+} */
 
-.task-date-time-dialog .flatpickr-calendar {
+/* .task-date-time-dialog .flatpickr-calendar {
   display: block;
-}
+} */
 
-.date-required-dialog {
+/* .date-required-dialog {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -354,40 +332,4 @@
 .date-required-dialog-ok-button {
   align-self: flex-end;
   padding: 5px;
-}
-
-.edit-task-due-date-para.overdue,
-.task-due-date-para.overdue,
-.task-item-date-and-time.overdue {
-  color: var(--overdue-color);
-}
-
-.edit-task-due-date-para.due-later-today,
-.task-due-date-para.due-later-today,
-.task-item-date-and-time.due-later-today {
-  color: var(--due-later-today-color);
-}
-
-.edit-task-due-date-para.due-this-week,
-.task-due-date-para.due-this-week,
-.task-item-date-and-time.due-this-week {
-  color: var(--due-this-week-color);
-}
-
-.edit-task-due-date-para.due-tomorrow,
-.task-due-date-para.due-tomorrow,
-.task-item-date-and-time.due-tomorrow {
-  color: var(--due-tomorrow-color);
-}
-
-.edit-task-due-date-para.due-in-future,
-.task-due-date-para.due-in-future,
-.task-item-date-and-time.due-in-future {
-  color: var(--due-in-future-color);
-}
-
-.edit-task-due-date-para.no-date,
-.task-due-date-para.no-date,
-.task-item-date-and-time {
-  color: var(--no-date-color);
-}
+} */

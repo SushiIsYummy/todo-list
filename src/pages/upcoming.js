@@ -1,5 +1,7 @@
-import { updateTaskListWithDateHeaders, addTaskToTaskListUpcoming, updateTaskList } from "./tasks";
+// import { updateTaskListWithDateHeaders, addTaskToTaskListUpcoming, updateTaskList } from "./tasks";
 import { addMarginBottomToTaskList, addMarginTopToTaskList } from "../utils";
+import { updateTaskListWithDateHeaders } from "./task-list-updater";
+import { addTaskToTaskListUpcoming } from "./task-list-updater";
 
 function createUpcoming() {
   let content = document.querySelector('#content');
@@ -28,6 +30,7 @@ function createUpcoming() {
     
   content.appendChild(upcomingContainer);
   updateTaskListWithDateHeaders('upcoming', upcomingList);
+  // updateTaskListWithDateHeaders('upcoming', upcomingList);
   
   window.addEventListener('taskAddedToLocalStorage', function() {
     addTaskToTaskListUpcoming(upcomingList);

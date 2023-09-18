@@ -170,3 +170,33 @@ function dialogAnimationEnd(e) {
   dialog.classList.remove('hide');
   dialog.removeEventListener('animationend', dialogAnimationEnd);
 }
+
+export function setDropdownLocationToCurrentPage() {
+  let pageHeader = document.querySelector('header[data-task-location]');
+  let taskLocationDropdown = document.querySelector('.add-task-dialog .task-location-dropdown');
+  if (pageHeader && taskLocationDropdown) {
+    taskLocationDropdown.value = pageHeader.dataset.taskLocation;
+  }
+}
+
+export function setTextAreaHeightToContentHeight(textarea) {
+  textarea.style.height = 'auto';
+  if (textarea.value !== '') {
+    textarea.style.height = textarea.scrollHeight + 'px';
+  }
+}
+
+export function textareaAutoResize(e) {
+  let textarea = e.target;
+  let scrollHeight = parseInt(textarea.scrollHeight);
+  let maxHeight = parseInt(getComputedStyle(textarea).maxHeight);
+  if (scrollHeight > maxHeight) {
+    textarea.classList.remove('overflow-y-hidden');
+    textarea.classList.add('overflow-y-visible');
+  } else {
+    textarea.classList.remove('overflow-y-visible');
+    textarea.classList.add('overflow-y-hidden');
+  }
+  textarea.style.height = 'auto';
+  textarea.style.height = textarea.scrollHeight + 'px';
+}

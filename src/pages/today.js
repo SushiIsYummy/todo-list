@@ -1,4 +1,4 @@
-import { updateTaskList, addTaskToTaskListToday } from "./tasks";
+import { updateTaskList, addTaskToTaskListToday } from "./task-list-updater";
 import { addMarginBottomToTaskList, addMarginTopToTaskList } from "../utils";
 
 function createToday() {

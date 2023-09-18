@@ -24,23 +24,25 @@
 }
 
 .edit-task-title {
+  max-height: 150px;
   height: auto;
   padding: 0 3px;
   font-size: 1.5rem;
   outline: none;
   font-family: "Times New Roman", Times, serif;
   resize: none;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
 }
 
 .edit-task-description {
+  max-height: 150px;
   height: auto;
   padding: 0 3px;
   font-size: 1rem;
   outline: none;
   font-family: "Times New Roman", Times, serif;
   resize: none;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
 }
 
 .edit-task-location-dropdown {

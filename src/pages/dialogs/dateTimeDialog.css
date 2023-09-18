@@ -1,0 +1,28 @@
+.task-date-time-dialog {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  border-radius: 5px;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-date-time-dialog .flatpickr-calendar {
+  display: block;
+}
+
+.task-due-date-input-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.task-due-date-today-button,
+.task-due-date-clear-button {
+  border: none;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+

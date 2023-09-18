@@ -1,5 +1,5 @@
 import scrollIntoView from 'scroll-into-view-if-needed'
-import { updateTaskList, addTaskToTaskList } from './tasks';
+import { updateTaskList, addTaskToTaskList } from './task-list-updater';
 import { addMarginBottomToTaskList, addMarginTopToTaskList } from '../utils';
 
 function createInbox() {

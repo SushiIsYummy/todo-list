@@ -13,7 +13,13 @@ import './styles/today.css';
 import './styles/upcoming.css';
 import './styles/project.css';
 import './styles/task-item.css';
-import '/src/pages/dialogs/editTaskItemDialog.css'
+import '/src/pages/dialogs/editTaskItemDialog.css';
+import '/src/pages/dialogs/discardChangesDialog.css';
+import '/src/pages/dialogs/addTaskDialog.css';
+import '/src/pages/dialogs/dateTimeDialog.css';
+import '/src/pages/dialogs/dateRequiredDialog.css';
+import '/src/pages/dialogs/addProjectDialog.css';
+import '/src/pages/dialogs/1-dialogs.css';
 
 import createAddTaskDialog, { populateTaskLocationDropdown, storeFormElementsAndDefaultValues } from './pages/dialogs/addTaskDialog';
 import createDateRequiredDialog from './pages/dialogs/dateRequiredDialog';
@@ -32,22 +38,6 @@ import createEditTaskItemDialog from '/src/pages/dialogs/editTaskItemDialog';
 
 let content = document.querySelector('#content');
 
-// function setTasks() {
-//   let taskList = JSON.parse(localStorage.getItem('taskList'));
-//   // let taskList = getTaskListFromLocalStorage();
-//   // taskList.forEach(task => {
-//   //   if (task.taskLocation === 'inbox') {
-//   //     task.taskLocation = 'Inbox';
-//   //   }
-  
-//   //   if (task.taskLocation === 'home') {
-//   //     task.taskLocation = 'Home';
-//   //   }
-//   // })
-//   localStorage.setItem('taskListPremade', JSON.stringify(taskList));
-
-// }
-// setTasks();
 createFooter();
 createSidebar();
 createDateTimeDialog();

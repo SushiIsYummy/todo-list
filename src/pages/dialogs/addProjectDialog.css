@@ -1,0 +1,23 @@
+.add-project-dialog {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  border: none;
+  border-radius: 5%;
+  padding: 10px;
+}
+
+.add-project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.add-project-dialog-action-buttons {
+  align-self: flex-end;
+}
+
+.add-project-dialog-name-input {
+  outline: none;
+}

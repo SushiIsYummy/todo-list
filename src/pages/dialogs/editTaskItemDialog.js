@@ -3,8 +3,9 @@ import { getLastSavedTime, getLastSavedDate, resetLastSavedDateAndTime, setLastS
 import sharedElements from './sharedElements';
 import calendarSVG from '/src/svgs/calendar-outline.svg';
 import * as dateTimeDialog from '/src/pages/dialogs/dateTimeDialog';
-import { removeHighlightedTaskItem, updateSingleTaskItem } from '../tasks';
-import { calculateTextareaRows } from '../../utils';
+import { getTaskListFromLocalStorage, removeHighlightedTaskItem } from '../tasks';
+import { updateSingleTaskItem } from '/src/pages/task-list-updater';
+import { calculateTextareaRows, setTextAreaHeightToContentHeight, textareaAutoResize } from '../../utils';
 
 let editTaskItem = null;
 
@@ -23,19 +24,15 @@ function createEditTaskItemDialog() {
   taskTitle.classList.add('edit-task-title');
   taskTitle.rows = '1';
   taskTitle.placeholder = 'Title';
-  taskTitle.addEventListener("input", () => {
-    taskTitle.style.height = "auto"
-    taskTitle.style.height = taskTitle.scrollHeight + "px"
-  })
+  taskTitle.classList.add('overflow-y-hidden');
+  taskTitle.addEventListener('input', textareaAutoResize);
 
   let taskDescription = document.createElement('textarea');
   taskDescription.classList.add('edit-task-description');
   taskDescription.rows = '1';
   taskDescription.placeholder = 'Description';
-  taskDescription.addEventListener("input", () => {
-    taskDescription.style.height = "auto"
-    taskDescription.style.height = taskDescription.scrollHeight + "px"
-  })
+  taskDescription.classList.add('overflow-y-hidden');
+  taskDescription.addEventListener('input', textareaAutoResize);
 
   let priorityDropdown = document.createElement('select');
   priorityDropdown.classList.add('edit-priority-dropdown');
@@ -121,7 +118,7 @@ function saveTaskItemDataToLocalStorage() {
   let priorityDropdown = document.querySelector('.edit-priority-dropdown');
   let taskLocationDropdown = document.querySelector('.edit-task-location-dropdown');
   let calendarIcon = document.querySelector('.calendar-svg');
-  let taskList = JSON.parse(localStorage.getItem('taskList'));
+  let taskList = getTaskListFromLocalStorage();
 
   let index = taskList.findIndex((task) => parseInt(task.id) == parseInt(editTaskItem.id));
   console.log(index);
@@ -177,21 +174,15 @@ export function showEditTaskItemDialog() {
   let taskDescription = document.querySelector('.edit-task-description');
   let taskTitle = document.querySelector('.edit-task-title');
 
-  // console.log('textarea rows: ' + calculateTextareaRows(taskTitle));
-  // taskTitle.style.height = 'auto';
-  // taskTitle.style.height = taskTitle.scrollHeight + 'px';
-  // taskDescription.style.height = taskTitle.scrollHeight + 'px';
   if (dialog.querySelector('.task-due-date-button-container') === null) {
     dialog.insertBefore(dueDateButton, taskLocationDropdown);
   } 
 
   dialog.showModal();
-  console.log(taskTitle.scrollHeight)
+
   // set title and description to height of content
-  taskTitle.style.height = 'auto';
-  taskTitle.style.height = taskTitle.scrollHeight + 'px';
-  taskDescription.style.height = 'auto';
-  taskDescription.style.height = taskDescription.scrollHeight + 'px';
+  setTextAreaHeightToContentHeight(taskTitle);
+  setTextAreaHeightToContentHeight(taskDescription);
 }
 
 export function closeEditTaskItemDialog() {

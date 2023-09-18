@@ -56,14 +56,14 @@ function activateDiscardChangesButtons() {
 }
 
 function dialogAnimationEnd() {
-  let addTaskDialog = document.querySelector('.footer-add-task-dialog');
+  let addTaskDialog = document.querySelector('.add-task-dialog');
   addTaskDialog.close();
   addTaskDialog.classList.remove('hide');
   addTaskDialog.removeEventListener('animationend', dialogAnimationEnd);
 }
 
 function hideAddTaskDialog() {
-  let addTaskDialog = document.querySelector('.footer-add-task-dialog');
+  let addTaskDialog = document.querySelector('.add-task-dialog');
   addTaskDialog.classList.add('hide');
   
   let extraDiv = document.querySelector('.extra-div');

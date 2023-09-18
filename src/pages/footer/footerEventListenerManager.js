@@ -1,4 +1,5 @@
-import { clearAddTaskForm } from '../dialogs/addTaskDialog';
+import { setDropdownLocationToCurrentPage } from '../../utils';
+import { clearAddTaskForm, storeFormElementsAndDefaultValues } from '../dialogs/addTaskDialog';
 import { setLastSavedDate, setLastSavedTime } from '../dialogs/dateTimeDialog';
 import sharedElements from '../dialogs/sharedElements';
 import * as addTaskDialogUtils from '/src/pages/dialogs/addTaskDialog';
@@ -17,6 +18,8 @@ const footerEventListenerManager = {
       if (dateAndPriorityButtons.querySelector('.task-due-date-button-container') === null) {
         dateAndPriorityButtons.insertBefore(dueDateButton, priorityDropdown);
       }
+      setDropdownLocationToCurrentPage();
+      storeFormElementsAndDefaultValues();
       addTaskDialog.showModal();
     })
   },

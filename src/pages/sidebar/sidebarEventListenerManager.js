@@ -9,10 +9,11 @@ const sidebarEventListenerManager = {
 
     sidebarList.addEventListener('click', (e) => {
       let clickedElement = e.target;
-      console.log(clickedElement);
+      // console.log(clickedElement);
       if (clickedElement.tagName === 'LI' && clickedElement.classList.contains('close-sidebar')) {
         utils.hideDialogWithAnimation(sidebar);
       } else if (clickedElement.tagName === 'A' || clickedElement.tagName === 'P') {
+        // console.log(clickedElement);
         let liElement = clickedElement.closest('li');
         if (liElement.classList.contains('close-sidebar')) {
           utils.hideDialogWithAnimation(sidebar);
@@ -26,16 +27,32 @@ const sidebarEventListenerManager = {
     let projectHeader = document.querySelector('project-header');
     
     projectsList.addEventListener('click', (e) => {
-      if (e.target.classList.contains('projects-list-item')) {
+      let clickedElement = e.target;
+      if (clickedElement.classList.contains('projects-list-item')) {
         if (projectHeader !== null && projectHeader.dataset.projectName !== e.target.dataset.projectName) {
           // if already on the project page
           // do nothing
           return;
         }
         utils.removeAllElementsExceptFooterSidebarDialogs();
-        createProjectPage(e.target.dataset.projectName);
+        createProjectPage(clickedElement.dataset.projectName);
         const pageChanged = new Event('pageChanged');
         window.dispatchEvent(pageChanged);
+      } else if (clickedElement.tagName !== 'LI') {
+        let liElement = clickedElement.closest('li');
+        if (liElement) {
+          if (liElement.classList.contains('projects-list-item')) {
+            if (projectHeader !== null && projectHeader.dataset.projectName !== e.target.dataset.projectName) {
+              // if already on the project page
+              // do nothing
+              return;
+            }
+            utils.removeAllElementsExceptFooterSidebarDialogs();
+            createProjectPage(liElement.dataset.projectName);
+            const pageChanged = new Event('pageChanged');
+            window.dispatchEvent(pageChanged);
+          }
+        } 
       }
     });
   },
