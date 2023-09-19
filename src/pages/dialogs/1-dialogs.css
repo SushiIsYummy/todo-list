@@ -1,5 +1,7 @@
 .discard-changes-dialog:not([open]),
 .task-date-time-dialog:not([open]), 
-.date-required-dialog:not([open]) {
+.date-required-dialog:not([open]),
+.edit-project-name-dialog:not([open]),
+.delete-project-dialog:not([open]) {
   display: none;
 }

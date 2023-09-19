@@ -1,0 +1,26 @@
+.edit-project-name-dialog {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* transform: translateZ(0); */
+
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.edit-project-name-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edit-project-name-dialog 
+.action-buttons {
+  align-self: flex-end;
+}
+
+.edit-project-name-dialog
+.name-input {
+  outline: none;
+}

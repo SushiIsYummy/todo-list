@@ -1,6 +1,8 @@
 import scrollIntoView from 'scroll-into-view-if-needed'
 import { updateTaskList, addTaskToTaskList } from './task-list-updater';
-import { addMarginBottomToTaskList, addMarginTopToTaskList, setDropdownLocationToCurrentPage } from '../utils';
+import { addMarginBottomToTaskList, addMarginTopToTaskList, createKebabMenu, setDropdownLocationToCurrentPage } from '../utils';
+import * as editProjectNameDialog from '/src/pages/dialogs/editProjectNameDialog';
+import * as deleteProjectDialog from '/src/pages/dialogs/deleteProjectDialog';
 
 function createProjectPage(projectName) {
   let content = document.querySelector('#content');
@@ -22,15 +24,19 @@ function createProjectPage(projectName) {
   let projectList = document.createElement('ul');
   projectList.classList.add('project-list');
 
-  projectHeader.appendChild(projectTitle);
+  let options = ['Edit Project Name', 'Delete Project'];
+  let kebabMenu = createKebabMenu(options);
+  // console.log(kebabMenu)
+  projectHeader.append(projectTitle, kebabMenu);
   projectMainContent.appendChild(projectList);
   projectContainer.appendChild(projectHeader);
   projectContainer.appendChild(projectMainContent);
 
   content.appendChild(projectContainer);
 
+  kebabMenuOptionsHandler(kebabMenu);
+
   updateTaskList(projectName, projectList);
-  // setDropdownLocationToCurrentPage();
 
   window.addEventListener('taskAddedToLocalStorage', function() {
     addTaskToTaskList(projectName, projectList);
@@ -40,4 +46,44 @@ function createProjectPage(projectName) {
   addMarginBottomToTaskList(projectList);
 }
 
+function kebabMenuOptionsHandler(kebabMenu) {
+  let menuList = kebabMenu.querySelector('.menu-list');
+  
+  
+  menuList.addEventListener('click', (e) => {
+    let clickedElement = e.target;
+    let projectHeader = document.querySelector('header[data-task-location]');
+    let projectName = null;
+
+    if (projectHeader) {
+      projectName = projectHeader.dataset.taskLocation;
+    } else {
+      return;
+    }
+
+    if (clickedElement.tagName === 'LI') {
+      if (clickedElement.classList.contains('edit-project-name')) {
+        editProjectNameDialog.showDialog();
+        editProjectNameDialog.setProjectNameInput(projectName);
+      } else if (clickedElement.classList.contains('delete-project')) {
+        deleteProjectDialog.showDialog();
+        deleteProjectDialog.setWarningMessage(projectName);
+      }
+      return;
+    }
+    
+    if (clickedElement.tagName !== 'LI') {
+      let liElement = clickedElement.closest('li');
+      if (liElement) {
+        if (liElement.classList.contains('edit-project-name')) {
+          editProjectNameDialog.showDialog();
+          editProjectNameDialog.setProjectNameInput(projectName);
+        } else if (liElement.classList.contains('delete-project')) {
+          deleteProjectDialog.showDialog();
+          deleteProjectDialog.setWarningMessage(projectName);
+        }
+      }
+    }
+  })
+}
 export default createProjectPage;

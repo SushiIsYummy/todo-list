@@ -88,8 +88,8 @@ function activateAddProjectDialogActionButtons() {
     }
     sidebarUtils.updateSidebarProjectsList();
 
-    const projectAddedToLocalStorage = new Event('projectAddedToLocalStorage');
-    window.dispatchEvent(projectAddedToLocalStorage);
+    const projectAddedRemovedRenamed = new Event('projectAddedRemovedRenamed');
+    window.dispatchEvent(projectAddedRemovedRenamed);
     addProjectDialog.close();
   });
 

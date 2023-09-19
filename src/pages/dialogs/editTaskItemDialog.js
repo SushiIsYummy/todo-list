@@ -73,7 +73,7 @@ function createEditTaskItemDialog() {
   activateEditTaskItemDialogActionButtons(cancelButton, saveButton, taskTitle);
 
   populateTaskLocationDropdown(taskLocationDropdown);
-  window.addEventListener('projectAddedToLocalStorage', () => {
+  window.addEventListener('projectAddedRemovedRenamed', () => {
     populateTaskLocationDropdown(taskLocationDropdown);
   })
   

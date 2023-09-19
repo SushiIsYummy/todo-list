@@ -23,6 +23,21 @@ const sidebarUtilitiesManager = {
       projectItem.appendChild(projectItemName);
       projectsListElement.appendChild(projectItem);
     }
+  },
+
+  updateSingleSidebarProjectName(oldProjectName, newProjectName) {
+    let projectLi = document.querySelector(`.projects-list-item[data-project-name=${oldProjectName}]`)
+    let p = projectLi.querySelector('p');
+
+    if (projectLi) {
+      p.textContent = newProjectName;
+      projectLi.dataset.projectName = newProjectName;
+    }
+  },
+
+  removeSidebarProject(projectName) {
+    let projectLi = document.querySelector(`.projects-list-item[data-project-name="${projectName}"]`);
+    projectLi.remove();
   }
 }
 

@@ -19,6 +19,8 @@ import '/src/pages/dialogs/addTaskDialog.css';
 import '/src/pages/dialogs/dateTimeDialog.css';
 import '/src/pages/dialogs/dateRequiredDialog.css';
 import '/src/pages/dialogs/addProjectDialog.css';
+import '/src/pages/dialogs/editProjectNameDialog.css';
+import '/src/pages/dialogs/deleteProjectDialog.css';
 import '/src/pages/dialogs/1-dialogs.css';
 
 import createAddTaskDialog, { populateTaskLocationDropdown, storeFormElementsAndDefaultValues } from './pages/dialogs/addTaskDialog';
@@ -26,6 +28,7 @@ import createDateRequiredDialog from './pages/dialogs/dateRequiredDialog';
 import createDateTimeDialog from './pages/dialogs/dateTimeDialog';
 import createDiscardChangesDialog from './pages/dialogs/discardChangesDialog';
 import createAddProjectDialog from './pages/dialogs/addProjectDialog';
+import createEditProjectNameDialog from './pages/dialogs/editProjectNameDialog';
 
 import footerEventListenerManager from './pages/footer/footerEventListenerManager';
 import sidebarELM from './pages/sidebar/sidebarEventListenerManager.js';
@@ -34,6 +37,7 @@ import { addEditFunctionToAllTaskItems, getTaskListFromLocalStorage, setTaskList
 import * as utils from '/src/utils';
 import sharedElements from './pages/dialogs/sharedElements';
 import createEditTaskItemDialog from '/src/pages/dialogs/editTaskItemDialog';
+import createDeleteProjectDialog from './pages/dialogs/deleteProjectDialog';
 
 
 let content = document.querySelector('#content');
@@ -45,6 +49,8 @@ createAddTaskDialog();
 createDateRequiredDialog();
 createDiscardChangesDialog();
 createAddProjectDialog();
+createEditProjectNameDialog();
+createDeleteProjectDialog();
 sharedElements.initializeElements();
 
 storeFormElementsAndDefaultValues();
@@ -106,26 +112,3 @@ addEditFunctionToAllTaskItems();
 window.addEventListener('pageChanged', () => {
   addEditFunctionToAllTaskItems();
 });
-
-  // for (let i = 0; i < 10; i++) {
-  //   Array.from(projectsListItems).forEach(projectItem => {
-  //     projectItem.addEventListener('click', () => {
-  //       removeAllElementsExceptFooterAndSidebar();
-  //       createProjectPage(projectItem.dataset.projectName);
-  //       sidebarDialog.close();
-  //     })
-  //   })
-  // }
-
-// window.addEventListener('addProjectToLocalStorage', () => {
-//   console.log('project added!');
-//   console.log(projectsListItems.length)
-//   Array.from(projectsListItems).forEach(projectItem => {
-//     console.log(projectItem)
-//     projectItem.addEventListener('click', () => {
-//       removeAllElementsExceptFooterAndSidebar();
-//       createProjectPage(projectItem.dataset.projectName);
-//       sidebarDialog.close();
-//     })
-//   })
-// });

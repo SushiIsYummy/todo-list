@@ -117,7 +117,7 @@ function createAddTaskDialog() {
   setUpFormSubmitHandler();
   // console.log(addTaskFormElementDefaultValues);
 
-  window.addEventListener('projectAddedToLocalStorage', () => {
+  window.addEventListener('projectAddedRemovedRenamed', () => {
     populateTaskLocationDropdown(taskLocationDropdown);
   })
 }
@@ -201,9 +201,6 @@ export function clearAddTaskForm() {
   let taskDescription = document.querySelector('.task-description');
   utils.setTextAreaHeightToContentHeight(taskDescription);
 
-  let dueDatePara = document.querySelector('.task-due-date-para');
-  dueDatePara.textContent = 'No Date';
-
   // empty the flatpickr alt input
   let dueDateFlatpickrInput = document.querySelector('.task-due-date-input.flatpickr-input');
   dueDateFlatpickrInput.value = '';
@@ -213,12 +210,22 @@ export function clearAddTaskForm() {
   let priorityDropdown = document.querySelector('.priority-dropdown');
   setCurrentPriorityValueWithCorrespondingColor(priorityDropdown);
 
+  // set task location dropdown to current page
+  let taskLocationDropdown = document.querySelector('.task-location-dropdown');
+  let header = document.querySelector('header[data-task-location]');
+  if (header) {
+    taskLocationDropdown.value = header.dataset.taskLocation;
+  }
+
   resetLastSavedDateAndTime();
   
   dueDateInput._flatpickr.clear();
 
   setCalendarIconColor('#646464');
 
+  let dueDatePara = document.querySelector('.task-due-date-para');
+  dueDatePara.textContent = 'No Date';
+  
   // remove colors
   for (let i = 0; i < dueDatePara.classList.length; i++) {
     if (dueDatePara.classList[i] !== 'task-due-date-para') {
@@ -227,14 +234,6 @@ export function clearAddTaskForm() {
   }
 
   dueDatePara.classList.add('no-date');
-  // this.setDueDateParaColor('#646464');
-
-  // reset option to last option which is priority 4
-  // priorityDropdown.value = priorityDropdown.options[priorityDropdown.options.length-1].value;
-  
-  // let colorOfLastOption = getComputedStyle(priorityDropdown.options[priorityDropdown.options.length-1]).color;
-  // priorityDropdown.style.color = colorOfLastOption;
-
 }
 
 // note: only usable when the add task dialog is opened since the

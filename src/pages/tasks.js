@@ -118,14 +118,6 @@ export function addEditFunctionToAllTaskItems() {
   });
 }
 
-export function removeHighlightedTaskItem() {
-  let highlightedTaskItem = document.querySelector('.task-item.highlighted');
-
-  if (highlightedTaskItem) {
-    highlightedTaskItem.classList.remove('highlighted');
-  }
-}
-
 export function addTaskToLocalStorage(task) { 
   // add task to local storage
   if (localStorage.getItem('taskList') === null) {
@@ -159,6 +151,46 @@ export function getTaskFromTaskList(taskId) {
   let taskList = getTaskListFromLocalStorage();
   let targetTask = taskList.find((task) => parseInt(task.id) === parseInt(taskId));
   return targetTask;
+}
+
+export function removeHighlightedTaskItem() {
+  let highlightedTaskItem = document.querySelector('.task-item.highlighted');
+
+  if (highlightedTaskItem) {
+    highlightedTaskItem.classList.remove('highlighted');
+  }
+}
+
+export function removeAllTasksWithProjectNameInLocalStorage(projectName) {
+  let taskList = getTaskListFromLocalStorage();
+
+  taskList = taskList.filter((task) => {
+    if (task.taskLocation === projectName) {
+      return false;
+    }
+    return true;
+  })
+
+  setTaskListInLocalStorage(taskList);
+}
+
+export function removeProjectFromLocalStorage(projectName) {
+  let projectsList = JSON.parse(localStorage.getItem('projectsList'));
+  let indexOfProject = projectsList.indexOf(projectName);
+  projectsList.splice(indexOfProject, 1);
+  localStorage.setItem('projectsList', JSON.stringify(projectsList));
+}
+
+export function moveTaskLocationsOfTasks(oldProjectName, newProjectName) {
+  let taskList = getTaskListFromLocalStorage();
+
+  taskList.forEach((task) => {
+    if (task.taskLocation === oldProjectName) {
+      task.taskLocation = newProjectName;
+    }
+  });
+
+  setTaskListInLocalStorage(taskList);
 }
 
 // export function updateTaskList(pageName, taskListElement) {

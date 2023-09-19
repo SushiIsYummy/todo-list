@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import kebabSVG from '/src/svgs/dots-vertical.svg';
 
 export function addMarginTopToTaskList(headerElement, taskListElement) {
   taskListElement.style.marginTop = getComputedStyle(headerElement).height;
@@ -190,6 +191,9 @@ export function textareaAutoResize(e) {
   let textarea = e.target;
   let scrollHeight = parseInt(textarea.scrollHeight);
   let maxHeight = parseInt(getComputedStyle(textarea).maxHeight);
+  if (typeof maxHeight !== 'number') {
+    return;
+  }
   if (scrollHeight > maxHeight) {
     textarea.classList.remove('overflow-y-hidden');
     textarea.classList.add('overflow-y-visible');
@@ -199,4 +203,66 @@ export function textareaAutoResize(e) {
   }
   textarea.style.height = 'auto';
   textarea.style.height = textarea.scrollHeight + 'px';
+}
+
+export function createKebabMenu(menuList) {
+  let kebabMenu = document.createElement('div');
+  kebabMenu.classList.add('kebab-menu');
+
+  document.addEventListener('click', function (event) {
+    // Check if the click target is outside of the kebab menu and its list
+    if (!kebabMenu.contains(event.target)) {
+        // If the click is outside, close the menu
+        kebabMenu.classList.remove('show-menu');
+    }
+  });
+
+  let kebabIframe = document.createElement('iframe');
+  kebabIframe.classList.add('kebab-icon');
+  kebabIframe.src = kebabSVG;
+
+  kebabIframe.addEventListener('load', function () {
+    // The code here will run when the iframe has finished loading its content.
+    // You can now safely add event listeners to elements within the iframe.
+    
+    // Example: Add a click event listener to an element within the iframe
+    const iframeDocument = kebabIframe.contentDocument || kebabIframe.contentWindow.document;
+    const iframeElement = iframeDocument.querySelector('svg');
+    
+    iframeElement.addEventListener('click', (e) => {
+        // Your click event handler code here
+        console.log(e.target);
+        kebabMenu.classList.toggle('show-menu');
+    });
+  });
+
+
+  let kebabMenuList = document.createElement('ul');
+  kebabMenuList.classList.add('menu-list');
+
+  kebabMenuList.addEventListener('click', () => {
+    kebabMenu.classList.toggle('show-menu');
+  })  
+  
+  if (menuList !== undefined) {
+    for (let i = 0; i < menuList.length; i++) {
+      let option = document.createElement('li');
+      option.classList.add(convertStringToClassName(menuList[i]));
+
+      let optionName = document.createElement('a');
+      optionName.textContent = menuList[i];
+  
+      option.appendChild(optionName);
+      kebabMenuList.appendChild(option);
+    }
+  }
+
+  kebabMenu.append(kebabIframe, kebabMenuList);
+  // console.log(kebabMenu);
+  return kebabMenu;
+}
+
+// converts string to lower case and joins words with a hyphen '-'
+export function convertStringToClassName(string) {
+  return string.toLowerCase().replaceAll(' ', '-');
 }
