@@ -14,7 +14,7 @@ function createEditProjectNameDialog() {
   editProjectNameHeader.classList.add('edit-project-name-header');
 
   let editProjectNameTitle = document.createElement('h1');
-  editProjectNameTitle.classList.add('edit-project-name-item-name');
+  editProjectNameTitle.classList.add('edit-project-name-title');
   editProjectNameTitle.textContent = 'Edit Project Name';
 
   let nameInput = document.createElement('input');

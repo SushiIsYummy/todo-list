@@ -12,15 +12,6 @@
   border: none;
 }
 
-.sidebar-dialog.hide {
-  max-width: 100% !important;
-  max-height: 100% !important;
-  width: 80%;
-  height: 100%;
-  
-  border: none;
-}
-
 .sidebar-dialog[open] {
   animation: showSidebarDialog var(--animation-time-atd-open) ease normal;
 }
@@ -62,12 +53,14 @@
   justify-content: center;
   align-items: center;
 
-  width: 20px;
-  height: 20px;
+  align-self: center;
+  line-height: 1;
+  width: 30px;
+  height: 30px;
   border: none;
   background-color: inherit;
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: white;
   cursor: pointer;
 }

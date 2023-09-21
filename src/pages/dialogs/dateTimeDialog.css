@@ -14,15 +14,71 @@
   display: block;
 }
 
+.task-due-date-input {
+  font-size: 1rem;
+  padding: 1px 3px;
+  font-weight: bold;
+}
+
 .task-due-date-input-buttons {
   display: flex;
   justify-content: space-between;
 }
 
-.task-due-date-today-button,
+.task-due-date-input-buttons button {
+  font-weight: bold;
+}
+
+.task-due-date-today-button {
+  background-color: greenyellow;
+}
+
 .task-due-date-clear-button {
+  background-color: red;
+  color: white;
+}
+
+.task-time-input-container {
+  display: flex;
+  gap: 10px;
+}
+
+.task-time-clear-button {
+  align-self: center;
+  font-size: 1rem;
+  height: fit-content;
+  background-color: red;
+  color: white;
+  border-radius: 5px;
   border: none;
-  padding: 7px 10px;
+  line-height: 1;
+  padding: 3px;
   cursor: pointer;
 }
 
+.task-due-date-today-button,
+.task-due-date-clear-button {
+  border: none;
+  padding: 10px 10px 7px 10px;
+  cursor: pointer;
+  border-radius: 0 0 5px 5px;
+}
+
+.task-date-time-dialog-action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.task-date-time-dialog-action-buttons button {
+  padding: 5px 10px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.task-date-time-dialog-save-button {
+  color: white;
+  background-color: #00BFFF;
+}

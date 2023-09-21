@@ -74,7 +74,7 @@ const createSidebarItemList = (itemName, itemClass) => {
 
   let addProjectButton = document.createElement('button');
   addProjectButton.classList.add('add-project-button');
-  addProjectButton.textContent = '+';
+  addProjectButton.textContent = '➕';
 
   let sidebarItemName = document.createElement('p');
   sidebarItemName.textContent = itemName;

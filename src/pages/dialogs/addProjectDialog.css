@@ -14,10 +14,37 @@
   gap: 10px;
 }
 
-.add-project-dialog-action-buttons {
-  align-self: flex-end;
+.add-project-item-name {
+  display: flex;
+  justify-content: center;
 }
-
 .add-project-dialog-name-input {
   outline: none;
+  font-size: 1rem;
+  padding: 0 3px;
+}
+
+.add-project-dialog-action-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.add-project-dialog-action-buttons button {
+  flex: 1;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.add-project-dialog-cancel-button {
+  padding: 5px 10px;
+  border: none;
+}
+
+.add-project-dialog-confirm-button {
+  padding: 5px 10px;
+  border: none;
+  background-color: green;
+  color: white;
 }

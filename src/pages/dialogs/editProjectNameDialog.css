@@ -15,9 +15,35 @@
   gap: 10px;
 }
 
+.edit-project-name-title {
+  text-align: center;
+}
+
+.edit-project-name-dialog
+.name-input {
+  font-size: 1rem;
+}
+
 .edit-project-name-dialog 
 .action-buttons {
-  align-self: flex-end;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.edit-project-name-dialog 
+.action-buttons button {
+  flex: 1;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+.edit-project-name-dialog
+.confirm-button {
+  background-color: green;
+  color: white;
 }
 
 .edit-project-name-dialog

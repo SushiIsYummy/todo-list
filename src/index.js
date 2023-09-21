@@ -3,7 +3,6 @@ import createFooter from './pages/footer/footerBuilder';
 import createInbox from './pages/inbox';
 import createUpcoming from './pages/upcoming';
 import createToday from './pages/today';
-import createProjectPage from './pages/project';
 
 import './styles/global.css';
 import './styles/sidebar.css';
@@ -23,17 +22,14 @@ import '/src/pages/dialogs/editProjectNameDialog.css';
 import '/src/pages/dialogs/deleteProjectDialog.css';
 import '/src/pages/dialogs/1-dialogs.css';
 
-import createAddTaskDialog, { populateTaskLocationDropdown, storeFormElementsAndDefaultValues } from './pages/dialogs/addTaskDialog';
+import createAddTaskDialog, { storeFormElementsAndDefaultValues } from './pages/dialogs/addTaskDialog';
 import createDateRequiredDialog from './pages/dialogs/dateRequiredDialog';
 import createDateTimeDialog from './pages/dialogs/dateTimeDialog';
 import createDiscardChangesDialog from './pages/dialogs/discardChangesDialog';
 import createAddProjectDialog from './pages/dialogs/addProjectDialog';
 import createEditProjectNameDialog from './pages/dialogs/editProjectNameDialog';
 
-import footerEventListenerManager from './pages/footer/footerEventListenerManager';
-import sidebarELM from './pages/sidebar/sidebarEventListenerManager.js';
-import sidebarUtils from './pages/sidebar/sidebarUtilitiesManager';
-import { addEditFunctionToAllTaskItems, getTaskListFromLocalStorage, setTaskListInLocalStorage } from './pages/tasks';
+import { addEditFunctionToAllTaskItems } from './pages/tasks';
 import * as utils from '/src/utils';
 import sharedElements from './pages/dialogs/sharedElements';
 import createEditTaskItemDialog from '/src/pages/dialogs/editTaskItemDialog';
@@ -55,17 +51,8 @@ sharedElements.initializeElements();
 
 storeFormElementsAndDefaultValues();
 
-// createToday();
-createUpcoming();
-// addEditFunctionToAllTaskItems();
-// createInbox();
+createToday();
 content.appendChild(createEditTaskItemDialog());
-// console.log('TASK LIST');
-// console.log(getTaskListFromLocalStorage());
-// localStorage.setItem('taskListPremade', JSON.stringify(getTaskListFromLocalStorage()));
-// let editTaskDialog = document.querySelector('.edit-task-dialog');
-// editTaskDialog.showModal();
-// setTaskListInLocalStorage();
 
 let inboxSidebarItem = document.querySelector('.sidebar-item.inbox');
 let todaySidebarItem = document.querySelector('.sidebar-item.today');
