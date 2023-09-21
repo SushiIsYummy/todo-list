@@ -50,10 +50,6 @@
   border-bottom: 1px solid #E6E6E6;
 }
 
-.sidebar-item-list.projects {
-
-}
-
 .projects-header {
   background-color: rgb(184, 184, 184);
 
@@ -62,12 +58,18 @@
 }
 
 .add-project-button {
-  width: 20px;
-  height: 20px;
-
   display: flex;
   justify-content: center;
   align-items: center;
+
+  width: 20px;
+  height: 20px;
+  border: none;
+  background-color: inherit;
+  font-weight: bold;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
 }
 
 .projects-list-item:hover,

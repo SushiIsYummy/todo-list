@@ -68,3 +68,11 @@
 .kebab-menu.show-menu .menu-list {
   display: block;
 }
+
+.kebab-menu {
+  display: flex;
+}
+
+.delete-project {
+  color: red;
+}

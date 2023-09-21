@@ -10,11 +10,18 @@
   padding: 10px;
   border: none;
   border-radius: 5px;
+  min-width: 250px;
+  max-width: 280px;
 }
 
 .delete-project-dialog .dialog-header {
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.8rem;
+  align-self: center;
+}
+
+.delete-project-dialog .warning-message {
+  align-self: center;
 }
 
 .delete-project-dialog .action-buttons {

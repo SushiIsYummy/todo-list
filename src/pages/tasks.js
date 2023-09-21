@@ -147,18 +147,73 @@ export function setTaskListInLocalStorage(taskList) {
   }
 }
 
+export function getProjectsListFromLocalStorage() {
+  let projectsList = JSON.parse(localStorage.getItem('projectsList'));
+  if (projectsList === null) {
+    projectsList = [];
+    setProjectsListInLocalStorage(projectsList);
+  }
+  return projectsList;
+
+}
+
+export function setProjectsListInLocalStorage(projectsList) {
+  if (projectsList) {
+    localStorage.setItem('projectsList', JSON.stringify(projectsList));
+  }
+}
+
 export function getTaskFromTaskList(taskId) {
   let taskList = getTaskListFromLocalStorage();
   let targetTask = taskList.find((task) => parseInt(task.id) === parseInt(taskId));
   return targetTask;
 }
 
-export function removeHighlightedTaskItem() {
+export function removeHighlightedFromTaskItem() {
   let highlightedTaskItem = document.querySelector('.task-item.highlighted');
 
   if (highlightedTaskItem) {
     highlightedTaskItem.classList.remove('highlighted');
   }
+}
+
+export function removeHighlightedTaskFromDOM() {
+  let highlightedTaskItem = document.querySelector('.task-item.highlighted');
+  if (!highlightedTaskItem) {
+    return;
+  }
+
+  // task has a date header and is the only task in its group
+  let groupedTasksByDate = highlightedTaskItem.closest('.grouped-tasks-by-date');
+  if (groupedTasksByDate) {
+    let groupedItems = groupedTasksByDate.querySelector('.grouped-task-items');
+    if (groupedItems) {
+      if (groupedItems.childElementCount === 1) {
+        groupedTasksByDate.remove();
+        return;
+      }
+    }
+  }
+
+  highlightedTaskItem.remove();
+
+}
+
+export function removeHighlightedTaskFromLocalStorage() {
+  let taskList = getTaskListFromLocalStorage();
+  let highlightedTaskItem = document.querySelector('.task-item.highlighted');
+  let taskId = highlightedTaskItem.dataset.taskId;
+  console.log('task id: ' + taskId)
+  if (highlightedTaskItem && taskId) {
+    let index = taskList.findIndex((task) => parseInt(task.id) === parseInt(taskId));
+    console.log('index: ' + index);
+    if (index !== -1) {
+      taskList.splice(index, 1);
+      console.log('spliced!');
+    }
+  }
+  console.log(taskList);
+  setTaskListInLocalStorage(taskList);
 }
 
 export function removeAllTasksWithProjectNameInLocalStorage(projectName) {
@@ -175,10 +230,10 @@ export function removeAllTasksWithProjectNameInLocalStorage(projectName) {
 }
 
 export function removeProjectFromLocalStorage(projectName) {
-  let projectsList = JSON.parse(localStorage.getItem('projectsList'));
+  let projectsList = getProjectsListFromLocalStorage();
   let indexOfProject = projectsList.indexOf(projectName);
   projectsList.splice(indexOfProject, 1);
-  localStorage.setItem('projectsList', JSON.stringify(projectsList));
+  setProjectsListInLocalStorage(projectsList);
 }
 
 export function moveTaskLocationsOfTasks(oldProjectName, newProjectName) {

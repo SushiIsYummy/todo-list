@@ -3,9 +3,9 @@ import { getLastSavedTime, getLastSavedDate, resetLastSavedDateAndTime, setLastS
 import sharedElements from './sharedElements';
 import calendarSVG from '/src/svgs/calendar-outline.svg';
 import * as dateTimeDialog from '/src/pages/dialogs/dateTimeDialog';
-import { getTaskListFromLocalStorage, removeHighlightedTaskItem } from '../tasks';
+import { getTaskListFromLocalStorage, removeHighlightedFromTaskItem, removeHighlightedTaskFromDOM, removeHighlightedTaskFromLocalStorage } from '../tasks';
 import { updateSingleTaskItem } from '/src/pages/task-list-updater';
-import { calculateTextareaRows, setTextAreaHeightToContentHeight, textareaAutoResize } from '../../utils';
+import { calculateTextareaRows, createKebabMenu, setTextAreaHeightToContentHeight, textareaAutoResize } from '../../utils';
 
 let editTaskItem = null;
 
@@ -16,6 +16,11 @@ function createEditTaskItemDialog() {
   let header = document.createElement('h1');
   header.classList.add('edit-task-item-header');
   header.textContent = 'Edit Task';
+
+  let kebabMenu = createKebabMenu(['Delete Task']);
+
+  let headerAndKebab = document.createElement('div');
+  headerAndKebab.classList.add('header-and-kebab');
 
   // growing textarea
   // https://codepen.io/devrasta07/pen/GRMPMGG
@@ -61,14 +66,12 @@ function createEditTaskItemDialog() {
   saveButton.type = 'button';
   saveButton.textContent = 'SAVE';
 
-  // taskTitleGrowWrap.appendChild(taskTitle);
-  // dropdownsAndDueDateButton.append(taskLocationDropdown, priorityDropdown);
+  headerAndKebab.append(header, kebabMenu);
   actionButtons.append(cancelButton, saveButton)
-  // dueDateContainer.append(dueDateSVG, dueDatePara);
-  editTaskItemDialog.append(header, taskTitle, taskDescription, taskLocationDropdown, priorityDropdown);
+  editTaskItemDialog.append(headerAndKebab, taskTitle, taskDescription, taskLocationDropdown, priorityDropdown);
   editTaskItemDialog.append(actionButtons);
 
-  // activateDueDateButtonOnClick(dueDateContainer);
+  activateKebabMenuOptions(editTaskItemDialog);
   addEventListenerPriorityDropdown(priorityDropdown);
   activateEditTaskItemDialogActionButtons(cancelButton, saveButton, taskTitle);
 
@@ -85,7 +88,7 @@ function activateEditTaskItemDialogActionButtons(cancelButton, saveButton, taskT
 
   cancelButton.addEventListener('click', () => {
     closeEditTaskItemDialog();
-    removeHighlightedTaskItem();
+    removeHighlightedFromTaskItem();
   })
 
   saveButton.addEventListener('click', () => {
@@ -96,7 +99,7 @@ function activateEditTaskItemDialogActionButtons(cancelButton, saveButton, taskT
       saveTaskItemDataToLocalStorage();
       updateSingleTaskItem()
       closeEditTaskItemDialog();
-      removeHighlightedTaskItem();
+      removeHighlightedFromTaskItem();
     }
   })
 
@@ -106,6 +109,31 @@ function activateEditTaskItemDialogActionButtons(cancelButton, saveButton, taskT
       e.target.setCustomValidity('');
     } 
   });
+}
+
+function activateKebabMenuOptions(dialog) {
+  let kebabMenuList = dialog.querySelector('.kebab-menu .menu-list');
+
+  kebabMenuList.addEventListener('click', (e) => {
+    let clickedElement = e.target;
+    console.log(clickedElement);
+    if (clickedElement.tagName === 'LI' && clickedElement.classList.contains('delete-task')) {
+      closeEditTaskItemDialog();
+      removeHighlightedTaskFromLocalStorage();
+      removeHighlightedTaskFromDOM();
+    } else if (clickedElement.tagName !== 'LI') {
+      let liElement = clickedElement.closest('li');
+      if (liElement) {
+        if (liElement.classList.contains('delete-task')) {
+          closeEditTaskItemDialog();
+          removeHighlightedTaskFromLocalStorage();
+          removeHighlightedTaskFromDOM();
+        }
+      }
+    }
+  })
+
+  
 }
 
 function saveTaskItemDataToLocalStorage() {

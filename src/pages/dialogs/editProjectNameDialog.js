@@ -1,5 +1,5 @@
 import sidebarUtils from "../sidebar/sidebarUtilitiesManager";
-import { moveTaskLocationsOfTasks } from "../tasks";
+import { getProjectsListFromLocalStorage, moveTaskLocationsOfTasks } from "../tasks";
 
 function createEditProjectNameDialog() {
   let content = document.querySelector('#content');
@@ -60,7 +60,7 @@ function handleActionButtons(editProjectNameDialog) {
 
   editProjectNameForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    let projectsList = JSON.parse(localStorage.getItem('projectsList'));
+    let projectsList = getProjectsListFromLocalStorage();
     let taskLocationHeader = document.querySelector('header[data-task-location]');
     let oldProjectName = null;
     let index = -1;

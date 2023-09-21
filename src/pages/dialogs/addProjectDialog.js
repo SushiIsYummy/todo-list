@@ -1,4 +1,5 @@
 import sidebarUtils from "../sidebar/sidebarUtilitiesManager";
+import { getProjectsListFromLocalStorage } from "../tasks";
 
 function createAddProjectDialog() {
   let content = document.querySelector('#content');
@@ -69,7 +70,7 @@ function activateAddProjectDialogActionButtons() {
   addProjectForm.addEventListener('submit', (e) => {
     e.preventDefault();
     let nameInput = document.querySelector('.add-project-dialog-name-input');
-    let projectList = JSON.parse(localStorage.getItem('projectsList'));
+    let projectList = getProjectsListFromLocalStorage();
 
     if (projectNameExists(nameInput.value)) {
       nameInput.setCustomValidity('The project name already exists. Please enter a different name.');
@@ -102,7 +103,7 @@ function activateAddProjectDialogActionButtons() {
 }
 
 function projectNameExists(projectName) {
-  let projectsList = JSON.parse(localStorage.getItem('projectsList'));
+  let projectsList = getProjectsListFromLocalStorage();
   if (projectsList.includes(projectName)) {
     return true;
   }

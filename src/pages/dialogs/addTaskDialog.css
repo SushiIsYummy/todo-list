@@ -1,5 +1,6 @@
 .task-title,
 .task-description {
+  font-family: "Times New Roman", Times, serif;
   padding: 5px 10px;
   caret-color: red;
   border: none;

@@ -1,8 +1,9 @@
+import { getProjectsListFromLocalStorage } from '../tasks';
 import * as utils from '/src/utils';
 
 const sidebarUtilitiesManager = {
   updateSidebarProjectsList() {
-    let projectsList = JSON.parse(localStorage.getItem('projectsList'));
+    let projectsList = getProjectsListFromLocalStorage();
     let projectsListElement = document.querySelector('.projects-list');
     utils.clearAllChildrenOfElement(projectsListElement);
 

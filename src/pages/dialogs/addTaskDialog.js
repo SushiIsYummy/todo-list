@@ -2,7 +2,7 @@ import sendButtonSVG from '/src/svgs/send.svg';
 import calendarSVG from '/src/svgs/calendar-outline.svg';
 import { getLastSavedDate, getLastSavedTime, resetLastSavedDateAndTime, setLastSavedDate, setLastSavedTime } from './dateTimeDialog';
 import sharedElements from './sharedElements';
-import { addTaskToLocalStorage } from '../tasks';
+import { addTaskToLocalStorage, getProjectsListFromLocalStorage } from '../tasks';
 import { createTask } from '../task-creator'; 
 import * as utils from '/src/utils';
 import * as dateTimeDialogUtils from '/src/pages/dialogs/dateTimeDialog';
@@ -297,7 +297,7 @@ export function activateDueDateButtonOnClick(dueDateButton) {
 
 export function populateTaskLocationDropdown(taskLocationDropdown) {
   // let taskLocationDropdown = document.querySelector('.task-location-dropdown');
-  let projectList = JSON.parse(localStorage.getItem('projectsList'));
+  let projectList = getProjectsListFromLocalStorage();
 
   utils.clearAllChildrenOfElement(taskLocationDropdown);
 
