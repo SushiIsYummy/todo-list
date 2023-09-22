@@ -8,12 +8,11 @@ const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 module.exports = {
   entry: './src/index.js',
   output: {
-    filename: '[name].js',
-    // filename: '[name].[contenthash].js',
+    filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
-  mode: 'development',
+  mode: 'production',
   optimization: {
     minimizer: [
       // Use TerserPlugin for JavaScript minification
@@ -22,9 +21,9 @@ module.exports = {
         test: /\.js(\?.*)?$/i,
       }),
       // Use OptimizeCSSAssetsPlugin for CSS minification
-      new CssMinimizerPlugin({
+      // new CssMinimizerPlugin({
         // CSS optimization options
-      }),
+      // }),
       new ImageMinimizerPlugin({
         minimizer: {
           implementation: ImageMinimizerPlugin.sharpMinify,
@@ -58,10 +57,10 @@ module.exports = {
   },
   module: {
     rules: [
-      // {
-      //   test: /\.css$/i,
-      //   use: ["style-loader", "css-loader"],
-      // },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
       {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
@@ -93,8 +92,7 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '[name].css', // Output CSS filename
-      // filename: '[name].[contenthash].css', // Output CSS filename
+      filename: '[name].[contenthash].css', // Output CSS filename
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/index.html'), // Path to your template
@@ -106,14 +104,5 @@ module.exports = {
       }
     }),
   ],
-  // target: 'web',
-  // devServer: {
-  //   // static: './',
-  //   static: {
-  //     directory: path.resolve(__dirname, 'dist'), // Change the directory to match your project setup
-  //   },
-  //   // compress: true,
-  //   // port: 9000, // You can choose any port you prefer
-  // },
-  devtool: 'inline-source-map',
+  // devtool: 'inline-source-map',
 };

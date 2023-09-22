@@ -9,7 +9,8 @@
     "watch": "webpack --watch",
     "server": "node server.js",
     "serve": "webpack serve",
-    "build": "webpack"
+    "build": "webpack",
+    "update-project": "git subtree push --prefix dist origin gh-pages"
   },
   "keywords": [],
   "author": "",
