@@ -1,9 +1,11 @@
 .today-container {
   /* padding: 0 30px; */
+  width: 100%;
 }
 
 .today-header {
-  position: fixed;
+  position: sticky;
+  /* position: fixed;   */
   top: 0;
   width: 100%;
   z-index: 5;

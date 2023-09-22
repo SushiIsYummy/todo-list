@@ -1,11 +1,14 @@
 import { updateTaskList, addTaskToTaskListToday } from "./task-list-updater";
-import { addMarginBottomToTaskList, addMarginTopToTaskList } from "../utils";
+import { addMarginBottomToTaskList, addMarginTopToTaskList, setDropdownLocationToCurrentPage } from "../utils";
 
 function createToday() {
   let content = document.querySelector('#content');
 
+  let pageContainer = document.querySelector('.page-container');
+
   let todayContainer = document.createElement('div');
   todayContainer.classList.add('today-container');
+  todayContainer.classList.add('page');
 
   let todayHeader = document.createElement('header');
   todayHeader.classList.add('today-header');
@@ -26,7 +29,9 @@ function createToday() {
   todayContainer.appendChild(todayHeader);
   todayContainer.appendChild(todayMainContent);
     
-  content.appendChild(todayContainer);
+  // content.appendChild(todayContainer);
+  pageContainer.appendChild(todayContainer);
+
   updateTaskList('today', todayList, false);
   
   window.addEventListener('taskAddedToLocalStorage', function() {
@@ -35,7 +40,7 @@ function createToday() {
   });
   
 
-  addMarginTopToTaskList(todayHeader, todayList);
+  // addMarginTopToTaskList(todayHeader, todayList);
   // addMarginBottomToTaskList(todayList);
   let footerBar = document.querySelector('.footer-bar');
   todayList.style.marginBottom = `${parseInt(getComputedStyle(footerBar).height) + 30}px`;

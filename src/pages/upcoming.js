@@ -6,8 +6,11 @@ import { addTaskToTaskListUpcoming } from "./task-list-updater";
 function createUpcoming() {
   let content = document.querySelector('#content');
 
+  let pageContainer = document.querySelector('.page-container');
+
   let upcomingContainer = document.createElement('div');
   upcomingContainer.classList.add('upcoming-container');
+  upcomingContainer.classList.add('page');
 
   let upcomingHeader = document.createElement('header');
   upcomingHeader.classList.add('upcoming-header');
@@ -28,7 +31,9 @@ function createUpcoming() {
   upcomingContainer.appendChild(upcomingHeader);
   upcomingContainer.appendChild(upcomingMainContent);
     
-  content.appendChild(upcomingContainer);
+  // content.appendChild(upcomingContainer);
+  pageContainer.appendChild(upcomingContainer);
+
   updateTaskListWithDateHeaders('upcoming', upcomingList);
   // updateTaskListWithDateHeaders('upcoming', upcomingList);
   
@@ -37,7 +42,7 @@ function createUpcoming() {
     // updateTaskListWithDateHeaders('upcoming', upcomingList);
   });
 
-  addMarginTopToTaskList(upcomingHeader, upcomingList);
+  // addMarginTopToTaskList(upcomingHeader, upcomingList);
   // addMarginBottomToTaskList(upcomingList);
   let footerBar = document.querySelector('.footer-bar');
   upcomingList.style.marginBottom = `${parseInt(getComputedStyle(footerBar).height) + 30}px`;

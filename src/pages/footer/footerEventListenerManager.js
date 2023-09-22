@@ -28,10 +28,24 @@ const footerEventListenerManager = {
     let hamburgerMenu = document.querySelector('.hamburger-menu');
     
     hamburgerMenu.addEventListener('click', () => {
-      // let sidebarDialog = document.querySelector('.sidebar-dialog');
+      let sidebarDiv = document.querySelector('.sidebar-div');
       let sidebarDialog = sharedElements.sidebarDialog;
+      let footerBar = document.querySelector('.footer-bar');
+      let addTaskDialog = sharedElements.addTaskDialog;
+      let pageContainer = document.querySelector('.page-container');
+      let pageHeader = document.querySelector('.page header');
+
+      console.log(getComputedStyle(sidebarDialog).display === 'none');
       if (sidebarDialog !== null) {
-        sidebarDialog.showModal();
+        if (window.innerWidth < 768) {
+          sidebarDialog.showModal();
+        } else {
+          sidebarDiv.classList.toggle('open');
+          footerBar.classList.toggle('shifted');
+          pageContainer.classList.toggle('shifted');
+          addTaskDialog.classList.toggle('shifted');
+          // pageHeader.classList.toggle('shifted');
+        }
       }
     })
   },

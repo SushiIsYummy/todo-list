@@ -7,8 +7,11 @@ import * as deleteProjectDialog from '/src/pages/dialogs/deleteProjectDialog';
 function createProjectPage(projectName) {
   let content = document.querySelector('#content');
 
+  let pageContainer = document.querySelector('.page-container');
+
   let projectContainer = document.createElement('div');
   projectContainer.classList.add('project-container');
+  projectContainer.classList.add('page');
 
   let projectHeader = document.createElement('header');
   projectHeader.classList.add('project-header');
@@ -32,7 +35,8 @@ function createProjectPage(projectName) {
   projectContainer.appendChild(projectHeader);
   projectContainer.appendChild(projectMainContent);
 
-  content.appendChild(projectContainer);
+  // content.appendChild(projectContainer);
+  pageContainer.appendChild(projectContainer);
 
   kebabMenuOptionsHandler(kebabMenu);
 
@@ -42,7 +46,7 @@ function createProjectPage(projectName) {
     addTaskToTaskList(projectName, projectList);
   });
   
-  addMarginTopToTaskList(projectHeader, projectList);
+  // addMarginTopToTaskList(projectHeader, projectList);
   addMarginBottomToTaskList(projectList);
 }
 

@@ -5,8 +5,11 @@ import { addMarginBottomToTaskList, addMarginTopToTaskList } from '../utils';
 function createInbox() {
   let content = document.querySelector('#content');
 
+  let pageContainer = document.querySelector('.page-container');
+
   let inboxContainer = document.createElement('div');
   inboxContainer.classList.add('inbox-container');
+  inboxContainer.classList.add('page');
 
   let inboxHeader = document.createElement('header');
   inboxHeader.classList.add('inbox-header');
@@ -27,7 +30,8 @@ function createInbox() {
   inboxContainer.appendChild(inboxHeader);
   inboxContainer.appendChild(inboxMainContent);
 
-  content.appendChild(inboxContainer);
+  // content.appendChild(inboxContainer);
+  pageContainer.appendChild(inboxContainer);
 
   updateTaskList('Inbox', inboxList);
   
@@ -38,7 +42,7 @@ function createInbox() {
     // updateTaskList('inbox', inboxList, true);
   });
   
-  addMarginTopToTaskList(inboxHeader, inboxList);
+  // addMarginTopToTaskList(inboxHeader, inboxList);
   addMarginBottomToTaskList(inboxList);
 }
 

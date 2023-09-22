@@ -5,8 +5,8 @@ import createUpcoming from './pages/upcoming';
 import createToday from './pages/today';
 
 import './styles/global.css';
-import './styles/sidebar.css';
-import './styles/footer.css'
+import '/src/pages/sidebar/sidebar.css';
+import '/src/pages/footer/footer.css'
 import './styles/inbox.css'
 import './styles/today.css';
 import './styles/upcoming.css';
@@ -37,7 +37,10 @@ import createDeleteProjectDialog from './pages/dialogs/deleteProjectDialog';
 
 
 let content = document.querySelector('#content');
+let pageContainer = document.createElement('div');
+pageContainer.classList.add('page-container');
 
+content.appendChild(pageContainer);
 createFooter();
 createSidebar();
 createDateTimeDialog();
@@ -72,6 +75,7 @@ inboxSidebarItem.addEventListener('click', () => {
   let inboxContainer = document.querySelector('.inbox-container');
   if (inboxContainer === null) {
     utils.removeAllElementsExceptFooterSidebarDialogs();
+    utils.removePage();
     createInbox();
     window.dispatchEvent(pageChanged);
   }
@@ -81,6 +85,7 @@ todaySidebarItem.addEventListener('click', () => {
   let todayContainer = document.querySelector('.today-container');
   if (todayContainer === null) {
     utils.removeAllElementsExceptFooterSidebarDialogs();
+    utils.removePage();
     createToday();
     window.dispatchEvent(pageChanged);
   }
@@ -90,6 +95,7 @@ upcomingSidebarItem.addEventListener('click', () => {
   let upcomingContainer = document.querySelector('.upcoming-container');
   if (upcomingContainer === null) {
     utils.removeAllElementsExceptFooterSidebarDialogs();
+    utils.removePage();
     createUpcoming();
     window.dispatchEvent(pageChanged);
   }

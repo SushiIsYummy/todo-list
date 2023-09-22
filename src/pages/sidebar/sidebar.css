@@ -2,10 +2,15 @@
   /* padding: 10px; */
 }
 
+.sidebar-div {
+  height: 100vh;
+  display: none;
+}
+
 .sidebar-dialog {
   max-width: 100% !important;
   max-height: 100% !important;
-  width: 80%;
+  width: 70%;
   height: 100%;
   left: 0;
 
@@ -65,6 +70,16 @@
   cursor: pointer;
 }
 
+.projects-list-item p {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: fit-content;
+  overflow-wrap: break-word;
+}
+
 .projects-list-item:hover,
 .sidebar-item:not(.projects):hover {
   background-color: #E6E6E6;
@@ -97,4 +112,53 @@
 
 .projects-list-item {
   cursor: pointer;
+}
+
+.page-container {
+  height: 100vh;
+  width: 100%;
+}
+
+@media only screen and (min-width: 768px) {
+
+  .project-container {
+    width: 100%;
+  }
+  
+  .page-container.shifted {
+    margin-left: 300px;
+  }
+
+
+  .page-container.shifted {
+    width: calc(100% - 300px);
+  }
+
+  .footer-bar.shifted {
+    left: 300px;
+  }
+
+  .add-task-dialog.shifted {
+    left: 300px;
+    width: calc(100% - 300px);
+  }
+
+  .sidebar-div {
+    /* position: sticky; */
+    position: fixed;
+    top: 0;
+    visibility: hidden;
+    width: 0px;
+    border-right: 1px solid #B8B8B8;
+  }
+
+  .sidebar-div.open {
+    display: block;
+    visibility: visible;
+    width: 300px;
+  }
+
+  .sidebar-dialog {
+    display: none;
+  }
 }

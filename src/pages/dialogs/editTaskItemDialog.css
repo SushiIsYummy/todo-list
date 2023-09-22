@@ -47,6 +47,12 @@
 
 .edit-task-location-dropdown {
   align-self: flex-start;
+  max-width: 100%;
+}
+
+.edit-task-location-dropdown option {
+  max-width: 100px;
+  white-space: normal;
 }
 
 .edit-priority-dropdown {

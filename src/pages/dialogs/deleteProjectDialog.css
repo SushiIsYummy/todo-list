@@ -22,6 +22,8 @@
 
 .delete-project-dialog .warning-message {
   align-self: center;
+  width: 100%;
+  overflow-wrap: break-word;
 }
 
 .delete-project-dialog .action-buttons {

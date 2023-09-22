@@ -1,11 +1,12 @@
 .project-container {
   /* padding: 0 30px; */
+  /* width: 100%; */
 }
 
 .project-header {
-  position: fixed;
+  position: sticky;
   top: 0;
-  width: 100%;
+  /* width: 100%; */
   z-index: 5;
   background-color: white;
   padding: 10px 20px;
@@ -15,7 +16,13 @@
 }
 
 .project-title {
+  /* width: 100%; */
+  /* overflow-wrap: break-word; */
+  /* font-size: 1.5rem; */
+  word-break: break-all;
+  /* word-wrap: break-word; */
   /* padding: 10px 20px; */
+  /* width: 700px; */
 }
 
 .project-list {
@@ -75,4 +82,11 @@
 
 .delete-project {
   color: red;
+}
+
+@media only screen and (min-width: 768px) {
+  .project-header.shifted {
+    /* left: 250px; */
+    /* width: calc(100% - 250px); */
+  }
 }

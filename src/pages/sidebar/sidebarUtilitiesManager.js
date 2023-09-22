@@ -27,7 +27,7 @@ const sidebarUtilitiesManager = {
   },
 
   updateSingleSidebarProjectName(oldProjectName, newProjectName) {
-    let projectLi = document.querySelector(`.projects-list-item[data-project-name=${oldProjectName}]`)
+    let projectLi = document.querySelector(`.projects-list-item[data-project-name="${oldProjectName}"]`)
     let p = projectLi.querySelector('p');
 
     if (projectLi) {

@@ -59,6 +59,7 @@
 
 .task-location-dropdown {
   height: fit-content;
+  max-width: 200px;
   padding: 5px;
 }
 

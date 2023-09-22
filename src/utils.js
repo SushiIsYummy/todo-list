@@ -103,10 +103,23 @@ export function removeAllElementsExceptFooterSidebarDialogs() {
     const child = elementsToBeRemoved[i];
     
     if (!child.classList.contains('footer-container') &&
-        child.nodeName !== 'DIALOG') {
+        child.nodeName !== 'DIALOG' && !child.classList.contains('sidebar-div') &&
+        !child.classList.contains('page-container')) {
       content.removeChild(child);
     }
   }
+}
+
+export function removePage() {
+  let pageContainer = document.querySelector('.page-container');
+  
+  if (pageContainer) {
+    let page = pageContainer.querySelector('.page');
+    if (page) {
+      page.remove();
+    }
+  }
+
 }
 
 export function elementContainsClassEndingWith(element, suffix) {

@@ -9,6 +9,11 @@ import sidebarUtils from './sidebarUtilitiesManager';
 function createSidebar() {
   let content = document.querySelector('#content');
 
+  let sidebarDiv = document.createElement('div');
+  sidebarDiv.classList.add('sidebar-div');
+
+  content.appendChild(sidebarDiv);
+
   let sidebarDialog = document.createElement('dialog');
   sidebarDialog.classList.add('sidebar-dialog');
 
@@ -33,6 +38,9 @@ function createSidebar() {
   sidebarELM.goToProjectPageOnProjectItemClick();
   utils.handleDialogOutsideClick(sidebarDialog, function(){ utils.hideDialogWithAnimation(sidebarDialog) });
 
+  // Initial update and add event listener for window resize
+  updateDialog();
+  window.addEventListener('resize', updateDialog);
 }
 
 const createSidebarItem = (itemName, itemClass, svg) => {
@@ -88,6 +96,20 @@ const createSidebarItemList = (itemName, itemClass) => {
   sidebarItemList.appendChild(projectList);
 
   return sidebarItemList;
+}
+
+
+function updateDialog() {
+  let sidebarDiv = document.querySelector('.sidebar-div');
+  let sidebarDialog = document.querySelector('.sidebar-dialog');
+  let sidebarAside = document.querySelector('aside.sidebar');
+
+  if (window.innerWidth >= 768) {
+    sidebarDialog.close();
+    sidebarDiv.appendChild(sidebarAside);
+  } else {
+    sidebarDialog.appendChild(sidebarAside);
+  }
 }
 
 export default createSidebar;
