@@ -8,11 +8,60 @@ const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 module.exports = {
   entry: './src/index.js',
   output: {
-    filename: '[name].[contenthash].js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
   mode: 'production',
+  module: {
+    rules: [
+      // {
+      //   test: /\.css$/i,
+      //   use: ["style-loader", "css-loader"],
+      // },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'images',  
+            }
+          },
+        ],
+      },
+      {
+        test: /\.(?:js|mjs|cjs)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['@babel/preset-env', { targets: "defaults" }]
+            ]
+          }
+        }
+      },
+    ],
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name].css', // Output CSS filename
+    }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, './src/index.html'), // Path to your template
+      filename: 'index.html', // Output filename in dist
+      minify: {
+        removeAttributeQuotes: true,
+        collapseWhitespace: true,
+        removeComments: true
+      }
+    }),
+  ],
   optimization: {
     minimizer: [
       // Use TerserPlugin for JavaScript minification
@@ -54,55 +103,7 @@ module.exports = {
         },
       }),
     ],
+    minimize: true,
   },
-  module: {
-    rules: [
-      {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
-      },
-      {
-        test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              outputPath: 'images',  
-            }
-          },
-        ],
-      },
-      {
-        test: /\.(?:js|mjs|cjs)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['@babel/preset-env', { targets: "defaults" }]
-            ]
-          }
-        }
-      },
-    ],
-  },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css', // Output CSS filename
-    }),
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, './src/index.html'), // Path to your template
-      filename: 'index.html', // Output filename in dist
-      minify: {
-        removeAttributeQuotes: true,
-        collapseWhitespace: true,
-        removeComments: true
-      }
-    }),
-  ],
   // devtool: 'inline-source-map',
 };

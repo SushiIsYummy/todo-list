@@ -1121,11 +1121,11 @@
 
 .add-task-dialog {
   /* for some reason without max-width: 100% !important, 
-    width: 100% isn't really 100% */
-    max-width: 100% !important;
-    width: 100%;  
-    inset-block-start: auto; /* Allow the element to be positioned based on normal flow */
-    inset-block-end: 0px; /* Keep the bottom edge aligned with the bottom of the containing block */
+  width: 100% isn't really 100% */
+  max-width: 100% !important;
+  width: 100%;  
+  inset-block-start: auto; /* Allow the element to be positioned based on normal flow */
+  inset-block-end: 0px; /* Keep the bottom edge aligned with the bottom of the containing block */
   border: 1px solid gray;
   border-radius: 10px 10px 0 0;
   border-bottom: none;
