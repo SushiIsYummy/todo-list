@@ -110,7 +110,7 @@ export function removeAllElementsExceptFooterSidebarDialogs() {
   }
 }
 
-export function removePage() {
+export function removeCurrentPage() {
   let pageContainer = document.querySelector('.page-container');
   
   if (pageContainer) {

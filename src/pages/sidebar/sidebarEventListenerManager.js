@@ -35,7 +35,7 @@ const sidebarEventListenerManager = {
           return;
         }
         utils.removeAllElementsExceptFooterSidebarDialogs();
-        utils.removePage();
+        utils.removeCurrentPage();
         createProjectPage(clickedElement.dataset.projectName);
         const pageChanged = new Event('pageChanged');
         window.dispatchEvent(pageChanged);
@@ -49,7 +49,7 @@ const sidebarEventListenerManager = {
               return;
             }
             utils.removeAllElementsExceptFooterSidebarDialogs();
-            utils.removePage();
+            utils.removeCurrentPage();
             createProjectPage(liElement.dataset.projectName);
             const pageChanged = new Event('pageChanged');
             window.dispatchEvent(pageChanged);

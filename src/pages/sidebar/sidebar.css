@@ -117,12 +117,14 @@
 .page-container {
   height: 100vh;
   width: 100%;
+  display: grid;
 }
 
 @media only screen and (min-width: 768px) {
 
   .project-container {
     width: 100%;
+    /* display: grid; */
   }
   
   .page-container.shifted {

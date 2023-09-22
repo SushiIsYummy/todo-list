@@ -2,6 +2,7 @@ import { hideDialogWithAnimation, removeAllElementsExceptFooterSidebarDialogs } 
 import sidebarUtils from "../sidebar/sidebarUtilitiesManager";
 import { removeAllTasksWithProjectNameInLocalStorage, removeProjectFromLocalStorage } from "../tasks";
 import createToday from "../today";
+import * as utils from '/src/utils'
 import { clearAddTaskForm } from "./addTaskDialog";
 import sharedElements from "./sharedElements";
 
@@ -65,6 +66,7 @@ function actionButtonsHandler(dialog) {
     removeProjectFromLocalStorage(projectName);
     
     removeAllElementsExceptFooterSidebarDialogs();
+    utils.removeCurrentPage();
     createToday();
 
     const projectAddedRemovedRenamed = new Event('projectAddedRemovedRenamed');

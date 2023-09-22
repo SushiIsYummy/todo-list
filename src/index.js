@@ -75,7 +75,7 @@ inboxSidebarItem.addEventListener('click', () => {
   let inboxContainer = document.querySelector('.inbox-container');
   if (inboxContainer === null) {
     utils.removeAllElementsExceptFooterSidebarDialogs();
-    utils.removePage();
+    utils.removeCurrentPage();
     createInbox();
     window.dispatchEvent(pageChanged);
   }
@@ -85,7 +85,7 @@ todaySidebarItem.addEventListener('click', () => {
   let todayContainer = document.querySelector('.today-container');
   if (todayContainer === null) {
     utils.removeAllElementsExceptFooterSidebarDialogs();
-    utils.removePage();
+    utils.removeCurrentPage();
     createToday();
     window.dispatchEvent(pageChanged);
   }
@@ -95,7 +95,7 @@ upcomingSidebarItem.addEventListener('click', () => {
   let upcomingContainer = document.querySelector('.upcoming-container');
   if (upcomingContainer === null) {
     utils.removeAllElementsExceptFooterSidebarDialogs();
-    utils.removePage();
+    utils.removeCurrentPage();
     createUpcoming();
     window.dispatchEvent(pageChanged);
   }
