@@ -156,12 +156,14 @@
 .page-container {
   height: 100vh;
   width: 100%;
+  display: grid;
 }
 
 @media only screen and (min-width: 768px) {
 
   .project-container {
     width: 100%;
+    /* display: grid; */
   }
   
   .page-container.shifted {
@@ -541,7 +543,8 @@
 }
 
 .inbox-header {
-  position: fixed;
+  position: sticky;
+  /* position: fixed; */
   top: 0;
   width: 100%;
   z-index: 5;
